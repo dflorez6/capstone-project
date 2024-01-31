@@ -1,0 +1,32 @@
+//====================
+// Containers
+//====================
+.app-container {
+  margin: 0 auto;
+  padding: 0;
+  width: 95%;
+}
+
+//====================
+// Wrappers
+//====================
+// Page
+.page-wrapper {
+  margin-top: $h-navbar;
+  min-height: calc(100vh - $h-navbar);
+  padding-bottom: 4rem;
+}
+
+// Loader
+.page-loader-wrapper {
+  padding: 5rem 0;
+}
+
+// Main
+.main-wrapper {
+  width: 100%;
+
+  .content-wrapper {
+    padding: 0 4rem;
+  }
+}
