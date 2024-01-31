@@ -1,9 +1,5 @@
 // Dependencies
 import { useNavigate, Link } from "react-router-dom";
-// State
-// import { useSelector, useDispatch } from "react-redux";
-// import { useLogoutMutation } from "../../slices/adminsApiSlice";
-// import { clearCredentials } from "../../slices/authSlice";
 // Styles
 import "./Header.scss";
 // Assets
@@ -11,14 +7,6 @@ import "./Header.scss";
 
 // Component
 const Header = () => {
-  //----------
-  // State
-  //----------
-
-  //----------
-  // Handlers
-  //----------
-
   //----------
   // Output
   //----------
@@ -28,7 +16,7 @@ const Header = () => {
         <div className="container-fluid app-container">
           <Link to="/" className="navbar-brand">
             {/* <img src={avatar} alt="David Florez" className="img-fluid" /> */}
-            VendorLynx
+            <p>VendorLynx Public</p>
           </Link>
           {/* ./Brand */}
 
@@ -63,7 +51,7 @@ const Header = () => {
                   </a>
                 </li>
 
-                {/* Public */}
+                {/* Login */}
                 <li className="nav-item">
                   <Link to="/vendors/login" className="nav-link">
                     <i className="fa-solid fa-right-to-bracket"></i>
