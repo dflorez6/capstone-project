@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Dependencies
+import { Outlet } from "react-router-dom"; // Injects the corresponding page/screen
+// State
+import { useSelector, useDispatch } from "react-redux";
+// Toatsify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// Components
+// import Header from "./layouts/header/Header";
+import HeaderPublic from "./layouts/header/HeaderPublic";
+import HeaderPrivate from "./layouts/header/HeaderPrivate";
+import Footer from "./layouts/footer/Footer";
 
+// Component
 function App() {
-  const [count, setCount] = useState(0)
+  //----------
+  // State
+  //----------
+  const dispatch = useDispatch(); // Initialize
+
+  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel='noreferrer'>
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel='noreferrer'>
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ToastContainer />
+      {/* TODO: Create 2 component layouts: Public & Private to display different UIs */}
+      <header className="fixed-top shadow-sm">
+        {vendorInfo ? <HeaderPrivate /> : <HeaderPublic />}
+      </header>
+      <main className="main-wrapper">
+        <Outlet />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

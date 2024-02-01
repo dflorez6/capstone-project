@@ -1,0 +1,58 @@
+//====================
+// Colors
+//====================
+// Primary
+$c-text-primary: #000000;
+$c-text-secondary: #999999;
+$c-aqua: #63e6be;
+$c-aqua-d: #88ffd1;
+$c-purple-d: #161032;
+$c-purple-m: #6E07F3;
+$c-purple-l: #623CEA;
+$c-red: #ff0054;
+$c-yellow: #f9c22e;
+$c-blue-l: #8cf4ff;
+$c-blue-ll: #bce7fd;
+$c-cyan: #12eaea; // 00FDDC
+$c-green: #5aff15;
+
+// Auxiliary
+$c-success: $c-green;
+$c-warning: $c-yellow;
+$c-danger: $c-red;
+$c-white: #ffffff;
+$c-black: #000000;
+$c-divider: #d0d0d0;
+
+// Dashboard
+$c-dashboard-border: #E4E0F5;
+
+//====================
+// Fonts
+//====================
+// Family
+$f-roboto: "Roboto", sans-serif;
+
+// Sizes
+$f-h1: 2rem;
+$f-h2: 1.75rem;
+$f-h3: 1.5rem;
+$f-h4: 1.25rem;
+$f-h5: 1.2rem;
+$f-h6: 1.1rem;
+$f-p: 1.1rem;
+
+// Weights
+$f-thin: 100;
+$f-xlight: 200;
+$f-light: 300;
+$f-regular: 400;
+$f-medium: 500;
+$f-bold: 700;
+$f-black: 900;
+
+//====================
+// Utilities
+//====================
+// Fixed Heights
+$h-navbar: 80px;
