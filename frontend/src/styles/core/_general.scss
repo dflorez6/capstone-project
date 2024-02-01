@@ -1,0 +1,50 @@
+//====================
+// General Styles
+//====================
+* {
+  font-family: $f-roboto;
+}
+
+html {
+  font-size: 15px; // sets rem base font size
+}
+
+body {
+  color: $c-text-primary;
+}
+
+h1 {
+  font-size: $f-h1;
+  font-weight: $f-bold;
+}
+h2 {
+  font-size: $f-h2;
+}
+h3 {
+  font-size: $f-h3;
+}
+h4 {
+  font-size: $f-h4;
+}
+h5 {
+  font-size: $f-h5;
+}
+h6 {
+  font-size: $f-h6;
+  font-weight: $f-regular;
+}
+p {
+  font-size: $f-p;
+  font-weight: $f-regular;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: 0;
+  display: inline-block;
+  padding: 0;
+}

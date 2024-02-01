@@ -1,0 +1,21 @@
+//====================
+// Form
+//====================
+.app-table {
+  thead {
+    tr {
+      th {
+        font-weight: $f-medium;
+        font-size: $f-h6;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        font-size: $f-p;
+      }
+    }
+  }
+}

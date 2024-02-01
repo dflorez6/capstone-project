@@ -1,0 +1,181 @@
+//====================
+// Buttons
+//====================
+// Primary
+.btn-app {
+  border: solid;
+  border-width: 2px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: $f-h5;
+  height: 3.1rem;
+  line-height: 3rem;
+  padding: 0 2rem;
+  text-align: center;
+  // text-transform: uppercase;
+  transition: all 0.25s ease-in-out;
+}
+
+.btn-app:hover,
+.btn-app:active,
+.btn-app:focus {
+  transition: all 0.25s ease-in-out;
+}
+
+// Colors
+.btn-app {
+  // Aqua
+  &.btn-app-aqua {
+    background-color: $c-aqua;
+    border-color: $c-aqua;
+    color: $c-text-primary;
+  }
+
+  &.btn-app-aqua:hover,
+  &.btn-app-aqua:active,
+  &.btn-app-aqua:focus {
+    background-color: $c-aqua;
+    border-color: $c-aqua;
+    color: $c-text-primary;
+  }
+
+  // Aqua Outline
+  &.btn-app-aqua-outline {
+    background-color: transparent;
+    border-color: $c-aqua;
+    color: $c-aqua;
+  }
+
+  &.btn-app-aqua-outline:hover,
+  &.btn-app-aqua-outline:active,
+  &.btn-app-aqua-outline:focus {
+    background-color: $c-aqua;
+    border-color: $c-aqua;
+    color: $c-text-primary;
+  }
+
+  // Purple
+  &.btn-app-purple {
+    background-color: $c-purple-m;
+    border-color: $c-purple-m;
+    color: $c-white;
+  }
+
+  &.btn-app-purple:hover,
+  &.btn-app-purple:active,
+  &.btn-app-purple:focus {
+    background-color: $c-purple-m;
+    border-color: $c-purple-m;
+    color: $c-white;
+  }
+
+  // Purple Outline
+  &.btn-app-purple-outline {
+    background-color: transparent;
+    border-color: $c-purple-m;
+    color: $c-purple-m;
+  }
+
+  &.btn-app-purple-outline:hover,
+  &.btn-app-purple-outline:active,
+  &.btn-app-purple-outline:focus {
+    background-color: $c-purple-m;
+    border-color: $c-purple-m;
+    color: $c-white;
+  }
+
+  // White
+  &.btn-app-white {
+    background-color: $c-white;
+    border-color: $c-white;
+    color: $c-text-primary;
+  }
+
+  &.btn-app-white:hover,
+  &.btn-app-white:active,
+  &.btn-app-white:focus {
+    background-color: $c-white;
+    border-color: $c-white;
+    color: $c-text-primary;
+  }
+
+  // White Outline
+  &.btn-app-white-outline {
+    background-color: transparent;
+    border-color: $c-white;
+    color: $c-white;
+  }
+
+  &.btn-app-white-outline:hover,
+  &.btn-app-white-outline:active,
+  &.btn-app-white-outline:focus {
+    background-color: $c-white;
+    border-color: $c-white;
+    color: $c-text-primary;
+  }
+
+  // Dark
+  &.btn-app-dark {
+    background-color: $c-text-primary;
+    border-color: $c-text-primary;
+    color: $c-white;
+  }
+
+  &.btn-app-dark:hover,
+  &.btn-app-dark:active,
+  &.btn-app-dark:focus {
+    background-color: $c-text-primary;
+    border-color: $c-text-primary;
+    color: $c-white;
+  }
+
+  // Red
+  &.btn-app-red {
+    background-color: $c-red;
+    border-color: $c-red;
+    color: $c-white;
+  }
+
+  &.btn-app-red:hover,
+  &.btn-app-red:active,
+  &.btn-app-red:focus {
+    background-color: $c-red;
+    border-color: $c-red;
+    color: $c-white;
+  }
+}
+
+// Sizes
+.btn-app {
+  &.btn-app-sm {
+    border-radius: 5px;
+    font-size: $f-h6;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    padding: 0 1.5rem;
+  }
+}
+
+// Table
+.btn-app-table {   
+  color: $c-text-secondary;
+  margin: 0 2rem 0 0;
+
+  svg {
+    font-size: $f-h4;
+    margin-right: 0.5rem;
+  }
+
+  // Actions
+  &.btn-app-table-delete {
+    color: $c-text-secondary;
+  }
+
+  &.btn-app-table-delete:hover {
+    color: $c-red;
+  }
+}
+
+.btn-app-table:hover {
+  color: $c-purple-m;
+}
