@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
-// import { useDispatch, useSelector } from "react-redux";
-// import { useRegisterMutation } from "../slices/adminsApiSlice";
-// import { setCredentials } from "../slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useRegisterMutation } from "../../../slices/vendorsApiSlice";
+import { setCredentials } from "../../../slices/vendorAuthSlice";
 // Components
 import FormContainer from "../../../components/FormContainer";
 import Loader from "../../../components/Loader";
@@ -15,8 +15,8 @@ function VendorRegistration() {
   //----------
   // State
   //----------
-  // const navigate = useNavigate(); // Initialize
-  // const dispatch = useDispatch(); // Initialize
+  const navigate = useNavigate(); // Initialize
+  const dispatch = useDispatch(); // Initialize
 
   // TODO: Avatar pending for implementation
   const [firstName, setFirstName] = useState("");
@@ -25,9 +25,19 @@ function VendorRegistration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [register, { isLoading, error }] = useRegisterMutation(); // Redux Toolkit Query
+
+  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+
   //----------
   // Effects
   //----------
+  // Redirect to home page if already logged in
+  useEffect(() => {
+    if (vendorInfo) {
+      navigate("/dashboard");
+    }
+  }, [navigate, vendorInfo]); // Dependency Array
 
   //----------
   // Handlers
@@ -35,7 +45,25 @@ function VendorRegistration() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    console.log("Form submitted");
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const res = await register({
+          // TODO: Implement Avatar
+          firstName,
+          lastName,
+          email,
+          password,
+        }).unwrap(); // Makes API Request
+        dispatch(setCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        navigate("/"); // Redirects to Home Page
+      } catch (error) {
+        toast.error(error?.data?.message || error?.error); // Toastify implementation
+        console.log(error?.data?.message || error?.error);
+      }
+    }
   };
 
   //----------
@@ -123,7 +151,7 @@ function VendorRegistration() {
             {/* ./Input: Password */}
           </div>
 
-          {/* {isLoading && <Loader />} */}
+          {isLoading && <Loader />}
 
           <div className="row">
             <div className="col-12">

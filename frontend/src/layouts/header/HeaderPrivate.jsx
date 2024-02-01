@@ -17,7 +17,7 @@ const Header = () => {
   const dispatch = useDispatch(); // Initialize
   const navigate = useNavigate(); // Initialize
 
-  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Admin Info through the useSelector Hook
+  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   const [logout, { isLoading, error }] = useLogoutMutation(); // Redux Toolkit Query
 
@@ -48,7 +48,7 @@ const Header = () => {
             <>
               <Link to="/dashboard" className="navbar-brand">
                 {/* <img src={avatar} alt="David Florez" className="img-fluid" /> */}
-                <p>VendorLynx Private 2</p>
+                <p>VendorLynx Private</p>
               </Link>
             </>
           )}

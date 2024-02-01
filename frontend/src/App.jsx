@@ -18,11 +18,12 @@ function App() {
   //----------
   const dispatch = useDispatch(); // Initialize
 
-  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Admin Info through the useSelector Hook
+  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   return (
     <>
       <ToastContainer />
+      {/* TODO: Create 2 component layouts: Public & Private to display different UIs */}
       <header className="fixed-top shadow-sm">
         {vendorInfo ? <HeaderPrivate /> : <HeaderPublic />}
       </header>
