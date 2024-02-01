@@ -94,8 +94,9 @@ const Header = () => {
                         Dashboard
                       </Link>
                     </li>
+                    {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
                     <li>
-                      <Link to="/profile" className="dropdown-item">
+                      <Link to="/vendors/profile" className="dropdown-item">
                         <i className="fa-solid fa-user"></i>
                         Profile
                       </Link>

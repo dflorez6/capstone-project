@@ -13,18 +13,27 @@ import store from "./store.js";
 import { Provider } from "react-redux";
 // Components
 import App from "./App.jsx";
-// import PrivateRoute from "./components/PrivateRoute.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 // Pages/Screens
 // Root
 import PublicHomePage from "./pages/home/HomePublic.jsx";
+//==========
 // Public
-import VendorLogin from "./pages/auth/vendors/VendorLogin.jsx";
-import VendorRegistration from "./pages/auth/vendors/VendorRegistration.jsx";
+//==========
+import VendorLogin from "./pages/vendors/auth/VendorLogin.jsx";
+import VendorRegistration from "./pages/vendors/auth/VendorRegistration.jsx";
+//==========
 // Private
+//==========
 import Dashboard from "./layouts/dashboard/Dashboard.jsx";
-/*
-import ProfilePage from "./pages/ProfilePage.jsx";
-*/
+//----------
+// Vendors
+//----------
+import VendorsProfile from "./pages/vendors/profile/Profile.jsx";
+//----------
+// Property Managers
+//----------
+// TODO: Property Managers Pages
 // Styles
 import "./style.scss";
 
@@ -40,13 +49,10 @@ const router = createBrowserRouter(
       <Route path="/vendors/register" element={<VendorRegistration />} />
 
       {/* Private Routes */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      {/*
       <Route path="" element={<PrivateRoute />}>
-      <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/vendors/profile" element={<VendorsProfile />} />
       </Route>
-      */}
     </Route>
   )
 );
