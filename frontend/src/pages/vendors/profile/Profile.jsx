@@ -75,7 +75,7 @@ const Profile = () => {
   // Output
   //----------
   return (
-    <section className="page-wrapper profile-wrapper">
+    <section className="private-page-wrapper profile-wrapper">
       <FormContainer>
         <h1>Update Vendor Profile</h1>
 

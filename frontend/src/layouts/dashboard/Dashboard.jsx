@@ -6,7 +6,7 @@ import "./Dashboard.scss";
 // Component
 function Dashboard() {
   return (
-    <section className="page-wrapper dashboard-wrapper">
+    <section className="private-page-wrapper dashboard-wrapper">
       <p>Dashboard</p>
 
       <p>

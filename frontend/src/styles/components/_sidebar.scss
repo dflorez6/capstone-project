@@ -1,0 +1,57 @@
+//====================
+// Sidebar
+//====================
+.app-sidebar {
+  background-color: $c-text-primary;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  
+  // Links
+  .sidebar-nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    // Link Container
+    .sidebar-nav-item {
+      // Link
+      .sidebar-nav-link {
+        color: $c-white;
+        display: block;
+        opacity: 0.5;
+        padding: 0.75rem 1rem;
+        transition: all 200ms ease-in-out;
+
+        svg {
+          font-size: 1.25rem;
+        }
+        p {
+          font-size: 1rem;
+          line-height: 1;
+          margin: 0;
+        }
+      }
+
+      // Link States
+      .sidebar-nav-link:hover,
+      .sidebar-nav-link:active {
+        background-color: $c-yellow;
+        color: $c-text-primary;
+        opacity: 1;
+        transition: all 200ms ease-in-out;
+      }
+
+      // Active Link
+      .sidebar-nav-link {
+        &.active {
+          background-color: $c-yellow;
+          color: $c-text-primary;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
