@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateVendorMutation } from "../../../slices/vendorsApiSlice";
-import { setCredentials } from "../../../slices/vendorAuthSlice";
+import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
+import { setCredentials } from "../../../../slices/vendorAuthSlice";
 // Toast
 import { toast } from "react-toastify";
 // Components
-import FormContainer from "../../../components/FormContainer";
-import Loader from "../../../components/Loader";
+import FormContainer from "../../../../components/FormContainer";
+import Loader from "../../../../components/Loader";
 // Styles
 import "./Profile.scss";
 

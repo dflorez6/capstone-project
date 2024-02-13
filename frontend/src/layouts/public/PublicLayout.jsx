@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom"; // Injects the corresponding page/scr
 // State
 
 // Components
-import HeaderPublic from "../../layouts/header/HeaderPublic";
+import HeaderPublic from "../../components/header/HeaderPublic";
 import Footer from "../../layouts/footer/Footer";
 // Styles
 import "./PublicLayout.scss";

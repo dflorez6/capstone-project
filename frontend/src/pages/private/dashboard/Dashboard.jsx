@@ -10,8 +10,9 @@ function Dashboard() {
       <p>Dashboard</p>
 
       <p>
-        Vendor Logged In:
-        TODO: Logout --- Pending for implementation
+        Vendor Logged In
+        <br />
+        TODO: Property Manager Logged In + Conditional Content --- Pending for implementation
       </p>
     </section>
   );

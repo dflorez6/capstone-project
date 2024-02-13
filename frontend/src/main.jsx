@@ -15,21 +15,20 @@ import { Provider } from "react-redux";
 import App from "./App.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 // Pages/Screens
-// Root
-import PublicHomePage from "./pages/home/HomePublic.jsx";
 //==========
 // Public
 //==========
-import VendorLogin from "./pages/vendors/auth/VendorLogin.jsx";
-import VendorRegistration from "./pages/vendors/auth/VendorRegistration.jsx";
+import PublicHomePage from "./pages/public/home/HomePublic.jsx"; // Root
+import VendorLogin from "./pages/public/auth/VendorLogin.jsx";
+import VendorRegistration from "./pages/public/auth/VendorRegistration.jsx";
 //==========
 // Private
 //==========
-import Dashboard from "./layouts/dashboard/Dashboard.jsx";
+import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
 //----------
 // Vendors
 //----------
-import VendorsProfile from "./pages/vendors/profile/Profile.jsx";
+import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
 //----------
 // Property Managers
 //----------

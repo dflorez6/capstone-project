@@ -1,8 +1,8 @@
 // Dependencies
 import { Outlet } from "react-router-dom"; // Injects the corresponding page/screen
 // Components
-import HeaderPrivate from "../../layouts/header/HeaderPrivate";
-import Sidebar from "../sidebar/Sidebar";
+import HeaderPrivate from "../../components/header/HeaderPrivate";
+import Sidebar from "../../components/sidebar/Sidebar";
 import Footer from "../../layouts/footer/Footer";
 // Styles
 import "./PrivateLayout.scss";
@@ -20,6 +20,9 @@ function PrivateLayout() {
     btnCollapseIcon.classList.toggle("collapsed-icon");
   };
 
+  //----------
+  // Output
+  //----------
   return (
     <>
       <header className="fixed-top shadow-sm">
