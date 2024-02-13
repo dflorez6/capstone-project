@@ -1,6 +1,35 @@
 //====================
 // Utilities
 //====================
+// Fonts
+.fs-h1 {
+  font-size: $f-h1;
+}
+
+.f-h2 {
+  font-size: $f-h2;
+}
+
+.f-h3 {
+  font-size: $f-h3;
+}
+
+.f-h4 {
+  font-size: $f-h4;
+}
+
+.f-h5 {
+  font-size: $f-h5;
+}
+
+.f-h6 {
+  font-size: $f-h6;
+}
+
+.f-p {
+  font-size: $f-p;
+}
+
 // Display
 .hidden {
   display: none;

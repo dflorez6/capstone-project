@@ -37,6 +37,43 @@ const vendorSchema = mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: "",
+    },
+    phone: {
+      type: String,
+    },
+    address: {
+      street: {
+        type: String,
+        default: "",
+      },
+      city: {
+        type: String,
+        default: "",
+      },
+      province: {
+        type: String,
+        default: "",
+      },
+      postalCode: {
+        type: String,
+        default: "",
+      },
+      // TODO: Refactor once City, Province & PostalCode Models have been created
+      /*
+      city: {
+        type: Schema.Types.ObjectId,
+        ref: "City",
+      },
+      province: {
+        type: Schema.Types.ObjectId,
+        ref: "Province",
+      },
+      postalCode: {
+        type: Schema.Types.ObjectId,
+        ref: "PostalCode",
+      },
+      */
     },
     // TODO: Add more fields
   },

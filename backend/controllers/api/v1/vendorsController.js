@@ -14,7 +14,8 @@ import Vendor from "../../../models/vendorModel.js";
 // Access: Public
 const registerVendor = asyncHandler(async (req, res) => {
   // Desctructure the request body
-  const { firstName, lastName, email, password, avatar } = req.body;
+  const { firstName, lastName, email, password, avatar, phone, address } =
+    req.body;
 
   // Check if Vendor exists
   const vendorExists = await Vendor.findOne({ email }); // findOne() returns a promise
@@ -31,6 +32,7 @@ const registerVendor = asyncHandler(async (req, res) => {
     email,
     password,
     avatar,
+    phone,
   });
 
   // Check if Vendor was created
@@ -46,6 +48,8 @@ const registerVendor = asyncHandler(async (req, res) => {
       lastName: vendor.lastName,
       email: vendor.email,
       avatar: vendor.avatar,
+      phone: vendor.phone,
+      address: vendor.address,
     });
   } else {
     res.status(400); // Bad Request
@@ -74,6 +78,8 @@ const authVendor = asyncHandler(async (req, res) => {
       lastName: vendor.lastName,
       email: vendor.email,
       avatar: vendor.avatar,
+      phone: vendor.phone,
+      address: vendor.address,
     });
   } else {
     res.status(401); // Bad Request
@@ -103,6 +109,10 @@ const logoutVendor = asyncHandler(async (req, res) => {
 // Route: GET /api/v1/vendors/profile
 // Access: Private
 const getVendorProfile = asyncHandler(async (req, res) => {
+  console.log("GET PROFILE");
+  console.log(req.vendor);
+  console.log(req.vendor.address);
+
   // Get the vendor from the request object
   const vendor = {
     _id: req.vendor._id,
@@ -111,6 +121,8 @@ const getVendorProfile = asyncHandler(async (req, res) => {
     lastName: req.vendor.lastName,
     email: req.vendor.email,
     avatar: req.vendor.avatar,
+    phone: req.vendor.phone,
+    address: req.vendor.address,
   };
 
   res.status(200).json(vendor);
@@ -133,6 +145,13 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
     vendor.lastName = req.body.lastName || vendor.lastName;
     vendor.email = req.body.email || vendor.email;
     vendor.avatar = req.body.avatar || vendor.avatar;
+    vendor.phone = req.body.phone || vendor.phone;
+    vendor.address.street = req.body.address.street || vendor.address.street;
+    vendor.address.city = req.body.address.city || vendor.address.city;
+    vendor.address.province =
+      req.body.address.province || vendor.address.province;
+    vendor.address.postalCode =
+      req.body.address.postalCode || vendor.address.postalCode;
 
     // Check if password was sent
     if (req.body.password) {
@@ -148,13 +167,13 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
       lastName: updatedVendor.lastName,
       email: updatedVendor.email,
       avatar: updatedVendor.avatar,
+      phone: updatedVendor.phone,
+      address: updatedVendor.address,
     });
   } else {
     res.status(404);
     throw new Error("Vendor not found");
   }
-
-  res.status(200).json({ message: "Update Profile" });
 });
 
 // accountType: vendor.accountType,
