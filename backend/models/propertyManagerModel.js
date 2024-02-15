@@ -1,5 +1,5 @@
 //====================
-// Model: Vendor
+// Model: Property Manager
 //====================
 // Import Dependencies
 import mongoose from "mongoose";

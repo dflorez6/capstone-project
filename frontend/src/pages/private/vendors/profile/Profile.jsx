@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
 import { setCredentials } from "../../../../slices/vendorAuthSlice";
+import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
+import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
+import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 // Toast
 import { toast } from "react-toastify";
 // Components
@@ -32,10 +34,14 @@ const Profile = () => {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
-
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
-  const [updateProfile, { isLoading, error }] = useUpdateVendorMutation(); // Redux Toolkit Mutation (array destructiring)
+  // Redux Toolkit Mutations
+  const [updateProfile, { isLoading, error }] = useUpdateVendorMutation(); // Array destructiring
+
+  // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
+  const { data: cities, isError: citiesError } = useGetCitiesQuery();
+  const { data: provinces, isError: provincesError } = useGetProvincesQuery();
 
   //----------
   // Effects
@@ -60,6 +66,14 @@ const Profile = () => {
     vendorInfo.address.province,
     vendorInfo.address.postalCode,
   ]); // Dependency Array
+
+  // Check for errors while fetching data
+  if (citiesError) {
+    console.log("Cities Error:", citiesError);
+  }
+  if (provincesError) {
+    console.log("Provinces Error:", provincesError);
+  }
 
   //----------
   // Handlers
@@ -89,7 +103,6 @@ const Profile = () => {
           phone,
           address,
         }).unwrap(); // Makes API Request
-
         dispatch(setCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile Updated");
       } catch (error) {
@@ -235,20 +248,47 @@ const Profile = () => {
           <div className="row">
             <div className="col-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="city">City</label>
-              <input
-                type="text"
+              <select
                 name="city"
                 id="city"
                 className="form-control"
-                placeholder="City"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-              />
+              >
+                <option disabled>
+                  Select...
+                </option>
+                {cities &&
+                  cities.map((city) => (
+                    <option key={city.id} value={city.city}>
+                      {city.city}
+                    </option>
+                  ))}
+              </select>
             </div>
             {/* ./Input: City */}
 
             <div className="col-12 col-md-3 col-lg-3 my-2">
               <label htmlFor="province">Province</label>
+              <select
+                name="province"
+                id="province"
+                className="form-control"
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
+              >
+                <option disabled>
+                  Select...
+                </option>
+                {provinces &&
+                  provinces.map((province) => (
+                    <option key={province.id} value={province.province}>
+                      {province.provinceCode}
+                    </option>
+                  ))}
+              </select>
+
+              {/*
               <input
                 type="text"
                 name="province"
@@ -258,6 +298,7 @@ const Profile = () => {
                 value={province}
                 onChange={(e) => setProvince(e.target.value)}
               />
+               */}
             </div>
             {/* ./Input: Province */}
 
@@ -273,7 +314,7 @@ const Profile = () => {
                 onChange={(e) => setPostalCode(e.target.value)}
               />
             </div>
-            {/* ./Input: Province */}
+            {/* ./Input: Postal Code */}
           </div>
 
           {isLoading && <Loader />}

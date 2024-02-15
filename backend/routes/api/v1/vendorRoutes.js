@@ -1,5 +1,5 @@
 //====================
-// Routes: Vendors
+// Routes: Vendor
 //====================
 // Import the dependencies
 import express from "express";

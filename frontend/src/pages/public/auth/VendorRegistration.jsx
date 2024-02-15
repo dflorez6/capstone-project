@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useRegisterMutation } from "../../../slices/vendorsApiSlice";
 import { setCredentials } from "../../../slices/vendorAuthSlice";
+import { useRegisterMutation } from "../../../slices/vendorsApiSlice";
 // Components
 import FormContainer from "../../../components/FormContainer";
 import Loader from "../../../components/Loader";

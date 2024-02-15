@@ -109,10 +109,6 @@ const logoutVendor = asyncHandler(async (req, res) => {
 // Route: GET /api/v1/vendors/profile
 // Access: Private
 const getVendorProfile = asyncHandler(async (req, res) => {
-  console.log("GET PROFILE");
-  console.log(req.vendor);
-  console.log(req.vendor.address);
-
   // Get the vendor from the request object
   const vendor = {
     _id: req.vendor._id,

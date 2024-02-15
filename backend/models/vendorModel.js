@@ -3,6 +3,8 @@
 //====================
 // Import Dependencies
 import mongoose from "mongoose";
+// TODO: Used for future reference. Used to reference object Ids from other collections
+// const { Schema } = mongoose; // Destructure Schema from mongoose
 import bcrypt from "bcryptjs";
 
 // TODO: Think about many to many relationships for example: to know which resources have been created by which Vendor
@@ -41,38 +43,40 @@ const vendorSchema = mongoose.Schema(
     },
     phone: {
       type: String,
+      trim: true,
     },
     address: {
       street: {
         type: String,
-        default: "",
+        // default: "",
       },
       city: {
         type: String,
-        default: "",
+        // default: "",
       },
       province: {
         type: String,
-        default: "",
+        // default: "",
       },
       postalCode: {
         type: String,
-        default: "",
+        // default: "",
       },
-      // TODO: Refactor once City, Province & PostalCode Models have been created
+
+      // TODO: Used for future reference. Used to reference object Ids from other collections
       /*
-      city: {
+        city: {
         type: Schema.Types.ObjectId,
         ref: "City",
+        lowercase: true,
+        default: "",
       },
       province: {
         type: Schema.Types.ObjectId,
         ref: "Province",
+        default: "",
       },
-      postalCode: {
-        type: Schema.Types.ObjectId,
-        ref: "PostalCode",
-      },
+
       */
     },
     // TODO: Add more fields
