@@ -34,6 +34,8 @@ const Profile = () => {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
+
+  // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   // Redux Toolkit Mutations
@@ -57,9 +59,9 @@ const Profile = () => {
     setProvince(vendorInfo.address.province);
     setPostalCode(vendorInfo.address.postalCode);
   }, [
-    vendorInfo.setFirstName,
-    vendorInfo.setLastName,
-    vendorInfo.setEmail,
+    vendorInfo.firstName,
+    vendorInfo.lastName,
+    vendorInfo.email,
     vendorInfo.phone,
     vendorInfo.address.street,
     vendorInfo.address.city,
@@ -78,6 +80,7 @@ const Profile = () => {
   //----------
   // Handlers
   //----------
+  // Form Submit Handler
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -111,6 +114,11 @@ const Profile = () => {
         console.log(error?.data?.message || error?.error);
       }
     }
+  };
+
+  // CitySelect Component onChange Handler
+  const handleCityChange = (selectedCity) => {
+    // Do something with the selected city
   };
 
   //----------
@@ -247,6 +255,7 @@ const Profile = () => {
 
           <div className="row">
             <div className="col-12 col-md-6 col-lg-6 my-2">
+              {/* TODO: Create a Select Component */}
               <label htmlFor="city">City</label>
               <select
                 name="city"
@@ -255,9 +264,7 @@ const Profile = () => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               >
-                <option disabled>
-                  Select...
-                </option>
+                <option disabled>Select...</option>
                 {cities &&
                   cities.map((city) => (
                     <option key={city.id} value={city.city}>
@@ -277,9 +284,7 @@ const Profile = () => {
                 value={province}
                 onChange={(e) => setProvince(e.target.value)}
               >
-                <option disabled>
-                  Select...
-                </option>
+                <option disabled>Select...</option>
                 {provinces &&
                   provinces.map((province) => (
                     <option key={province.id} value={province.province}>
@@ -287,18 +292,6 @@ const Profile = () => {
                     </option>
                   ))}
               </select>
-
-              {/*
-              <input
-                type="text"
-                name="province"
-                id="province"
-                className="form-control"
-                placeholder="Province"
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-              />
-               */}
             </div>
             {/* ./Input: Province */}
 
