@@ -5,58 +5,88 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+// TODO: Think about many to many relationships for example: to know which resources have been created by which Vendor
 
-
-
-/*
-// TODO: Mongoose guide to embed & reference
-
-
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-// Define schema for Cities
-const citySchema = new Schema({
-  city: String
-});
-
-// Define schema for Provinces
-const provinceSchema = new Schema({
-  province: String
-});
-
-// Define schema for Postal Codes
-const postalCodeSchema = new Schema({
-  postalCode: String
-});
-
-// Define schema for User
-const userSchema = new Schema({
-  name: String,
-  email: String,
-  address: {
-    street: String,
-    city: {
-      type: Schema.Types.ObjectId,
-      ref: 'City'
+//--------------------
+// Schema Definition
+//--------------------
+const propertyManagerSchema = mongoose.Schema(
+  {
+    accountType: {
+      type: String,
+      default: "propertyManager",
     },
-    province: {
-      type: Schema.Types.ObjectId,
-      ref: 'Province'
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    postalCode: {
-      type: Schema.Types.ObjectId,
-      ref: 'PostalCode'
-    }
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    avatar: {
+      type: String,
+      default: "",
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      street: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      province: {
+        type: String,
+      },
+      postalCode: {
+        type: String,
+      },
+    },
+    // TODO: Add more fields
+  },
+  {
+    timestamps: true, // Used to have createdAt & updatedAt fields
   }
+);
+
+//--------------------
+// Hooks
+//--------------------
+// Hash password before saving (middleware)
+propertyManagerSchema.pre("save", async function (next) {
+  // If password is not modified, function moves on
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  // If password is modified or is new (Property Manager created)
+  const salt = await bcrypt.genSalt(10); // 10 is the number of rounds
+  this.password = await bcrypt.hash(this.password, salt); // Hash the password before its saved into the DB
 });
 
-// Define models
-const City = mongoose.model('City', citySchema);
-const Province = mongoose.model('Province', provinceSchema);
-const PostalCode = mongoose.model('PostalCode', postalCodeSchema);
-const User = mongoose.model('User', userSchema);
+// Compare passwords (plain text password vs hashed password)
+propertyManagerSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-module.exports = { City, Province, PostalCode, User };
+//--------------------
+// Model Definition
+//--------------------
+const PropertyManager = mongoose.model("PropertyManager", propertyManagerSchema);
 
-*/
+export default PropertyManager;

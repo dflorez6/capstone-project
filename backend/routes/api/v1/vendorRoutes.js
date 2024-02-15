@@ -23,8 +23,6 @@ router.post("/logout", logoutVendor);
 
 // Profile
 // Another way of using router: Chain multiple actions to the same route
-/*
-*/
 router
   .route("/profile")
   .get(protect, getVendorProfile)

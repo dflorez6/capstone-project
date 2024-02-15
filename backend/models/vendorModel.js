@@ -100,7 +100,7 @@ vendorSchema.pre("save", async function (next) {
     next();
   }
 
-  // If password is modified or is new (admin created)
+  // If password is modified or is new (Vendor created)
   const salt = await bcrypt.genSalt(10); // 10 is the number of rounds
   this.password = await bcrypt.hash(this.password, salt); // Hash the password before its saved into the DB
 });

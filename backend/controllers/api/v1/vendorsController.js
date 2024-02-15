@@ -9,7 +9,7 @@ import Vendor from "../../../models/vendorModel.js";
 //--------------------
 // POST
 //--------------------
-// Description: Register a new vendor user && authenticate the vendor
+// Description: Register a new Vendor user && authenticate the Vendor
 // Route: POST /api/v1/vendors/register
 // Access: Public
 const registerVendor = asyncHandler(async (req, res) => {
@@ -57,7 +57,7 @@ const registerVendor = asyncHandler(async (req, res) => {
   }
 });
 
-// Description: Authenticates a vendor user/sets token
+// Description: Authenticates a Vendor user/sets token
 // Route: POST /api/v1/vendors/auth
 // Access: Public
 const authVendor = asyncHandler(async (req, res) => {
@@ -87,7 +87,7 @@ const authVendor = asyncHandler(async (req, res) => {
   }
 });
 
-// Description: Logout vendor user
+// Description: Logout Vendor user
 // Route: POST /api/v1/vendors/logout
 // Access: Public
 const logoutVendor = asyncHandler(async (req, res) => {
@@ -105,7 +105,7 @@ const logoutVendor = asyncHandler(async (req, res) => {
 //--------------------
 // GET
 //--------------------
-// Description: Get vendor profile
+// Description: Get Vendor profile
 // Route: GET /api/v1/vendors/profile
 // Access: Private
 const getVendorProfile = asyncHandler(async (req, res) => {
@@ -127,7 +127,7 @@ const getVendorProfile = asyncHandler(async (req, res) => {
 //--------------------
 // PUT / PATCH
 //--------------------
-// Description: Update vendor profile
+// Description: Update Vendor profile
 // Route: PUT /api/v1/vendors/profile
 // Access: Private
 const updateVendorProfile = asyncHandler(async (req, res) => {
@@ -171,8 +171,6 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
     throw new Error("Vendor not found");
   }
 });
-
-// accountType: vendor.accountType,
 
 //--------------------
 // DELETE

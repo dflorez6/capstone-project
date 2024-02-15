@@ -36,14 +36,13 @@ app.use(cookieParser()); // Parse cookies
 const baseURL = "/api/v1";
 // Users
 import vendorRoutes from "./routes/api/v1/vendorRoutes.js";
-// TODO: Prop Manager Pending
+import propertyManagerRoutes from "./routes/api/v1/propertyManagerRoutes.js"
+app.use(`${baseURL}/vendors`, vendorRoutes);
+app.use(`${baseURL}/property-managers`, propertyManagerRoutes);
 
 // Auxiliary
 import cityRoutes from "./routes/api/v1/cityRoutes.js";
 import provinceRoutes from "./routes/api/v1/provinceRoutes.js";
-
-//
-app.use(`${baseURL}/vendors`, vendorRoutes);
 app.use(`${baseURL}/cities`, cityRoutes);
 app.use(`${baseURL}/provinces`, provinceRoutes);
 
