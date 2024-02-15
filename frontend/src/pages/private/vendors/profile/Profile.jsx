@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "../../../../slices/vendorAuthSlice";
+import { vendorSetCredentials } from "../../../../slices/vendorAuthSlice";
 import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
 import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
 import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
@@ -106,7 +106,7 @@ const Profile = () => {
           phone,
           address,
         }).unwrap(); // Makes API Request
-        dispatch(setCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile Updated");
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation

@@ -17,7 +17,6 @@ function PublicLayout() {
       </header>
       <main className="main-wrapper">
         <Outlet />
-        <p>Public Layout</p>
       </main>
       <footer>
         <Footer />

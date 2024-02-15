@@ -19,8 +19,11 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 // Public
 //==========
 import PublicHomePage from "./pages/public/home/HomePublic.jsx"; // Root
-import VendorLogin from "./pages/public/auth/VendorLogin.jsx";
+import Login from "./pages/public/auth/Login.jsx";
 import VendorRegistration from "./pages/public/auth/VendorRegistration.jsx";
+import PropertyManagerRegistration from "./pages/public/auth/PropertyManagerRegistration.jsx";
+// import VendorLogin from "./pages/public/auth/VendorLogin.jsx";
+// import PropertyManagerLogin from "./pages/public/auth/PropertyManagerLogin.jsx";
 //==========
 // Private
 //==========
@@ -29,6 +32,7 @@ import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
 // Vendors
 //----------
 import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
+// TODO: Prop Manager Profile
 //----------
 // Property Managers
 //----------
@@ -44,8 +48,12 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<PublicHomePage />} />
 
       {/* Public Routes */}
-      <Route path="/vendors/login" element={<VendorLogin />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/vendors/register" element={<VendorRegistration />} />
+      <Route
+        path="/property-managers/register"
+        element={<PropertyManagerRegistration />}
+      />
 
       {/* Private Routes */}
       <Route path="" element={<PrivateRoute />}>
@@ -64,3 +72,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </React.StrictMode>
   </Provider>
 );
+
+/*
+// Independent Login per user
+<Route path="/vendors/login" element={<VendorLogin />} />
+<Route
+  path="/property-managers/login"
+  element={<PropertyManagerLogin />}
+/>
+*/

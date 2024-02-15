@@ -83,6 +83,7 @@
 }
 
 // Page
+// TODO: Replace this depending on visibilty: public or private page
 .page-wrapper {
   margin-top: $h-navbar;
   min-height: calc(100vh - $h-navbar);
@@ -90,5 +91,11 @@
 }
 
 .private-page-wrapper {
+  padding: 0 2rem;
+}
+
+.public-page-wrapper {
+  margin-top: $h-navbar;
+  min-height: calc(100vh - $h-navbar);
   padding: 0 2rem;
 }

@@ -15,6 +15,17 @@ function App() {
   const dispatch = useDispatch(); // Initialize
 
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+  const { propertyManagerInfo } = useSelector(
+    (state) => state.propertyManagerAuth
+  ); // Gets Property Manager Info through the useSelector Hook
+
+  // Conditional layout rendering
+  let layoutComponent;
+  if (vendorInfo || propertyManagerInfo) {
+    layoutComponent = <PrivateLayout />;
+  } else {
+    layoutComponent = <PublicLayout />;
+  }
 
   //----------
   // Output
@@ -22,9 +33,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-
-      {/* Displays UI Layout depending on access level */}
-      {vendorInfo ? <PrivateLayout /> : <PublicLayout />}
+      {layoutComponent} {/* Displays UI Layout depending on access level */}
     </>
   );
 }

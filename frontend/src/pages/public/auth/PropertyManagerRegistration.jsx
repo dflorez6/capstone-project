@@ -4,14 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useVendorRegisterMutation } from "../../../slices/vendorsApiSlice";
-import { vendorSetCredentials } from "../../../slices/vendorAuthSlice";
+import { usePropertyManagerRegisterMutation } from "../../../slices/propertyManagersApiSlice";
+import { propertyManagerSetCredentials } from "../../../slices/propertyManagerAuthSlice";
 // Components
 import FormContainer from "../../../components/FormContainer";
 import Loader from "../../../components/Loader";
 
 // Component
-function VendorRegistration() {
+function PropertyManagerRegistration() {
   //----------
   // State
   //----------
@@ -27,18 +27,20 @@ function VendorRegistration() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Redux Toolkit
-  const [register, { isLoading, error }] = useVendorRegisterMutation(); // Mutation
-  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+  const [register, { isLoading, error }] = usePropertyManagerRegisterMutation(); // Mutation
+  const { propertyManagerInfo } = useSelector(
+    (state) => state.propertyManagerAuth
+  ); // Gets Property Manager Info through the useSelector Hook
 
   //----------
   // Effects
   //----------
   // Redirect to home page if already logged in
   useEffect(() => {
-    if (vendorInfo) {
+    if (propertyManagerInfo) {
       navigate("/dashboard");
     }
-  }, [navigate, vendorInfo]); // Dependency Array
+  }, [navigate, propertyManagerInfo]); // Dependency Array
 
   //----------
   // Handlers
@@ -58,7 +60,7 @@ function VendorRegistration() {
           email,
           password,
         }).unwrap(); // Makes API Request
-        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        dispatch(propertyManagerSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         navigate("/"); // Redirects to Home Page
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
@@ -71,16 +73,13 @@ function VendorRegistration() {
   // Redux Toolkit Slice Errors
   //----------
   if (error) {
-    console.log("Login Errors:", error);
+    console.log("Registration Errors:", error);
   }
 
-  //----------
-  // Output
-  //----------
   return (
     <section className="page-wrapper">
       <FormContainer>
-        <h1>Vendor Registration</h1>
+        <h1>Property Manager Registration</h1>
 
         <form className="form" id="" onSubmit={submitHandler}>
           <div className="row">
@@ -174,7 +173,8 @@ function VendorRegistration() {
 
           <div className="row py-3">
             <div className="col-12">
-              Already have an account? <Link to="/vendors/login">Login</Link>
+              Already have an account?{" "}
+              <Link to="/property-managers/login">Login</Link>
             </div>
           </div>
         </form>
@@ -183,4 +183,4 @@ function VendorRegistration() {
   );
 }
 
-export default VendorRegistration;
+export default PropertyManagerRegistration;
