@@ -1,0 +1,46 @@
+// Imports
+@import "../../../styles/core/variables.scss";
+
+//====================
+// Authentication Page
+//====================
+.public-page-wrapper {
+  &.auth-page-wrapper {
+    background-color: $c-white;    
+    padding: 2rem 0;
+
+    // Form Container (1 container split in 2 forms)
+    .forms-container {
+      display: flex;
+      margin: 0 auto 2rem;
+      width: 80%;
+
+      .vendor-form-container {
+        background-color: $c-white;
+        color: $c-text-primary;
+        padding: 2rem;
+        width: 50%;
+      }
+
+      .prop-manager-form-container {
+        background-color: $c-black;
+        color: $c-white;
+        padding: 2rem;
+        width: 50%;
+      }
+    }
+
+    // Form Container (1 pane with switch)
+    .form-container {
+        background-color: $c-aqua;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        padding: 1.5rem;
+        width: 75%;
+
+    }
+
+    //
+  }
+}

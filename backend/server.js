@@ -17,7 +17,7 @@ import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js"; // Custom Middleware
-import connectDB from "./config/db.js";
+import connectDB from "./config/db.js"; // Connect to DB
 
 // Initialize App
 connectDB();
@@ -34,15 +34,21 @@ app.use(cookieParser()); // Parse cookies
 // Routes
 //====================
 const baseURL = "/api/v1";
+// Users
 import vendorRoutes from "./routes/api/v1/vendorRoutes.js";
-// import tagRoutes from "./routes/api/v1/tagRoutes.js";
-//
+import propertyManagerRoutes from "./routes/api/v1/propertyManagerRoutes.js"
 app.use(`${baseURL}/vendors`, vendorRoutes);
-// app.use(`${baseURL}/tags`, tagRoutes);
+app.use(`${baseURL}/property-managers`, propertyManagerRoutes);
 
-app.get('/', (req, res) => {
-    res.send("Hello Server!");
-})
+// Auxiliary
+import cityRoutes from "./routes/api/v1/cityRoutes.js";
+import provinceRoutes from "./routes/api/v1/provinceRoutes.js";
+app.use(`${baseURL}/cities`, cityRoutes);
+app.use(`${baseURL}/provinces`, provinceRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Hello Server!");
+});
 
 //====================
 // Production

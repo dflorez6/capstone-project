@@ -53,8 +53,9 @@ const Header = () => {
 
                 {/* Login */}
                 <li className="nav-item">
-                  <Link to="/vendors/login" className="nav-link">
+                  <Link to="/login" className="nav-link">
                     <i className="fa-solid fa-right-to-bracket"></i>
+                    Log In
                   </Link>
                 </li>
               </ul>
@@ -67,3 +68,18 @@ const Header = () => {
 };
 
 export default Header;
+
+/*
+<li className="nav-item">
+  <Link to="/vendors/login" className="nav-link">
+    <i className="fa-solid fa-right-to-bracket"></i>
+    Vendor
+  </Link>
+</li>
+<li className="nav-item">
+  <Link to="/property-managers/login" className="nav-link">
+    <i className="fa-solid fa-right-to-bracket"></i>
+    Prop Manager
+  </Link>
+</li>
+*/

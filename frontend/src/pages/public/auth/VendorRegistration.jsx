@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useRegisterMutation } from "../../../slices/vendorsApiSlice";
-import { setCredentials } from "../../../slices/vendorAuthSlice";
+import { useVendorRegisterMutation } from "../../../slices/vendorsApiSlice";
+import { vendorSetCredentials } from "../../../slices/vendorAuthSlice";
 // Components
 import FormContainer from "../../../components/FormContainer";
 import Loader from "../../../components/Loader";
@@ -18,6 +18,7 @@ function VendorRegistration() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
+  // Form Fields
   // TODO: Avatar pending for implementation
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -25,8 +26,8 @@ function VendorRegistration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [register, { isLoading, error }] = useRegisterMutation(); // Redux Toolkit Query
-
+  // Redux Toolkit
+  const [register, { isLoading, error }] = useVendorRegisterMutation(); // Mutation
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   //----------
@@ -57,7 +58,7 @@ function VendorRegistration() {
           email,
           password,
         }).unwrap(); // Makes API Request
-        dispatch(setCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         navigate("/"); // Redirects to Home Page
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
@@ -65,6 +66,13 @@ function VendorRegistration() {
       }
     }
   };
+
+  //----------
+  // Redux Toolkit Slice Errors
+  //----------
+  if (error) {
+    console.log("Login Errors:", error);
+  }
 
   //----------
   // Output

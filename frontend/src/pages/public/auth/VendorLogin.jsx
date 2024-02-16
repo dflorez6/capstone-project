@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../../../slices/vendorsApiSlice";
-import { setCredentials } from "../../../slices/vendorAuthSlice";
+import { useVendorLoginMutation } from "../../../slices/vendorsApiSlice";
+import { vendorSetCredentials } from "../../../slices/vendorAuthSlice";
 // Components
 import FormContainer from "../../../components/FormContainer";
 import Loader from "../../../components/Loader";
@@ -18,11 +18,12 @@ function VendorLogin() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
+  // Form Fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [login, { isLoading, error }] = useLoginMutation(); // Redux Toolkit Query
-
+  // Redux Toolkit
+  const [login, { isLoading, error }] = useVendorLoginMutation(); // Mutation
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   //----------
@@ -43,7 +44,7 @@ function VendorLogin() {
 
     try {
       const res = await login({ email, password }).unwrap(); // Makes API Request
-      dispatch(setCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+      dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
       navigate("/dashboard"); // Redirects to Dashboard Page
     } catch (err) {
       toast.error(err?.data?.message || err?.error); // Toastify implementation
@@ -51,6 +52,13 @@ function VendorLogin() {
       console.log(err?.data?.message || err?.error);
     }
   };
+
+  //----------
+  // Redux Toolkit Slice Errors
+  //----------
+  if (error) {
+    console.log("Login Errors:", error);
+  }
 
   //----------
   // Output
