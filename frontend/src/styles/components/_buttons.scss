@@ -143,6 +143,21 @@
     border-color: $c-red;
     color: $c-white;
   }
+
+  // Yellow
+  &.btn-app-yellow {
+    background-color: $c-yellow;
+    border-color: $c-yellow;
+    color: $c-text-primary;
+  }
+
+  &.btn-app-yellow:hover,
+  &.btn-app-yellow:active,
+  &.btn-app-yellow:focus {
+    background-color: $c-yellow;
+    border-color: $c-yellow;
+    color: $c-text-primary;
+  }
 }
 
 // Sizes
@@ -157,7 +172,7 @@
 }
 
 // Table
-.btn-app-table {   
+.btn-app-table {
   color: $c-text-secondary;
   margin: 0 2rem 0 0;
 

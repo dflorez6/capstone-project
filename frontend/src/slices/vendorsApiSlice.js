@@ -10,7 +10,7 @@ export const vendorsApiSlice = apiSlice.injectEndpoints({
   // Endpoints
   endpoints: (builder) => ({
     // Login
-    login: builder.mutation({
+    vendorLogin: builder.mutation({
       query: (data) => ({
         url: `${VENDORS_URL}/auth`,
         method: "POST",
@@ -19,7 +19,7 @@ export const vendorsApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Logout
-    logout: builder.mutation({
+    vendorLogout: builder.mutation({
       query: () => ({
         url: `${VENDORS_URL}/logout`,
         method: "POST",
@@ -27,7 +27,7 @@ export const vendorsApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Register
-    register: builder.mutation({
+    vendorRegister: builder.mutation({
       query: (data) => ({
         url: `${VENDORS_URL}/register`,
         method: "POST",
@@ -49,8 +49,8 @@ export const vendorsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useLoginMutation,
-  useLogoutMutation,
-  useRegisterMutation,
+  useVendorLoginMutation,
+  useVendorLogoutMutation,
+  useVendorRegisterMutation,
   useUpdateVendorMutation,
 } = vendorsApiSlice; // Export hooks for usage in components

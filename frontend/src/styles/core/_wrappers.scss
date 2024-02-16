@@ -10,13 +10,6 @@
 //====================
 // Wrappers
 //====================
-// Page
-.page-wrapper {
-  margin-top: $h-navbar;
-  min-height: calc(100vh - $h-navbar);
-  padding-bottom: 4rem;
-}
-
 // Loader
 .page-loader-wrapper {
   padding: 5rem 0;
@@ -29,4 +22,80 @@
   .content-wrapper {
     padding: 0 4rem;
   }
+}
+
+// Main: Public
+.main-wrapper {
+  &.public-wrapper {
+    background-color: $c-white;
+  }
+}
+
+// Main: Public
+.main-wrapper {
+  &.private-wrapper {
+    background-color: $c-white;
+    display: flex;
+    flex-direction: row;
+    margin-top: $h-navbar;
+    min-height: calc(100vh - $h-navbar);
+
+    // Sidebar
+    .sidebar-wrapper {
+      margin-left: 0;
+      transition: all 0.5s;
+
+      // Collapsed
+      &.collapsed {
+        margin-left: -8.5%;
+      }
+    }
+
+    // Content
+    .content-wrapper {
+      background-color: lightgray;
+      flex-grow: 1;
+      padding: 0;      
+      transition: all 0.5s;
+
+      // Collapse Button
+      .btn-collapse {
+        padding: 1rem 2rem;
+
+        button {
+          margin: 0;
+
+          // Icon
+          svg {
+            color: $c-text-primary;
+            font-size: 1.5rem;
+            transition: all 1s ease-in-out;
+          }
+
+          .collapsed-icon {
+            transform: rotate(180deg);
+            transition: all 1s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Page
+// TODO: Replace this depending on visibilty: public or private page
+.page-wrapper {
+  margin-top: $h-navbar;
+  min-height: calc(100vh - $h-navbar);
+  padding-bottom: 4rem;
+}
+
+.private-page-wrapper {
+  padding: 0 2rem;
+}
+
+.public-page-wrapper {
+  margin-top: $h-navbar;
+  min-height: calc(100vh - $h-navbar);
+  padding: 0 2rem;
 }

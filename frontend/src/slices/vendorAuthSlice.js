@@ -18,12 +18,12 @@ const vendorAuthSlice = createSlice({
   initialState,
   reducers: {
     // Set Credentials (log in)
-    setCredentials: (state, action) => {
+    vendorSetCredentials: (state, action) => {
       state.vendorInfo = action.payload; // Vendor data added to the Store
       localStorage.setItem("vendorInfo", JSON.stringify(action.payload)); // Vendor data saved to local storage
     },
     // Clear Credentials (log out)
-    clearCredentials: (state, action) => {
+    vendorClearCredentials: (state, action) => {
       state.vendorInfo = null;
       localStorage.removeItem("vendorInfo");
     },
@@ -31,7 +31,7 @@ const vendorAuthSlice = createSlice({
 });
 
 // Export Actions
-export const { setCredentials, clearCredentials } = vendorAuthSlice.actions;
+export const { vendorSetCredentials, vendorClearCredentials } = vendorAuthSlice.actions;
 
 // Export Reducer
 export default vendorAuthSlice.reducer;

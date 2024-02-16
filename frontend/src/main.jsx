@@ -13,18 +13,31 @@ import store from "./store.js";
 import { Provider } from "react-redux";
 // Components
 import App from "./App.jsx";
-// import PrivateRoute from "./components/PrivateRoute.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 // Pages/Screens
-// Root
-import PublicHomePage from "./pages/home/HomePublic.jsx";
+//==========
 // Public
-import VendorLogin from "./pages/auth/vendors/VendorLogin.jsx";
-import VendorRegistration from "./pages/auth/vendors/VendorRegistration.jsx";
+//==========
+import PublicHomePage from "./pages/public/home/HomePublic.jsx"; // Root
+import Login from "./pages/public/auth/Login.jsx";
+import VendorRegistration from "./pages/public/auth/VendorRegistration.jsx";
+import PropertyManagerRegistration from "./pages/public/auth/PropertyManagerRegistration.jsx";
+// import VendorLogin from "./pages/public/auth/VendorLogin.jsx";
+// import PropertyManagerLogin from "./pages/public/auth/PropertyManagerLogin.jsx";
+//==========
 // Private
-import Dashboard from "./layouts/dashboard/Dashboard.jsx";
-/*
-import ProfilePage from "./pages/ProfilePage.jsx";
-*/
+//==========
+import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
+//----------
+// Vendors
+//----------
+import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
+import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
+// TODO: Prop Manager Profile
+//----------
+// Property Managers
+//----------
+// TODO: Property Managers Pages
 // Styles
 import "./style.scss";
 
@@ -36,17 +49,19 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<PublicHomePage />} />
 
       {/* Public Routes */}
-      <Route path="/vendors/login" element={<VendorLogin />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/vendors/register" element={<VendorRegistration />} />
+      <Route
+        path="/property-managers/register"
+        element={<PropertyManagerRegistration />}
+      />
 
       {/* Private Routes */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      {/*
       <Route path="" element={<PrivateRoute />}>
-      <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/vendors/profile" element={<VendorsProfile />} />
+        <Route path="/property-managers/profile" element={<PropertyManagersProfile />} />        
       </Route>
-      */}
     </Route>
   )
 );
@@ -59,3 +74,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </React.StrictMode>
   </Provider>
 );
+
+/*
+// Independent Login per user
+<Route path="/vendors/login" element={<VendorLogin />} />
+<Route
+  path="/property-managers/login"
+  element={<PropertyManagerLogin />}
+/>
+*/

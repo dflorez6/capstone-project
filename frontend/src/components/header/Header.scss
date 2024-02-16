@@ -6,7 +6,8 @@
 //====================
 header {
   .app-navbar {
-    //
+    background-color: $c-white;
+    min-height: $h-navbar;
 
     // Brand
     .navbar-brand {

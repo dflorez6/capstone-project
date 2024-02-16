@@ -2,8 +2,10 @@
 import { useNavigate, Link } from "react-router-dom";
 // State
 import { useSelector, useDispatch } from "react-redux";
-import { useLogoutMutation } from "../../slices/vendorsApiSlice";
-import { clearCredentials } from "../../slices/vendorAuthSlice";
+import { useVendorLogoutMutation } from "../../slices/vendorsApiSlice";
+import { vendorClearCredentials } from "../../slices/vendorAuthSlice";
+import { usePropertyManagerLogoutMutation } from "../../slices/propertyManagersApiSlice";
+import { propertyManagerClearCredentials } from "../../slices/propertyManagerAuthSlice";
 // Styles
 import "./Header.scss";
 // Assets
@@ -18,8 +20,19 @@ const Header = () => {
   const navigate = useNavigate(); // Initialize
 
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+  const { propertyManagerInfo } = useSelector(
+    (state) => state.propertyManagerAuth
+  ); // Gets Property Manager Info through the useSelector Hook
 
-  const [logout, { isLoading, error }] = useLogoutMutation(); // Redux Toolkit Query
+  // Redux Toolkit
+  const [vendorLogout, { isLoading: vendorLoading, error: vendorError }] =
+    useVendorLogoutMutation(); // Mutation
+  const [
+    propertyManagerLogout,
+    { isLoading: propertyManagerLoading, error: propertyManagerError },
+  ] = usePropertyManagerLogoutMutation(); // Mutation
+
+  // TODO: Add Prop Manager
 
   //----------
   // Handlers
@@ -27,14 +40,34 @@ const Header = () => {
   // TODO: Refactor when having 2 user types: Vendor & Property Manager
   const logoutHandler = async () => {
     try {
-      await logout().unwrap(); // Makes API Request + destroy cookie
-      dispatch(clearCredentials()); // Clears Credentials in Redux Store & LocalStorage
+      // Checks which user type is logged in
+      if (vendorInfo) {
+        await vendorLogout().unwrap(); // Makes API Request + destroy cookie
+        dispatch(vendorClearCredentials()); // Clears Credentials in Redux Store & LocalStorage
+      } else {
+        // Property Manager
+        await propertyManagerLogout().unwrap();
+        dispatch(propertyManagerClearCredentials());
+      }
       navigate("/");
     } catch (err) {
       console.log("Logout Error:");
       console.log(err?.data?.message || err?.error);
     }
   };
+
+  //----------
+  // Global Variables
+  //----------
+  let authUser;
+  let authRoute;
+  if (vendorInfo) {
+    authUser = vendorInfo;
+    authRoute = "/vendors";
+  } else {
+    authUser = propertyManagerInfo;
+    authRoute = "/property-managers";
+  }
 
   //----------
   // Output
@@ -44,7 +77,7 @@ const Header = () => {
       <nav className="navbar navbar-expand-lg app-navbar">
         <div className="container-fluid app-container">
           {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
-          {vendorInfo && (
+          {authUser && (
             <>
               <Link to="/dashboard" className="navbar-brand">
                 {/* <img src={avatar} alt="David Florez" className="img-fluid" /> */}
@@ -84,8 +117,7 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
-                    {vendorInfo.email}
+                    {authUser.email}
                   </a>
                   <ul className="dropdown-menu">
                     <li>
@@ -95,7 +127,10 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/profile" className="dropdown-item">
+                      <Link
+                        to={authRoute + "/profile"}
+                        className="dropdown-item"
+                      >
                         <i className="fa-solid fa-user"></i>
                         Profile
                       </Link>

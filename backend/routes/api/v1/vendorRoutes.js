@@ -1,5 +1,5 @@
 //====================
-// Routes: Vendors
+// Routes: Vendor
 //====================
 // Import the dependencies
 import express from "express";
@@ -23,8 +23,6 @@ router.post("/logout", logoutVendor);
 
 // Profile
 // Another way of using router: Chain multiple actions to the same route
-/*
-*/
 router
   .route("/profile")
   .get(protect, getVendorProfile)

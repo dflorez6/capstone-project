@@ -50,8 +50,9 @@ https://www.youtube.com/watch?v=PxshhOKNPpQ
         process.env.PORT
 
 ## MongoDB with Mongoose (ORM) In Express Installation
+
 * From the terminal:
-    
+
     > yarn add mongoose --save
 
 * To import dependency, from the server file (server.js) or /models/index.js (decoupled models):
@@ -66,7 +67,16 @@ https://www.youtube.com/watch?v=PxshhOKNPpQ
             return mongoose.connect(process.env.DATABASE_URL);
         };
 
+## Seed the DB
+
+1. Create a Model (e.g. City)
+2. Create a seed file (e.g. seedCity)
+3. Run the seed model from the terminal, make sure to be in the correct folder:
+
+    > node seedCity.js
+
 ### Bcryptjs (encrypt/decrypt password)
+
 * Install from the terminal:
 
     > yarn add bcryptjs --save
