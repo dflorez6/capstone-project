@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { vendorSetCredentials } from "../../../../slices/vendorAuthSlice";
-import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
+import { propertyManagerSetCredentials } from "../../../../slices/propertyManagerAuthSlice";
+import { useUpdatePropertyManagerMutation } from "../../../../slices/propertyManagersApiSlice";
 import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
 import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 // Toast
@@ -16,7 +16,7 @@ import Loader from "../../../../components/Loader";
 import "../../../../styles/styles/Profile.scss";
 
 // Component
-const Profile = () => {
+function Profile() {
   //----------
   // State
   //----------
@@ -36,10 +36,13 @@ const Profile = () => {
   const [postalCode, setPostalCode] = useState("");
 
   // Redux Store
-  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+  // const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
+  const { propertyManagerInfo } = useSelector(
+    (state) => state.propertyManagerAuth
+  ); // Gets Vendor Info through the useSelector Hook
 
   // Redux Toolkit Mutations
-  const [updateProfile, { isLoading, error }] = useUpdateVendorMutation(); // Array destructiring
+  const [updateProfile, { isLoading, error }] = useUpdatePropertyManagerMutation(); // Array destructiring
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const { data: cities, isError: citiesError } = useGetCitiesQuery();
@@ -50,23 +53,23 @@ const Profile = () => {
   //----------
   // Update inputs from Redux Store for vendorInfo
   useEffect(() => {
-    setFirstName(vendorInfo.firstName);
-    setLastName(vendorInfo.lastName);
-    setEmail(vendorInfo.email);
-    setPhone(vendorInfo.phone);
-    setStreet(vendorInfo.address.street);
-    setCity(vendorInfo.address.city);
-    setProvince(vendorInfo.address.province);
-    setPostalCode(vendorInfo.address.postalCode);
+    setFirstName(propertyManagerInfo.firstName);
+    setLastName(propertyManagerInfo.lastName);
+    setEmail(propertyManagerInfo.email);
+    setPhone(propertyManagerInfo.phone);
+    setStreet(propertyManagerInfo.address.street);
+    setCity(propertyManagerInfo.address.city);
+    setProvince(propertyManagerInfo.address.province);
+    setPostalCode(propertyManagerInfo.address.postalCode);
   }, [
-    vendorInfo.firstName,
-    vendorInfo.lastName,
-    vendorInfo.email,
-    vendorInfo.phone,
-    vendorInfo.address.street,
-    vendorInfo.address.city,
-    vendorInfo.address.province,
-    vendorInfo.address.postalCode,
+    propertyManagerInfo.firstName,
+    propertyManagerInfo.lastName,
+    propertyManagerInfo.email,
+    propertyManagerInfo.phone,
+    propertyManagerInfo.address.street,
+    propertyManagerInfo.address.city,
+    propertyManagerInfo.address.province,
+    propertyManagerInfo.address.postalCode,
   ]); // Dependency Array
 
   //----------
@@ -100,7 +103,7 @@ const Profile = () => {
         };
 
         const res = await updateProfile({
-          _id: vendorInfo._id,
+          _id: propertyManagerInfo._id,
           firstName,
           lastName,
           email,
@@ -108,7 +111,7 @@ const Profile = () => {
           phone,
           address,
         }).unwrap(); // Makes API Request
-        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        dispatch(propertyManagerSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile Updated");
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
@@ -129,7 +132,7 @@ const Profile = () => {
   return (
     <section className="private-page-wrapper profile-wrapper">
       <FormContainer>
-        <h1>Update Vendor Profile</h1>
+        <h1>Update Property Manager Profile</h1>
 
         <form className="form" id="" onSubmit={submitHandler}>
           <div className="row">
@@ -328,6 +331,6 @@ const Profile = () => {
       </FormContainer>
     </section>
   );
-};
+}
 
 export default Profile;
