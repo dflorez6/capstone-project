@@ -1,5 +1,5 @@
 // Dependencies
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // State
@@ -19,12 +19,14 @@ function VendorRegistration() {
   const dispatch = useDispatch(); // Initialize
 
   // Form Fields
-  // TODO: Avatar pending for implementation
+  const [avatar, setAvatar] = useState(null); // Store the selected image file
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const inputFileRef = useRef(null); // Create a ref for the file input element
 
   // Redux Toolkit
   const [register, { isLoading, error }] = useVendorRegisterMutation(); // Mutation
@@ -43,6 +45,7 @@ function VendorRegistration() {
   //----------
   // Handlers
   //----------
+  // Form Submit
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -51,20 +54,29 @@ function VendorRegistration() {
       toast.error("Passwords do not match");
     } else {
       try {
-        const res = await register({
-          // TODO: Implement Avatar
-          firstName,
-          lastName,
-          email,
-          password,
-        }).unwrap(); // Makes API Request
+        const formData = new FormData();
+        formData.append("avatar", avatar); // Append selected image file to FormData
+
+        // Append other form data
+        formData.append("firstName", firstName);
+        formData.append("lastName", lastName);
+        formData.append("email", email);
+        formData.append("password", password);
+
+        const res = await register(formData).unwrap(); // Pass FormData to register function & make API call
         dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
-        navigate("/"); // Redirects to Home Page
+        navigate("/");
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
         console.log(error?.data?.message || error?.error);
       }
     }
+  };
+
+  // File Change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(file); // Update the state with the selected file
   };
 
   //----------
@@ -83,6 +95,21 @@ function VendorRegistration() {
         <h1>Vendor Registration</h1>
 
         <form className="form" id="" onSubmit={submitHandler}>
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+              <label htmlFor="avatar">Profile Picture</label>
+              <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                className="form-control"
+                ref={inputFileRef} // Attach the ref to the input element
+                onChange={handleFileChange} // Call handleFileChange on file selection
+              />
+            </div>
+          </div>
+          {/* ./Input: Image Upload */}
+
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="firstName">First Name</label>

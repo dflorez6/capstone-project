@@ -1,5 +1,5 @@
 // Dependencies
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,8 @@ const Profile = () => {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
-  // TODO: Avatar pending for implementation
+  // Form Fields
+  const [avatar, setAvatar] = useState(null); // Store the selected image file
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,6 +35,8 @@ const Profile = () => {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
+
+  const inputFileRef = useRef(null); // Create a ref for the file input element
 
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
@@ -99,6 +102,28 @@ const Profile = () => {
           postalCode,
         };
 
+        // TODO: FIX WHY IS NOT UPDATING THE ADDRESS ANYMORE
+        console.log("UPDATE PROFILE");
+        console.log("address", address);
+        console.log("street", street);
+
+        // Form Data
+        const formData = new FormData();
+        formData.append("avatar", avatar); // Append selected image file to FormData
+
+        // Append other form data
+        formData.append("firstName", firstName);
+        formData.append("lastName", lastName);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("phone", phone);
+        formData.append("address", address);
+
+        const res = await updateProfile(formData).unwrap(); // Pass FormData to updateProfile function & make API call
+        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        toast.success("Profile updated successfully");
+
+        /*
         const res = await updateProfile({
           _id: vendorInfo._id,
           firstName,
@@ -110,12 +135,19 @@ const Profile = () => {
         }).unwrap(); // Makes API Request
         dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile Updated");
+        */
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
         console.log("Update Profile Error:");
         console.log(error?.data?.message || error?.error);
       }
     }
+  };
+
+  // File Change
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(file); // Update the state with the selected file
   };
 
   // CitySelect Component onChange Handler
@@ -139,6 +171,26 @@ const Profile = () => {
             </div>
           </div>
           {/* ./Form Section Title */}
+
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+              <label htmlFor="">Current Photo</label>
+              <img src={vendorInfo.avatar.url} alt="" className="avatar" />
+            </div>
+
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+              <label htmlFor="avatar">Update Photo</label>
+               <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                className="form-control"
+                ref={inputFileRef} // Attach the ref to the input element
+                onChange={handleFileChange} // Call handleFileChange on file selection
+              />
+            </div>
+          </div>
+          {/* ./Input: Image Upload */}
 
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">

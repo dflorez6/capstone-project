@@ -62,9 +62,11 @@ const vendorSchema = mongoose.Schema(
     avatar: {
       publicId: {
         type: String,
+        default: "fhx28zsa9swgxs1xhsm7",
       },
       url: {
         type: String,
+        default: "https://res.cloudinary.com/dxj6szh5w/image/upload/v1701561789/fhx28zsa9swgxs1xhsm7.png",
       },
     },
     // TODO: Add more fields
