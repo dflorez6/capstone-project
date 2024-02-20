@@ -174,7 +174,7 @@ function PropertyManagerRegistration() {
           <div className="row py-3">
             <div className="col-12">
               Already have an account?{" "}
-              <Link to="/property-managers/login">Login</Link>
+              <Link to="/login">Login</Link>
             </div>
           </div>
         </form>

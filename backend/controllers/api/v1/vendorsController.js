@@ -5,6 +5,8 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../../../utils/generateToken.js";
 import Vendor from "../../../models/vendorModel.js";
+// Image Uploader
+import cloudinary from "../../../services/cloudinary.config.js"; // Used when using cloudinary node package instead of multer
 
 //--------------------
 // POST
@@ -25,35 +27,48 @@ const registerVendor = asyncHandler(async (req, res) => {
     throw new Error("Vendor already exists");
   }
 
-  // Create the Vendor
-  const vendor = await Vendor.create({
-    firstName,
-    lastName,
-    email,
-    password,
-    avatar,
-    phone,
-  });
+  try {
+    // Check if file is uploaded
+    let avatarData = {};
+    if (req.file) {
+      // If file is uploaded, access the file URL and publicId from Cloudinary
+      avatarData.url = req.file.path; // The file path will be the Cloudinary URL
+      avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
+    }
 
-  // Check if Vendor was created
-  if (vendor) {
-    // Token
-    generateToken(res, vendor._id);
-
-    // Response
-    res.status(201).json({
-      _id: vendor._id,
-      accountType: vendor.accountType,
-      firstName: vendor.firstName,
-      lastName: vendor.lastName,
-      email: vendor.email,
-      avatar: vendor.avatar,
-      phone: vendor.phone,
-      address: vendor.address,
+    // Create the Vendor
+    const vendor = await Vendor.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      phone,
+      address,
+      avatar: avatarData, // Assign avatar data to the vendor
     });
-  } else {
-    res.status(400); // Bad Request
-    throw new Error("Invalid Vendor data");
+
+    // Check if Vendor was created
+    if (vendor) {
+      // Token
+      generateToken(res, vendor._id);
+
+      // Response
+      res.status(201).json({
+        _id: vendor._id,
+        accountType: vendor.accountType,
+        firstName: vendor.firstName,
+        lastName: vendor.lastName,
+        email: vendor.email,
+        avatar: vendor.avatar,
+        phone: vendor.phone,
+        address: vendor.address,
+      });
+    } else {
+      res.status(400);
+      throw new Error("Invalid Vendor data");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -135,12 +150,39 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
   const vendor = await Vendor.findById(req.vendor._id);
 
   // Check if Vendor exists
-  if (vendor) {
+  if (!vendor) {
+    res.status(404);
+    throw new Error("Vendor not found");
+  }
+
+  try {
+    // Check if a new avatar is uploaded
+    let result;
+    let avatarData = {};
+
+    // let avatarUrl = vendor.avatar.url;
+
+    // Check if a new file is uploaded
+    if (req.file) {
+      // If a new file is uploaded, delete the old image from Cloudinary
+      if (vendor.avatar.publicId) {
+        await cloudinary.uploader.destroy(vendor.avatar.publicId);
+      }
+
+      // If file is uploaded (multer), access the file URL and publicId from Cloudinary
+      avatarData.url = req.file.path; // The file path will be the Cloudinary URL
+      avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
+    }
+
     // Update the Vendor
     vendor.firstName = req.body.firstName || vendor.firstName;
     vendor.lastName = req.body.lastName || vendor.lastName;
     vendor.email = req.body.email || vendor.email;
-    vendor.avatar = req.body.avatar || vendor.avatar;
+    // vendor.avatar.url = avatarUrl;
+    vendor.avatar.url = req.file ? avatarData.url : vendor.avatar.url; // Update the url only if a new file is uploaded
+    vendor.avatar.publicId = req.file
+      ? avatarData.publicId
+      : vendor.avatar.publicId; // Update the publicId only if a new file is uploaded
     vendor.phone = req.body.phone || vendor.phone;
     vendor.address.street = req.body.address.street || vendor.address.street;
     vendor.address.city = req.body.address.city || vendor.address.city;
@@ -166,9 +208,8 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
       phone: updatedVendor.phone,
       address: updatedVendor.address,
     });
-  } else {
-    res.status(404);
-    throw new Error("Vendor not found");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -186,3 +227,12 @@ export {
   getVendorProfile,
   updateVendorProfile,
 };
+
+/*
+// TODO: Left for reference. Upload directly to Cloudinary using the node package and not multer
+// Upload the new avatar to Cloudinary
+result = await cloudinary.uploader.upload(req.file.path, {
+  folder: "vendorLynx",
+});
+avatarUrl = result.secure_url;
+*/

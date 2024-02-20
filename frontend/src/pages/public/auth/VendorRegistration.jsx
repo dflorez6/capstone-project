@@ -174,7 +174,7 @@ function VendorRegistration() {
 
           <div className="row py-3">
             <div className="col-12">
-              Already have an account? <Link to="/vendors/login">Login</Link>
+              Already have an account? <Link to="/login">Login</Link>
             </div>
           </div>
         </form>

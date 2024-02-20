@@ -117,6 +117,12 @@ https://www.youtube.com/watch?v=PxshhOKNPpQ
 
     > yarn add express-async-handler --save
 
+### Body Parser
+* Install from the terminal:
+
+    > yarn add body-parser --save
+
+
 ### Nodemon
 * Install from the terminal:
 
@@ -201,7 +207,8 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
 * Install from the terminal:
     
-    > npm install cloudinary multer multer-storage-cloudinary --save
+    > yarn add cloudinary multer --save
+    > yarn add multer multer-storage-cloudinary --save
 
 * Create a Cloudinary instance
 

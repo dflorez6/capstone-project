@@ -12,12 +12,14 @@ import {
   updateVendorProfile,
 } from "../../../controllers/api/v1/vendorsController.js";
 import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+// Image Uploader
+import imgUploader from "../../../services/multer.js";
 
 //--------------------
 // Controller Actions
 //--------------------
 // Auth
-router.post("/register", registerVendor);
+router.post("/register", imgUploader.single("avatar"), registerVendor);
 router.post("/auth", authVendor);
 router.post("/logout", logoutVendor);
 
@@ -26,7 +28,7 @@ router.post("/logout", logoutVendor);
 router
   .route("/profile")
   .get(protect, getVendorProfile)
-  .put(protect, updateVendorProfile);
+  .put(protect, imgUploader.single("avatar"), updateVendorProfile); // No need to call the imgUploader.single("avatar") middleware as the controller will handle uploading the new image and removing the old image
 
 // Profile
 // router.get("/profile", getVendorProfile);

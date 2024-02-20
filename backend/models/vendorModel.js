@@ -37,10 +37,6 @@ const vendorSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    avatar: {
-      type: String,
-      default: "",
-    },
     phone: {
       type: String,
       trim: true,
@@ -62,22 +58,14 @@ const vendorSchema = mongoose.Schema(
         type: String,
         // default: "",
       },
-
-      // TODO: Used for future reference. Used to reference object Ids from other collections
-      /*
-        city: {
-        type: Schema.Types.ObjectId,
-        ref: "City",
-        lowercase: true,
-        default: "",
+    },
+    avatar: {
+      publicId: {
+        type: String,
       },
-      province: {
-        type: Schema.Types.ObjectId,
-        ref: "Province",
-        default: "",
+      url: {
+        type: String,
       },
-
-      */
     },
     // TODO: Add more fields
   },
@@ -116,3 +104,19 @@ vendorSchema.methods.matchPassword = async function (enteredPassword) {
 const Vendor = mongoose.model("Vendor", vendorSchema);
 
 export default Vendor;
+
+// TODO: Used for future reference. Used to reference object Ids from other collections
+/*
+  city: {
+  type: Schema.Types.ObjectId,
+  ref: "City",
+  lowercase: true,
+  default: "",
+},
+province: {
+  type: Schema.Types.ObjectId,
+  ref: "Province",
+  default: "",
+},
+
+*/
