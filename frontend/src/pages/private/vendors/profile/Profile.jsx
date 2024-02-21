@@ -102,40 +102,22 @@ const Profile = () => {
           postalCode,
         };
 
-        // TODO: FIX WHY IS NOT UPDATING THE ADDRESS ANYMORE
-        console.log("UPDATE PROFILE");
-        console.log("address", address);
-        console.log("street", street);
-
         // Form Data
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
-
-        // Append other form data
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
         formData.append("password", password);
         formData.append("phone", phone);
-        formData.append("address", address);
+        formData.append("address[street]", street);
+        formData.append("address[city]", city);
+        formData.append("address[province]", province);
+        formData.append("address[postalCode]", postalCode);
 
         const res = await updateProfile(formData).unwrap(); // Pass FormData to updateProfile function & make API call
         dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile updated successfully");
-
-        /*
-        const res = await updateProfile({
-          _id: vendorInfo._id,
-          firstName,
-          lastName,
-          email,
-          password,
-          phone,
-          address,
-        }).unwrap(); // Makes API Request
-        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
-        toast.success("Profile Updated");
-        */
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
         console.log("Update Profile Error:");
@@ -180,7 +162,7 @@ const Profile = () => {
 
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="avatar">Update Photo</label>
-               <input
+              <input
                 type="file"
                 name="avatar"
                 id="avatar"
