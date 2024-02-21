@@ -26,7 +26,8 @@ function VendorRegistration() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const inputFileRef = useRef(null); // Create a ref for the file input element
+  // Create a ref for the file input element
+  const inputFileRef = useRef(null); 
 
   // Redux Toolkit
   const [register, { isLoading, error }] = useVendorRegisterMutation(); // Mutation
@@ -56,8 +57,6 @@ function VendorRegistration() {
       try {
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
-
-        // Append other form data
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);

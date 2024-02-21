@@ -38,7 +38,8 @@ const Profile = () => {
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
-  const inputFileRef = useRef(null); // Create a ref for the file input element
+  // Create a ref for the file input element
+  const inputFileRef = useRef(null);
 
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
