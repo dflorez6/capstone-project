@@ -14,6 +14,8 @@ import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
 // Styles
 import "../../../../styles/styles/Profile.scss";
+// Assets
+import profilePlaceholder from "../../../../assets/img/profile_placeholder.png";
 
 // Component
 const Profile = () => {
@@ -56,11 +58,11 @@ const Profile = () => {
     setFirstName(vendorInfo.firstName);
     setLastName(vendorInfo.lastName);
     setEmail(vendorInfo.email);
-    setPhone(vendorInfo.phone);
-    setStreet(vendorInfo.address.street);
-    setCity(vendorInfo.address.city);
-    setProvince(vendorInfo.address.province);
-    setPostalCode(vendorInfo.address.postalCode);
+    setPhone(vendorInfo.phone || "");
+    setStreet(vendorInfo.address.street || "");
+    setPostalCode(vendorInfo.address.postalCode || "");
+    setCity(vendorInfo.address.city || "");
+    setProvince(vendorInfo.address.province || "");
   }, [
     vendorInfo.firstName,
     vendorInfo.lastName,
@@ -157,7 +159,17 @@ const Profile = () => {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="">Current Photo</label>
-              <img src={vendorInfo.avatar.url} alt="" className="avatar" />
+              {vendorInfo.avatar.url === "" ? (
+                <>
+                  <img
+                    src={profilePlaceholder}
+                    alt={vendorInfo.lastName}
+                    className="avatar"
+                  />
+                </>
+              ) : (
+                <img src={vendorInfo.avatar.url} alt="" className="avatar" />
+              )}
             </div>
 
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
@@ -300,7 +312,9 @@ const Profile = () => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               >
-                <option disabled>Select...</option>
+                <option value="" disabled>
+                  Select...
+                </option>
                 {cities &&
                   cities.map((city) => (
                     <option key={city.id} value={city.city}>
@@ -320,7 +334,9 @@ const Profile = () => {
                 value={province}
                 onChange={(e) => setProvince(e.target.value)}
               >
-                <option disabled>Select...</option>
+                <option value="" disabled>
+                  Select...
+                </option>
                 {provinces &&
                   provinces.map((province) => (
                     <option key={province.id} value={province.province}>
