@@ -5,6 +5,8 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../../../utils/generateToken.js";
 import PropertyManager from "../../../models/propertyManagerModel.js";
+// Image Uploader
+import cloudinary from "../../../services/cloudinary.config.js"; // Used when using cloudinary node package instead of multer
 
 //--------------------
 // POST
@@ -25,35 +27,48 @@ const registerPropertyManager = asyncHandler(async (req, res) => {
     throw new Error("Property Manager already exists");
   }
 
-  // Create the Property Manager
-  const propertyManager = await PropertyManager.create({
-    firstName,
-    lastName,
-    email,
-    password,
-    avatar,
-    phone,
-  });
+  try {
+    // Check if file is uploaded
+    let avatarData = {};
+    if (req.file) {
+      // If file is uploaded, access the file URL and publicId from Cloudinary
+      avatarData.url = req.file.path; // The file path will be the Cloudinary URL
+      avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
+    }
 
-  // Check if Property Manager was created
-  if (propertyManager) {
-    // Token
-    generateToken(res, propertyManager._id);
-
-    // Response
-    res.status(201).json({
-      _id: propertyManager._id,
-      accountType: propertyManager.accountType,
-      firstName: propertyManager.firstName,
-      lastName: propertyManager.lastName,
-      email: propertyManager.email,
-      avatar: propertyManager.avatar,
-      phone: propertyManager.phone,
-      address: propertyManager.address,
+    // Create the Property Manager
+    const propertyManager = await PropertyManager.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      avatar,
+      phone,
+      avatar: avatarData, // Assign avatar data to the vendor
     });
-  } else {
-    res.status(400); // Bad Request
-    throw new Error("Invalid Property Manager data");
+
+    // Check if Property Manager was created
+    if (propertyManager) {
+      // Token
+      generateToken(res, propertyManager._id);
+
+      // Response
+      res.status(201).json({
+        _id: propertyManager._id,
+        accountType: propertyManager.accountType,
+        firstName: propertyManager.firstName,
+        lastName: propertyManager.lastName,
+        email: propertyManager.email,
+        avatar: propertyManager.avatar,
+        phone: propertyManager.phone,
+        address: propertyManager.address,
+      });
+    } else {
+      res.status(400); // Bad Request
+      throw new Error("Invalid Property Manager data");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -137,12 +152,37 @@ const updatePropertyManagerProfile = asyncHandler(async (req, res) => {
   );
 
   // Check if Property Manager exists
-  if (propertyManager) {
+  if (!propertyManager) {
+    res.status(404);
+    throw new Error("Property Manager not found");
+  }
+
+  try {
+    // Check if a new avatar is uploaded
+    let avatarData = {};
+
+    // Check if a new file is uploaded
+    if (req.file) {
+      // If a new file is uploaded, delete the old image from Cloudinary
+      if (propertyManager.avatar.publicId) {
+        await cloudinary.uploader.destroy(propertyManager.avatar.publicId);
+      }
+
+      // If file is uploaded (multer), access the file URL and publicId from Cloudinary
+      avatarData.url = req.file.path; // The file path will be the Cloudinary URL
+      avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
+    }
+
     // Update the Property Manager
     propertyManager.firstName = req.body.firstName || propertyManager.firstName;
     propertyManager.lastName = req.body.lastName || propertyManager.lastName;
     propertyManager.email = req.body.email || propertyManager.email;
-    propertyManager.avatar = req.body.avatar || propertyManager.avatar;
+    propertyManager.avatar.url = req.file
+      ? avatarData.url
+      : propertyManager.avatar.url; // Update the url only if a new file is uploaded
+    propertyManager.avatar.publicId = req.file
+      ? avatarData.publicId
+      : propertyManager.avatar.publicId; // Update the publicId only if a new file is uploaded
     propertyManager.phone = req.body.phone || propertyManager.phone;
     propertyManager.address.street =
       req.body.address.street || propertyManager.address.street;
@@ -170,9 +210,8 @@ const updatePropertyManagerProfile = asyncHandler(async (req, res) => {
       phone: updatedPropertyManager.phone,
       address: updatedPropertyManager.address,
     });
-  } else {
-    res.status(404);
-    throw new Error("Property Manager not found");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

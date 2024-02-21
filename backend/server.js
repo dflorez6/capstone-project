@@ -16,6 +16,7 @@ dotenv.config();
 import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js"; // Custom Middleware
 import connectDB from "./config/db.js"; // Connect to DB
 
@@ -29,6 +30,8 @@ const app = express();
 app.use(express.json()); // Using JSON data throughout the application
 app.use(express.urlencoded({ extended: true })); // Decode post information from the URL
 app.use(cookieParser()); // Parse cookies
+app.use(bodyParser.json()); // Use body-parser middleware to parse incoming requests
+app.use(bodyParser.urlencoded({ extended: true })); // Use body-parser to parse URL-encoded bodies
 
 //====================
 // Routes

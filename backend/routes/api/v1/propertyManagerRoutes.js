@@ -12,12 +12,14 @@ import {
   updatePropertyManagerProfile,
 } from "../../../controllers/api/v1/propertyManagersController.js";
 import { protect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Vendor has access
+// Image Uploader
+import imgUploader from "../../../services/multer.js";
 
 //--------------------
 // Controller Actions
 //--------------------
 // Auth
-router.post("/register", registerPropertyManager);
+router.post("/register", imgUploader.single("avatar"), registerPropertyManager);
 router.post("/auth", authPropertyManager);
 router.post("/logout", logoutPropertyManager);
 
@@ -26,6 +28,6 @@ router.post("/logout", logoutPropertyManager);
 router
   .route("/profile")
   .get(protect, getPropertyManagerProfile)
-  .put(protect, updatePropertyManagerProfile);
+  .put(protect, imgUploader.single("avatar"), updatePropertyManagerProfile);
 
 export default router;
