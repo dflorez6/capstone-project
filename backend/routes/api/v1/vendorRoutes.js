@@ -28,7 +28,7 @@ router.post("/logout", logoutVendor);
 router
   .route("/profile")
   .get(protect, getVendorProfile)
-  .put(protect, imgUploader.single("avatar"), updateVendorProfile); // No need to call the imgUploader.single("avatar") middleware as the controller will handle uploading the new image and removing the old image
+  .put(protect, imgUploader.single("avatar"), updateVendorProfile);
 
 // Profile
 // router.get("/profile", getVendorProfile);

@@ -35,10 +35,6 @@ const propertyManagerSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    avatar: {
-      type: String,
-      default: "",
-    },
     phone: {
       type: String,
       trim: true,
@@ -55,6 +51,16 @@ const propertyManagerSchema = mongoose.Schema(
       },
       postalCode: {
         type: String,
+      },
+    },
+    avatar: {
+      publicId: {
+        type: String,
+        default: "",
+      },
+      url: {
+        type: String,
+        default: "",
       },
     },
     // TODO: Add more fields
