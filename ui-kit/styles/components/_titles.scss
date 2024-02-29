@@ -1,0 +1,20 @@
+//====================
+// Titles
+//====================
+// Page
+.page-title-wrapper {
+  padding: 1rem 0;
+
+  h1 {
+    font-weight: $f-bold;
+  }
+}
+
+// Section
+.section-title-wrapper {
+  .section-title {
+    font-size: $f-h4;
+    font-weight: $f-black;
+    text-transform: uppercase;
+  }
+}

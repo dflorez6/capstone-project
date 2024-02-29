@@ -15,8 +15,7 @@ import City from "../../../models/cityModel.js";
 const getAllCities = asyncHandler(async (req, res) => {
   try {
     // Use the find() method without any conditions to retrieve all records
-    const cities = await City.find();
-
+    const cities = await City.find().sort({ city: 1 }); // TODO: DB - To get order by DESC use -1
     res.status(200).json(cities);
   } catch (error) {
     res.status(500).json(error.message);

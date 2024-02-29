@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 // TODO: Used for future reference. Used to reference object Ids from other collections
 // const { Schema } = mongoose; // Destructure Schema from mongoose
 import bcrypt from "bcryptjs";
+// Models
+import VendorStore from "./vendorStoreModel.js";
 
 // TODO: Think about many to many relationships for example: to know which resources have been created by which Vendor
 
@@ -17,6 +19,12 @@ const vendorSchema = mongoose.Schema(
     accountType: {
       type: String,
       default: "vendor",
+    },
+    companyName: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
     },
     firstName: {
       type: String,
@@ -77,8 +85,10 @@ const vendorSchema = mongoose.Schema(
 );
 
 //--------------------
-// Methods
+// Indexes
 //--------------------
+// Create an index on the 'city' field in ascending order
+vendorSchema.index({ _id: 1, email: 1 });
 
 //--------------------
 // Hooks
@@ -93,6 +103,25 @@ vendorSchema.pre("save", async function (next) {
   // If password is modified or is new (Vendor created)
   const salt = await bcrypt.genSalt(10); // 10 is the number of rounds
   this.password = await bcrypt.hash(this.password, salt); // Hash the password before its saved into the DB
+
+  // Generate & format storeSlug based on the companyName
+  let companyName = this.companyName.toLowerCase();
+  let formattedStoreSlug = companyName.replace(/\s+/g, "-");
+
+  try {
+    // Create a new VendorStore when the new Vendor is created
+    const newVendorStore = new VendorStore({
+      storeSlug: formattedStoreSlug,
+      storeOwner: this._id, // Reference the Vendor's ObjectId as storeOwner
+    });
+
+    // Save the new VendorStore record
+    await newVendorStore.save();
+    next();
+  } catch (error) {
+    console.log("VendorStore Creation Error", error);
+    next(error); // Pass any errors to the next middleware
+  }
 });
 
 // Compare passwords (plain text password vs hashed password)
@@ -100,25 +129,20 @@ vendorSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Will delete children collections (similar to dependent destroy in Rails)
+vendorSchema.pre("remove", async function (next) {
+  try {
+    // Find and remove all child documents associated with this parent
+    await VendorStore.deleteMany({ parentId: this._id });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 //--------------------
 // Model Definition
 //--------------------
 const Vendor = mongoose.model("Vendor", vendorSchema);
 
 export default Vendor;
-
-// TODO: Used for future reference. Used to reference object Ids from other collections
-/*
-  city: {
-  type: Schema.Types.ObjectId,
-  ref: "City",
-  lowercase: true,
-  default: "",
-},
-province: {
-  type: Schema.Types.ObjectId,
-  ref: "Province",
-  default: "",
-},
-
-*/

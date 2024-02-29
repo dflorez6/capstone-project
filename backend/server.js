@@ -42,12 +42,18 @@ import vendorRoutes from "./routes/api/v1/vendorRoutes.js";
 import propertyManagerRoutes from "./routes/api/v1/propertyManagerRoutes.js"
 app.use(`${baseURL}/vendors`, vendorRoutes);
 app.use(`${baseURL}/property-managers`, propertyManagerRoutes);
-
 // Auxiliary
 import cityRoutes from "./routes/api/v1/cityRoutes.js";
 import provinceRoutes from "./routes/api/v1/provinceRoutes.js";
+import serviceCategoryRoutes from "./routes/api/v1/serviceCategoryRoutes.js"
+import certificateCategoryRoutes from "./routes/api/v1/certificateCategoryRoutes.js"
 app.use(`${baseURL}/cities`, cityRoutes);
 app.use(`${baseURL}/provinces`, provinceRoutes);
+app.use(`${baseURL}/service-categories`, serviceCategoryRoutes);
+app.use(`${baseURL}/certificate-categories`, certificateCategoryRoutes);
+// Store
+import vendorStoreRoutes from "./routes/api/v1/vendorStoreRoutes.js"
+app.use(`${baseURL}/vendor-stores`, vendorStoreRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Server!");

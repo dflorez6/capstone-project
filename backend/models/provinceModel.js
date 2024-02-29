@@ -27,12 +27,10 @@ const provinceSchema = mongoose.Schema(
 );
 
 //--------------------
-// Methods
+// Indexes
 //--------------------
-
-//--------------------
-// Hooks
-//--------------------
+// Create an index on the 'city' field in ascending order
+provinceSchema.index({ province: 1 });
 
 //--------------------
 // Model Definition

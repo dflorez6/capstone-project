@@ -16,8 +16,16 @@ import cloudinary from "../../../services/cloudinary.config.js"; // Used when us
 // Access: Public
 const registerVendor = asyncHandler(async (req, res) => {
   // Desctructure the request body
-  const { firstName, lastName, email, password, avatar, phone, address } =
-    req.body;
+  const {
+    companyName,
+    firstName,
+    lastName,
+    email,
+    password,
+    avatar,
+    phone,
+    address,
+  } = req.body;
 
   // Check if Vendor exists
   const vendorExists = await Vendor.findOne({ email }); // findOne() returns a promise
@@ -38,6 +46,7 @@ const registerVendor = asyncHandler(async (req, res) => {
 
     // Create the Vendor
     const vendor = await Vendor.create({
+      companyName,
       firstName,
       lastName,
       email,
@@ -56,6 +65,7 @@ const registerVendor = asyncHandler(async (req, res) => {
       res.status(201).json({
         _id: vendor._id,
         accountType: vendor.accountType,
+        companyName: vendor.companyName,
         firstName: vendor.firstName,
         lastName: vendor.lastName,
         email: vendor.email,
@@ -89,6 +99,7 @@ const authVendor = asyncHandler(async (req, res) => {
     res.status(201).json({
       _id: vendor._id,
       accountType: vendor.accountType,
+      companyName: vendor.companyName,
       firstName: vendor.firstName,
       lastName: vendor.lastName,
       email: vendor.email,
@@ -128,6 +139,7 @@ const getVendorProfile = asyncHandler(async (req, res) => {
   const vendor = {
     _id: req.vendor._id,
     accountType: req.vendor.accountType,
+    companyName: req.vendor.companyName,    
     firstName: req.vendor.firstName,
     lastName: req.vendor.lastName,
     email: req.vendor.email,
@@ -201,6 +213,7 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
 
     res.status(200).json({
       _id: updatedVendor._id,
+      companyName: updatedVendor.companyName,
       firstName: updatedVendor.firstName,
       lastName: updatedVendor.lastName,
       email: updatedVendor.email,
