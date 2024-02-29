@@ -169,7 +169,6 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
 
   try {
     // Check if a new avatar is uploaded
-    // let result;
     let avatarData = {};
 
     // let avatarUrl = vendor.avatar.url;

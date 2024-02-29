@@ -13,6 +13,8 @@ import {
 } from "../../../controllers/api/v1/vendorStoresController.js";
 import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
+// Image Uploader
+import imgUploader from "../../../services/multer.js";
 
 //--------------------
 // Controller Actions
@@ -27,8 +29,8 @@ router.route("/").post(protect, createVendorStore);
 router
   .route("/:storeSlug")
   .get(protect, showVendorStore)
-  .put(protect, updateVendorStore)
-  .patch(protect, updateVendorStore)
+  .put(protect, imgUploader.single("coverImage"), updateVendorStore)
+  .patch(protect, imgUploader.single("coverImage"), updateVendorStore)
   .delete(protect, deleteVendorStore);
 // Another way of using router: Chain multiple actions to the same route
 

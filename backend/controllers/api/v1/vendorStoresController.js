@@ -4,6 +4,8 @@
 // Import Dependencies
 import asyncHandler from "express-async-handler";
 import VendorStore from "../../../models/vendorStoreModel.js";
+// Image Uploader
+import cloudinary from "../../../services/cloudinary.config.js"; // Used when using cloudinary node package instead of multer
 
 //--------------------
 // GET
@@ -62,19 +64,65 @@ const createVendorStore = asyncHandler(async (req, res) => {
 // Route: PUT /api/v1/vendor-stores/:storeSlug
 // Access: Private
 const updateVendorStore = asyncHandler(async (req, res) => {
+  // Destructured /:storeSlug
+  const { storeSlug } = req.params;
+
+  // Find vendorStore
+  /*
+  const vendorStore = await VendorStore.findOne({ storeSlug });
+  */
+  const vendorStore = await VendorStore.findOne({ storeSlug }).populate({
+    path: "storeOwner", // Populate the 'storeOwner' field
+    select: "-password", // Exclude 'password' from the query
+  });
+
+  // console.log("vendorStore: ", vendorStore);
+
+  // Check if Vendor exists
+  if (!vendorStore) {
+    res.status(404);
+    throw new Error("Vendor Store not found");
+  }
+
   try {
-    const { storeOwner } = req.query; // Passed
+    // Destructure body request
+    const { title, description, storeOwner } = req.body;
 
-    // TODO: POSSIBLE REFACTOR - To update pass the storeOwnerId (VendorId) and if they match it means that the Vendor
-    // that created the store will be the only one allowed to update the Store. Do the same for the DELETE ACTION
+    // Check if authenticatedUser(req.vendor) is the storeOwner
+    if (storeOwner === req.vendor._id.toString()) {
+      // Check if a new cover is uploaded
+      let coverImageData = {};
 
-    // Fetch VendorStore
-    const vendorStore = await VendorStore.findOne({ storeOwner }).populate({
-      path: "storeOwner", // Populate the 'storeOwner' field
-      select: "-password", // Exclude 'password' from the query
-    });
+      // Check if a new file is uploaded
+      if (req.file) {
+        // If a new file is uploaded, delete the old image from Cloudinary
+        if (vendorStore.coverImage.publicId) {
+          await cloudinary.uploader.destroy(vendorStore.coverImage.publicId);
+        }
 
-    res.status(200).json(vendorStore);
+        // If file is uploaded (multer), access the file URL and publicId from Cloudinary
+        coverImageData.url = req.file.path; // The file path will be the Cloudinary URL
+        coverImageData.publicId = req.file.filename; // The public ID provided by Cloudinary
+      }
+
+      // Update the Vendor Store
+      vendorStore.title = title;
+      vendorStore.description = description;
+      vendorStore.coverImage.url = req.file
+        ? coverImageData.url
+        : vendorStore.coverImage.url; // Update the url only if a new file is uploaded
+      vendorStore.coverImage.publicId = req.file
+        ? coverImageData.publicId
+        : vendorStore.coverImage.publicId; // Update the publicId only if a new file is uploaded
+
+      // Save Vendor Store new data
+      const updatedVendorStore = await vendorStore.save();
+      
+      res.status(200).json(updatedVendorStore);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized. Not the Store owner.");
+    }
   } catch (error) {
     res.status(500).json(error.message);
   }
