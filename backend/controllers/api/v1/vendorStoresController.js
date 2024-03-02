@@ -38,6 +38,9 @@ const showVendorStore = asyncHandler(async (req, res) => {
       select: "-password", // Exclude 'password' from the query
     });
 
+    // Sort storeImages in descending order based on createdAt timestamp
+    vendorStore.storeImages.sort((a, b) => b.createdAt - a.createdAt); // Another way of sorting in DESC order
+
     res.status(200).json(vendorStore);
   } catch (error) {
     res.status(500).json(error.message);

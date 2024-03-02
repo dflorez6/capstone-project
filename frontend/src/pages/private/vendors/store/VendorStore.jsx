@@ -11,6 +11,8 @@ import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
 // Styles
 import "./VendorStore.scss";
+// Assets
+import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
 
 // Component
 function VendorStore() {
@@ -83,11 +85,21 @@ function VendorStore() {
                 <div className="store-cover" style={{backgroundImage: `url(${vendorStore?.coverImage.url})`}}> 
               */}
               <div className="store-image-wrapper">
-                <img
-                  src={vendorStore.coverImage.url}
-                  alt=""
-                  className="store-cover"
-                />
+                {vendorStore.coverImage.url === "" ? (
+                  <>
+                    <img
+                      src={imgPlaceholder}
+                      alt={vendorStore.storeSlug}
+                      className="store-cover"
+                    />
+                  </>
+                ) : (
+                  <img
+                    src={vendorStore.coverImage.url}
+                    alt={vendorStore.storeSlug}
+                    className="store-cover"
+                  />
+                )}
               </div>
               {/* ./Image */}
 
@@ -147,7 +159,7 @@ function VendorStore() {
                           <img
                             src="https://cdn-icons-png.flaticon.com/128/4396/4396060.png"
                             className="service-image"
-                            alt="..."
+                            alt={vendorStore.storeSlug}
                           />
                         </div>
                         {/* ./Icon */}
@@ -170,7 +182,7 @@ function VendorStore() {
                           <img
                             src="https://cdn-icons-png.flaticon.com/128/3185/3185876.png"
                             className="service-image"
-                            alt="..."
+                            alt={vendorStore.storeSlug}
                           />
                         </div>
                         {/* ./Icon */}
@@ -193,7 +205,7 @@ function VendorStore() {
                           <img
                             src="https://cdn-icons-png.flaticon.com/128/8246/8246670.png"
                             className="service-image"
-                            alt="..."
+                            alt={vendorStore.storeSlug}
                           />
                         </div>
                         {/* ./Icon */}
@@ -216,7 +228,7 @@ function VendorStore() {
                           <img
                             src="https://cdn-icons-png.flaticon.com/128/4295/4295647.png"
                             className="service-image"
-                            alt="..."
+                            alt={vendorStore.storeSlug}
                           />
                         </div>
                         {/* ./Icon */}
@@ -239,84 +251,72 @@ function VendorStore() {
             {/* ./Services */}
 
             {/* Gallery */}
-            <div className="panel-wrapper shadow p-0">
-              {/* Carousel */}
-              <div
-                id="carouselServices"
-                className="carousel app-carousel slide"
-              >
-                <div className="carousel-indicators">
-                  <button
-                    type="button"
-                    data-bs-target="#carouselServices"
-                    data-bs-slide-to="0"
-                    className="active"
-                    aria-current="true"
-                    aria-label="Slide 1"
-                  ></button>
-                  <button
-                    type="button"
-                    data-bs-target="#carouselServices"
-                    data-bs-slide-to="1"
-                    aria-label="Slide 2"
-                  ></button>
-                  <button
-                    type="button"
-                    data-bs-target="#carouselServices"
-                    data-bs-slide-to="2"
-                    aria-label="Slide 3"
-                  ></button>
-                </div>
-                <div className="carousel-inner">
-                  <div className="carousel-item active">
-                    <img
-                      src="https://images.pexels.com/photos/8092/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=800"
-                      className="d-block w-100"
-                      alt="..."
-                    />
+            {vendorStore.storeImages.length > 0 && (
+              <div className="panel-wrapper shadow p-0">
+                <>
+                  {/* Carousel */}
+                  <div
+                    id="carouselServices"
+                    className="carousel app-carousel slide"
+                    data-bs-ride="carousel"
+                  >
+                    <div className="carousel-indicators">
+                      {vendorStore.storeImages.map((image, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          data-bs-target="#carouselServices"
+                          data-bs-slide-to={index}
+                          className={index === 0 ? "active" : ""}
+                          aria-label={`Slide ${index + 1}`}
+                        ></button>
+                      ))}
+                    </div>
+                    <div className="carousel-inner">
+                      {vendorStore.storeImages.map((image, index) => (
+                        <div
+                          key={index}
+                          className={`carousel-item ${
+                            index === 0 ? "active" : ""
+                          }`}
+                        >
+                          <img
+                            src={image.url}
+                            className="d-block w-100"
+                            alt={`Services Slide ${index + 1}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      className="carousel-control-prev"
+                      type="button"
+                      data-bs-target="#carouselServices"
+                      data-bs-slide="prev"
+                    >
+                      <span
+                        className="carousel-control-prev-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                      className="carousel-control-next"
+                      type="button"
+                      data-bs-target="#carouselServices"
+                      data-bs-slide="next"
+                    >
+                      <span
+                        className="carousel-control-next-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
                   </div>
-                  <div className="carousel-item">
-                    <img
-                      src="https://images.pexels.com/photos/3862135/pexels-photo-3862135.jpeg?auto=compress&cs=tinysrgb&w=800"
-                      className="d-block w-100"
-                      alt="..."
-                    />
-                  </div>
-                  <div className="carousel-item">
-                    <img
-                      src="https://images.pexels.com/photos/3760529/pexels-photo-3760529.jpeg?auto=compress&cs=tinysrgb&w=800"
-                      className="d-block w-100"
-                      alt="..."
-                    />
-                  </div>
-                </div>
-                <button
-                  className="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#carouselServices"
-                  data-bs-slide="prev"
-                >
-                  <span
-                    className="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span className="visually-hidden">Previous</span>
-                </button>
-                <button
-                  className="carousel-control-next"
-                  type="button"
-                  data-bs-target="#carouselServices"
-                  data-bs-slide="next"
-                >
-                  <span
-                    className="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span className="visually-hidden">Next</span>
-                </button>
+                  {/* Carousel */}
+                </>
               </div>
-              {/* Carousel */}
-            </div>
+            )}
             {/* ./Gallery */}
 
             <div className="panel-wrapper store-certificates-wrapper shadow">
