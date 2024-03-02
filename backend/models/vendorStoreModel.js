@@ -24,6 +24,18 @@ const vendorStoreSchema = mongoose.Schema(
         default: "",
       },
     },
+    storeImages: [
+      {
+        publicId: {
+          type: String,
+          default: "",
+        },
+        url: {
+          type: String,
+          default: "",
+        },
+      },
+    ],
     title: {
       type: String,
       trim: true,

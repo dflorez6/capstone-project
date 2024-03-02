@@ -26,6 +26,9 @@ const vendorSchema = mongoose.Schema(
       unique: true,
       trim: true,
     },
+    storeSlug: {
+      type: String,
+    },
     firstName: {
       type: String,
       required: true,
@@ -77,9 +80,7 @@ const vendorSchema = mongoose.Schema(
         default: "",
       },
     },
-    storeSlug: {
-      type: String,
-    },
+
     // TODO: Add more fields
   },
   {

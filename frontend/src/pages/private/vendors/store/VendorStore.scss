@@ -64,7 +64,7 @@
 
             .rating-counter {
               .icon {
-                //
+                background-color: $c-white;
               }
             }
 
@@ -115,6 +115,7 @@
 
       // Content
       .panel-content-wrapper {
+        background-color: transparent;
       }
     }
 
@@ -178,14 +179,14 @@
     }
     // Certificates
     .store-certificates-wrapper {
+      background-color: $c-white;
     }
 
     // Reviews
     .store-reviews-wrapper {
+      background-color: $c-white;
     }
   }
-
-  /* Custom CSS for setting the carousel height */
 
   //
 }

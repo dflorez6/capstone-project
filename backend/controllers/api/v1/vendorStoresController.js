@@ -76,8 +76,6 @@ const updateVendorStore = asyncHandler(async (req, res) => {
     select: "-password", // Exclude 'password' from the query
   });
 
-  // console.log("vendorStore: ", vendorStore);
-
   // Check if Vendor exists
   if (!vendorStore) {
     res.status(404);
@@ -86,32 +84,52 @@ const updateVendorStore = asyncHandler(async (req, res) => {
 
   try {
     // Destructure body request
-    const { title, description, storeOwner } = req.body;
+    const { title, description, storeOwner, storeImages } = req.body;
 
     // Check if authenticatedUser(req.vendor) is the storeOwner
     if (storeOwner === req.vendor._id.toString()) {
-      // Check if a new cover is uploaded
+      // Initialize variables for coverImage and storeImages data
       let coverImageData = {};
+      let storeImagesData = [];
 
-      // Check if a new file is uploaded
-      if (req.file) {
+      // Update coverImage if provided
+      if (req.files && req.files.coverImage) {
+        // Get the first file object for coverImage
+        const coverImage = req.files.coverImage[0];
+
         // If a new file is uploaded, delete the old image from Cloudinary
         if (vendorStore.coverImage.publicId) {
           await cloudinary.uploader.destroy(vendorStore.coverImage.publicId);
         }
 
-        // If file is uploaded (multer), access the file URL and publicId from Cloudinary
-        coverImageData.url = req.file.path; // The file path will be the Cloudinary URL
-        coverImageData.publicId = req.file.filename; // The public ID provided by Cloudinary
+        coverImageData.url = coverImage.path; // The file path will be the Cloudinary URL
+        coverImageData.publicId = coverImage.filename; // The public ID provided by Cloudinary
+      }
+
+      // Update storeImages if provided
+      if (req.files && req.files.storeImages) {
+        // Iterate over uploaded files & upload them to Cloudinary
+        for (const file of req.files.storeImages) {
+          storeImagesData.push({
+            url: file.path,
+            publicId: file.filename,
+          });
+        }
+
+        // Append newly uploaded images to the existing array
+        vendorStore.storeImages = [
+          ...vendorStore.storeImages,
+          ...storeImagesData,
+        ];
       }
 
       // Update the Vendor Store
       vendorStore.title = title;
       vendorStore.description = description;
-      vendorStore.coverImage.url = req.file
+      vendorStore.coverImage.url = req.files.coverImage
         ? coverImageData.url
         : vendorStore.coverImage.url; // Update the url only if a new file is uploaded
-      vendorStore.coverImage.publicId = req.file
+      vendorStore.coverImage.publicId = req.files.coverImage
         ? coverImageData.publicId
         : vendorStore.coverImage.publicId; // Update the publicId only if a new file is uploaded
 

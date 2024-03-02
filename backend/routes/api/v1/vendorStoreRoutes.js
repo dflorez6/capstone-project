@@ -29,8 +29,43 @@ router.route("/").post(protect, createVendorStore);
 router
   .route("/:storeSlug")
   .get(protect, showVendorStore)
-  .put(protect, imgUploader.single("coverImage"), updateVendorStore)
-  .patch(protect, imgUploader.single("coverImage"), updateVendorStore)
+  /*
+  .put(
+    protect,
+    imgUploader.single("coverImage"),
+    imgUploader.array("storeImages", 10),
+    updateVendorStore
+  )
+  */
+  .put(
+    protect,
+    // Use fields to allow Multer to parse multiple form fields
+    imgUploader.fields([
+      {
+        name: "coverImage",
+        maxCount: 1,
+      },
+      {
+        name: "storeImages",
+        maxCount: 2,
+      },
+    ]),
+    updateVendorStore
+  )
+  .patch(
+    protect,
+    imgUploader.fields([
+      {
+        name: "coverImage",
+        maxCount: 1,
+      },
+      {
+        name: "storeImages",
+        maxCount: 2,
+      },
+    ]),
+    updateVendorStore
+  )
   // Multiple Multer Middleware
   //  .patch(protect, imgUploaderSingle.single("coverImage"), imgUploaderMultiple.array("storeImages"), updateVendorStore);
   .delete(protect, deleteVendorStore);
