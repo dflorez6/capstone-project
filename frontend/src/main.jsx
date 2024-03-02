@@ -32,12 +32,11 @@ import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
 // Vendors
 //----------
 import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
-import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
-// TODO: Prop Manager Profile
+import VendorStore from "./pages/private/vendors/store/VendorStore.jsx";
 //----------
 // Property Managers
 //----------
-// TODO: Property Managers Pages
+import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
 // Styles
 import "./style.scss";
 
@@ -59,7 +58,11 @@ const router = createBrowserRouter(
       {/* Private Routes */}
       <Route path="" element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        {/* Vendors */}
         <Route path="/vendors/profile" element={<VendorsProfile />} />
+        <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />
+
+        {/* Property Managers */}
         <Route path="/property-managers/profile" element={<PropertyManagersProfile />} />        
       </Route>
     </Route>

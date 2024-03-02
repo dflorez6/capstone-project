@@ -19,6 +19,7 @@ const Header = () => {
   const dispatch = useDispatch(); // Initialize
   const navigate = useNavigate(); // Initialize
 
+  // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
   const { propertyManagerInfo } = useSelector(
     (state) => state.propertyManagerAuth
@@ -32,12 +33,9 @@ const Header = () => {
     { isLoading: propertyManagerLoading, error: propertyManagerError },
   ] = usePropertyManagerLogoutMutation(); // Mutation
 
-  // TODO: Add Prop Manager
-
   //----------
   // Handlers
   //----------
-  // TODO: Refactor when having 2 user types: Vendor & Property Manager
   const logoutHandler = async () => {
     try {
       // Checks which user type is logged in
@@ -49,7 +47,7 @@ const Header = () => {
         await propertyManagerLogout().unwrap();
         dispatch(propertyManagerClearCredentials());
       }
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       console.log("Logout Error:");
       console.log(err?.data?.message || err?.error);

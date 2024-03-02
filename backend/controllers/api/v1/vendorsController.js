@@ -72,6 +72,7 @@ const registerVendor = asyncHandler(async (req, res) => {
         avatar: vendor.avatar,
         phone: vendor.phone,
         address: vendor.address,
+        storeSlug: vendor.storeSlug,
       });
     } else {
       res.status(400);
@@ -106,6 +107,7 @@ const authVendor = asyncHandler(async (req, res) => {
       avatar: vendor.avatar,
       phone: vendor.phone,
       address: vendor.address,
+      storeSlug: vendor.storeSlug,
     });
   } else {
     res.status(401); // Bad Request
@@ -139,13 +141,14 @@ const getVendorProfile = asyncHandler(async (req, res) => {
   const vendor = {
     _id: req.vendor._id,
     accountType: req.vendor.accountType,
-    companyName: req.vendor.companyName,    
+    companyName: req.vendor.companyName,
     firstName: req.vendor.firstName,
     lastName: req.vendor.lastName,
     email: req.vendor.email,
     avatar: req.vendor.avatar,
     phone: req.vendor.phone,
     address: req.vendor.address,
+    storeSlug: req.storeSlug,
   };
 
   res.status(200).json(vendor);
@@ -219,6 +222,7 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
       avatar: updatedVendor.avatar,
       phone: updatedVendor.phone,
       address: updatedVendor.address,
+      storeSlug: updatedVendor.storeSlug,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

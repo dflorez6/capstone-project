@@ -31,6 +31,8 @@ router
   .get(protect, showVendorStore)
   .put(protect, imgUploader.single("coverImage"), updateVendorStore)
   .patch(protect, imgUploader.single("coverImage"), updateVendorStore)
+  // Multiple Multer Middleware
+  //  .patch(protect, imgUploaderSingle.single("coverImage"), imgUploaderMultiple.array("storeImages"), updateVendorStore);
   .delete(protect, deleteVendorStore);
 // Another way of using router: Chain multiple actions to the same route
 

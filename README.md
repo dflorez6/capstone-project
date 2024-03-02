@@ -326,6 +326,12 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
     > npm install react-toastify --save
 
+### Swiper Slider
+
+* Install the following packages
+
+    > npm install swiper --save
+
 <hr>
 
 # DEPLOYMENT

@@ -77,6 +77,9 @@ const vendorSchema = mongoose.Schema(
         default: "",
       },
     },
+    storeSlug: {
+      type: String,
+    },
     // TODO: Add more fields
   },
   {
@@ -117,6 +120,10 @@ vendorSchema.pre("save", async function (next) {
 
     // Save the new VendorStore record
     await newVendorStore.save();
+
+    // Update the storeSlug value
+    this.storeSlug = formattedStoreSlug;
+
     next();
   } catch (error) {
     console.log("VendorStore Creation Error", error);

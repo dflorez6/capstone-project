@@ -47,7 +47,7 @@
 
       // Collapsed
       &.collapsed {
-        margin-left: -8.5%;
+        margin-left: -10.25%;
       }
     }
 
@@ -55,12 +55,13 @@
     .content-wrapper {
       background-color: lightgray;
       flex-grow: 1;
-      padding: 0;      
+      padding: 0;
       transition: all 0.5s;
 
       // Collapse Button
       .btn-collapse {
-        padding: 1rem 2rem;
+        line-height: 1;
+        padding: 1rem 2rem 0.5rem;
 
         button {
           margin: 0;

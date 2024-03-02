@@ -117,7 +117,7 @@ const updateVendorStore = asyncHandler(async (req, res) => {
 
       // Save Vendor Store new data
       const updatedVendorStore = await vendorStore.save();
-      
+
       res.status(200).json(updatedVendorStore);
     } else {
       res.status(401);
