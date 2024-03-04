@@ -54,39 +54,79 @@ function Sidebar() {
   // Output
   //----------
   return (
-    <div className="app-sidebar">
-      <ul className="sidebar-nav">
-        <li className="sidebar-nav-item">
-          <Link className="sidebar-nav-link active" to="/dashboard">
-          <i className="fa-solid fa-chart-simple"></i>
-            <p>Dashboard</p>
-          </Link>
+    <>
+      {/* Off Canvas */}
+      <div
+        className="offcanvas offcanvas-start app-sidebar"
+        tabIndex="-1"
+        id="offcanvasExample"
+        aria-labelledby="offcanvasExampleLabel"
+      >
+        <div className="offcanvas-header app-sidebar-header">
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        {/* Sidebar Header */}
+        <div className="offcanvas-body app-sidebar-body">
+          <div className="sidebar-navigation-wrapper">
+            <ul className="sidebar-navigation">
+              <li className="sidebar-navigation-item">
+                <Link className="sidebar-navigation-link " to="/dashboard">
+                  <i className="fa-solid fa-chart-simple link-icon"></i>
+                  <span className="link-text">Dashboard</span>
+                </Link>
+              </li>
 
-          {/* Vendor */}
-          {vendorInfo ? (
-            <>
-              <Link className="sidebar-nav-link" to={`/vendors/store/${vendorInfo.storeSlug}`}>
-                <i className="fa-solid fa-store"></i>
-                <p>Store</p>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link className="sidebar-nav-link" to="/">
-                <i className="fa-solid fa-store"></i>
-                <p>Projects</p>
-              </Link>
-            </>
-          )}
+              {vendorInfo ? (
+                <>
+                  {/* Vendor */}
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link "
+                      to={`/vendors/store/${vendorInfo.storeSlug}`}
+                    >
+                      <i className="fa-solid fa-store link-icon"></i>
+                      <span className="link-text">Store</span>
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {/* Property Manager */}
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link "
+                      to={`/vendors/store/${vendorInfo.storeSlug}`}
+                    >
+                      <i className="fa-solid fa-store link-icon"></i>
+                      <span className="link-text">Projects</span>
+                    </Link>
+                  </li>
+                </>
+              )}
 
-          <Link className="sidebar-nav-link" onClick={logoutHandler}>
-            <i className="fa-solid fa-right-from-bracket"></i>
-            <p>Log Out</p>
-          </Link>
-        </li>
-      </ul>
-      {/* ./Sidebar Links */}
-    </div>
+              <li className="sidebar-navigation-item">
+                <Link
+                  className="sidebar-navigation-link"
+                  onClick={logoutHandler}
+                >
+                  <i className="fa-solid fa-right-from-bracket link-icon"></i>
+                  <span className="link-text">Logout</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {/* Sidebar Body */}
+      </div>
+      {/* Off Canvas*/}
+    </>
   );
 }
 
