@@ -31,7 +31,6 @@ const getAllVendorStores = asyncHandler(async (req, res) => {
 const showVendorStore = asyncHandler(async (req, res) => {
   try {
     const { storeSlug } = req.params; // Passed
-
     // Fetch VendorStore
     const vendorStore = await VendorStore.findOne({ storeSlug }).populate({
       path: "storeOwner", // Populate the 'storeOwner' field
@@ -71,15 +70,12 @@ const updateVendorStore = asyncHandler(async (req, res) => {
   const { storeSlug } = req.params;
 
   // Find vendorStore
-  /*
-  const vendorStore = await VendorStore.findOne({ storeSlug });
-  */
   const vendorStore = await VendorStore.findOne({ storeSlug }).populate({
     path: "storeOwner", // Populate the 'storeOwner' field
     select: "-password", // Exclude 'password' from the query
   });
 
-  // Check if Vendor exists
+  // Check if Vendor Store exists
   if (!vendorStore) {
     res.status(404);
     throw new Error("Vendor Store not found");
@@ -87,7 +83,7 @@ const updateVendorStore = asyncHandler(async (req, res) => {
 
   try {
     // Destructure body request
-    const { title, description, storeOwner, storeImages } = req.body;
+    const { title, description, storeOwner } = req.body;
 
     // Check if authenticatedUser(req.vendor) is the storeOwner
     if (storeOwner === req.vendor._id.toString()) {

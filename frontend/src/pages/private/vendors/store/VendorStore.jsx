@@ -4,8 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useGetVendorStoreQuery } from "../../../../slices/vendorStoreApiSlice";
-// Toast
-import { toast } from "react-toastify";
 // Components
 import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
@@ -22,9 +20,6 @@ function VendorStore() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
-  // Form Fields
-  // TODO: Think about using this view to also update. In case I choose a different page move the logic to that component
-
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
@@ -32,7 +27,7 @@ function VendorStore() {
   const url = window.location.pathname;
   const urlParts = url.split("/");
   const urlStoreSlug = urlParts[urlParts.length - 1]; // Get the last part of the URL
-
+  
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
     data: vendorStore,
@@ -106,8 +101,18 @@ function VendorStore() {
               <div className="store-info-wrapper">
                 <div className="store-title-wrapper">
                   <h1>{vendorStore.title}</h1>
+                  {/* Only storeOwner can edit the Store */}
+                  {vendorStore.storeOwner._id === vendorInfo._id && (
+                    <>
+                      <Link
+                        to={`/vendors/store/${vendorStore.storeSlug}/edit`}
+                        className="btn-app btn-app-sm btn-app-dark-outline"
+                      >
+                        edit
+                      </Link>
+                    </>
+                  )}
                 </div>
-
                 <div className="store-rating-wrapper">
                   <div className="store-rating-reviews-wrapper">
                     {/* TODO: MAKE RATINGS DYNAMIC */}
@@ -131,9 +136,7 @@ function VendorStore() {
                     </Link>
                   </div>
                 </div>
-
                 <hr />
-
                 <div className="store-description">
                   <p>{vendorStore.description}</p>
                 </div>

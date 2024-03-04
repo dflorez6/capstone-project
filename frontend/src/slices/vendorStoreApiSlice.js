@@ -25,11 +25,21 @@ export const vendorStoreApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // TODO: Update Store 
+    // Update Vendor Store
+    updateVendorStore: builder.mutation({
+      query: ({ storeSlug, data }) => ({
+        url: `${VENDOR_STORES_URL}/${storeSlug}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
 
     // Add API Endpoint
   }),
 });
 
-export const { useGetVendorStoresQuery, useGetVendorStoreQuery } =
-  vendorStoreApiSlice; // Export hooks for usage in components
+export const {
+  useGetVendorStoresQuery,
+  useGetVendorStoreQuery,
+  useUpdateVendorStoreMutation,
+} = vendorStoreApiSlice; // Export hooks for usage in components

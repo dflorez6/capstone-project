@@ -4,7 +4,7 @@
 // Sidebar (bootstrap offcanvas)
 .app-sidebar {
   min-width: 25%;
-  width: auto;
+  width: auto !important;
 
   // Header
   .app-sidebar-header {

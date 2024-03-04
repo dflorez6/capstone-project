@@ -85,7 +85,9 @@
   }
 }
 
-// Page
+//====================
+// Pages
+//====================
 // TODO: Replace this depending on visibilty: public or private page
 .page-wrapper {
   margin-top: $h-navbar;
@@ -101,4 +103,29 @@
   margin-top: $h-navbar;
   min-height: calc(100vh - $h-navbar);
   padding: 0 2rem;
+}
+
+//====================
+// Panels
+//====================
+.panel-wrapper {
+  background-color: $c-white;
+  border-radius: 10px;
+  margin: 2rem 0;
+  padding: 1.5rem 1.5rem;
+
+  // Title
+  .panel-title-wrapper {
+    h2 {
+      font-size: $f-h3;
+      font-weight: $f-medium;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
+  }
+
+  // Content
+  .panel-content-wrapper {
+    background-color: transparent;
+  }
 }

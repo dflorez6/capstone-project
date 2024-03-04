@@ -33,6 +33,7 @@ import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
 //----------
 import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
 import VendorStore from "./pages/private/vendors/store/VendorStore.jsx";
+import EditVendorStore from "./pages/private/vendors/store/EditVendorStore.jsx";
 //----------
 // Property Managers
 //----------
@@ -61,6 +62,7 @@ const router = createBrowserRouter(
         {/* Vendors */}
         <Route path="/vendors/profile" element={<VendorsProfile />} />
         <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />
+        <Route path="/vendors/store/:storeSlug/edit" element={<EditVendorStore />} />
 
         {/* Property Managers */}
         <Route path="/property-managers/profile" element={<PropertyManagersProfile />} />        

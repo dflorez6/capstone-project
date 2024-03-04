@@ -129,6 +129,21 @@
     color: $c-white;
   }
 
+  // Dark Outline
+  &.btn-app-dark-outline {
+    background-color: transparent;
+    border-color: $c-text-primary;
+    color: $c-text-primary;
+  }
+
+  &.btn-app-dark-outline:hover,
+  &.btn-app-dark-outline:active,
+  &.btn-app-dark-outline:focus {
+    background-color: $c-text-primary;
+    border-color: $c-text-primary;
+    color: $c-white;
+  }
+
   // Red
   &.btn-app-red {
     background-color: $c-red;
@@ -162,11 +177,22 @@
 
 // Sizes
 .btn-app {
+  // SM
   &.btn-app-sm {
     border-radius: 5px;
     font-size: $f-h6;
     height: 2.5rem;
     line-height: 2.5rem;
+    padding: 0 1.5rem;
+  }
+
+  // XS
+  &.btn-app-xs {
+    border-radius: 5px;
+    font-size: $f-h6;
+    height: 2rem;
+    line-height: 1.75rem;
+    min-width: 22%;
     padding: 0 1.5rem;
   }
 }
