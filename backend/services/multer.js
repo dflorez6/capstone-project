@@ -28,5 +28,18 @@ const storage = new createCloudinaryStorage({
 
 const imgUploader = multer({ storage: storage });
 
-// Export
 export default imgUploader;
+
+/*
+// Single File Uploader
+const singleImgUploader = multer({ storage: storage }).single('coverImage');;
+
+// Multiple File Uploader
+const multipleImgUploader = multer({ storage: storage }).array(
+  "storeImages",
+  10
+); // 'storeImages' is the field name for multiple image uploads, 10 is the maximum number of files allowed
+
+// Export
+export { singleImgUploader, multipleImgUploader };
+*/

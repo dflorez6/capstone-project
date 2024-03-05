@@ -10,17 +10,6 @@ import "./PrivateLayout.scss";
 // Component
 function PrivateLayout() {
   //----------
-  // Handlers
-  //----------
-  const sidebarCollapse = () => {
-    const sidebarWrapper = document.getElementById("sidebarWrapper");
-    sidebarWrapper.classList.toggle("collapsed");
-
-    const btnCollapseIcon = document.getElementById("btnCollapseIcon");
-    btnCollapseIcon.classList.toggle("collapsed-icon");
-  };
-
-  //----------
   // Output
   //----------
   return (
@@ -31,16 +20,20 @@ function PrivateLayout() {
 
       <main className="main-wrapper private-wrapper">
         <div className="sidebar-wrapper" id="sidebarWrapper">
-          <Sidebar />
+          <Sidebar />          
         </div>
 
         <div className="content-wrapper">
-          <div className="btn-collapse">
-            <button onClick={sidebarCollapse} id="btnCollapse">
-              <i
-                className="fa-solid fa-circle-chevron-left"
-                id="btnCollapseIcon"
-              ></i>
+          <div className="btn-sidebar-wrapper">
+            <button
+              className="btn-sidebar-trigger"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasExample"
+              aria-controls="offcanvasExample"
+            >
+              <i className="fa-solid fa-bars"></i>
+              <span className="">Menu</span>
             </button>
           </div>
           {/* ./Collapse Button */}

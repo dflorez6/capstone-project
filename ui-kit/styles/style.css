@@ -1,0 +1,80 @@
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: #e3e1e1 !important;
+  color: #000000;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.2rem;
+}
+
+h6 {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+p {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+}
+
+.section-wrapper {
+  margin: 0 0 2rem;
+}
+.section-wrapper .section-content-wrapper {
+  background-color: transparent;
+}
+
+.section-wrapper.bg-white {
+  background-color: #ffffff;
+  border-radius: 10px;
+  min-height: 86px;
+  padding: 1.5rem;
+}
+
+.badge {
+  font-weight: 400;
+}
+
+.page-title-wrapper {
+  padding: 1rem 0;
+}
+.page-title-wrapper h1 {
+  font-weight: 700;
+}
+
+.section-title-wrapper .section-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/*# sourceMappingURL=style.css.map */

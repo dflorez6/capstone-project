@@ -11,4 +11,14 @@
     margin: 1.5rem 0 0;
     text-align: center;
   }
+
+  // Horizontal Form
+  .submit-wrapper {
+    &.horizontal-form-submit {
+      .btn-app-xs {
+        height: auto;
+        padding: 0.183rem 1.5rem;
+      }
+    }
+  }
 }

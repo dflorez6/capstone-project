@@ -15,8 +15,7 @@ import Province from "../../../models/provinceModel.js";
 const getAllProvinces = asyncHandler(async (req, res) => {
   try {
     // Use the find() method without any conditions to retrieve all records
-    const provinces = await Province.find();
-
+    const provinces = await Province.find().sort({ province: 1 });
     res.status(200).json(provinces);
   } catch (error) {
     res.status(500).json(error.message);

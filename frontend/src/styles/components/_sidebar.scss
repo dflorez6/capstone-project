@@ -1,57 +1,73 @@
 //====================
 // Sidebar
 //====================
+// Sidebar (bootstrap offcanvas)
 .app-sidebar {
-  background-color: $c-text-primary;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-  
-  // Links
-  .sidebar-nav {
-    list-style-type: none;
-    margin: 0;
+  min-width: 25%;
+  width: auto !important;
+
+  // Header
+  .app-sidebar-header {
+    align-self: end;
+
+    .btn-close {
+      background-image: none;
+      box-shadow: none;
+      font-size: 1.5rem;
+      outline: none;
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+  }
+
+  // Body
+  .app-sidebar-body {
     padding: 0;
-    text-align: center;
 
-    // Link Container
-    .sidebar-nav-item {
-      // Link
-      .sidebar-nav-link {
-        color: $c-white;
-        display: block;
-        opacity: 0.5;
-        padding: 0.75rem 1rem;
-        transition: all 200ms ease-in-out;
+    // Sidebar Navigation
+    .sidebar-navigation-wrapper {
+      .sidebar-navigation {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
 
-        svg {
-          font-size: 1.25rem;
-        }
-        p {
-          font-size: 1rem;
-          line-height: 1;
-          margin: 0;
+        .sidebar-navigation-item {
+          // Link
+          .sidebar-navigation-link {
+            align-items: center;
+            background-color: $c-white;
+            color: $c-text-primary;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+
+            .link-icon {
+              font-size: $f-h5;
+            }
+
+            .link-text {
+              font-size: $f-h5;
+            }
+          }
+
+          // Hover
+          .sidebar-navigation-link:hover {
+            background-color: $c-purple-m;
+            color: $c-white;
+          }
+
+          // Active
+          .active {
+            background-color: $c-purple-m;
+            color: $c-white;
+          }
         }
       }
+    }
 
-      // Link States
-      .sidebar-nav-link:hover,
-      .sidebar-nav-link:active {
-        background-color: $c-yellow;
-        color: $c-text-primary;
-        opacity: 1;
-        transition: all 200ms ease-in-out;
-      }
-
-      // Active Link
-      .sidebar-nav-link {
-        &.active {
-          background-color: $c-yellow;
-          color: $c-text-primary;
-          opacity: 1;
-        }
-      }
+    .list-group-item:hover {
+      background-color: $c-purple-m;
+      color: $c-white;
     }
   }
 }
