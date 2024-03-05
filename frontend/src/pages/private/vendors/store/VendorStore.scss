@@ -1,0 +1,178 @@
+// Imports
+@import "../../../../styles/core/variables.scss";
+
+//====================
+// Vendor Store Page
+//====================
+.vendor-store-wrapper {
+  .vendor-store-content {
+    // Image + Info
+    .store-image-info-wrapper {
+      border-radius: 10px;
+      flex-direction: row;
+      display: flex;
+
+      // Image
+      .store-image-wrapper {
+        // flex: 1;
+        display: flex;
+        justify-content: center;
+        width: 45%;
+
+        .store-cover {
+          border-bottom-left-radius: 10px;
+          border-top-left-radius: 10px;
+          // height: auto;
+          min-height: 200px;
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: cover;
+          // height: 250px;
+          width: 100%;
+        }
+      }
+
+      // Info
+      .store-info-wrapper {
+        background: $c-white;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        flex: 1;
+        min-height: 200px;
+        padding: 1.5rem;
+
+        // Title
+        .store-title-wrapper {
+          display: flex;
+          justify-content: space-between;
+
+          h1 {
+            font-size: $f-h2;
+            font-weight: $f-medium;
+            margin: 0;
+          }
+
+          .btn-app-sm {
+            height: 2rem;
+            line-height: 1.75rem;
+            min-width: 22%;
+          }
+        }
+
+        // Rating & Review Counters
+        .store-rating-wrapper {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+
+          // Counters
+          .store-rating-reviews-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+
+            .rating-counter {
+              .icon {
+                background-color: $c-white;
+              }
+            }
+
+            .reviews-counter {
+              p {
+                margin: 0;
+              }
+            }
+          }
+
+          // Actions
+          .store-rating-actions {
+            .btn-app-sm {
+              height: 2rem;
+              line-height: 1.75rem;
+            }
+          }
+        }
+
+        // Description
+        .store-description {
+          p {
+            font-weight: $f-light;
+            margin: 0;
+          }
+        }
+
+        //
+      }
+    }
+
+    // Services
+    .store-services-wrapper {
+      margin: 4rem 0 0;
+
+      // Title
+      .panel-title-wrapper {
+        h2 {
+          margin: 0;
+        }
+      }
+
+      // Service Cards
+      .service-cards-wrapper {
+        align-items: stretch;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        // Service
+        .service-card-wrapper {
+          align-items: center;
+          background-color: $c-white;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          padding: 3rem 1rem;
+          flex: 0 0 32%;
+          margin: 1.25rem 0 0;
+          text-align: center;
+
+          // Icon
+          .serivce-icon-wrapper {
+            flex: 1;
+            text-align: center;
+
+            img {
+              height: 50px;
+              width: 50px;
+            }
+          }
+
+          // Content
+          .service-content-wrapper {
+            flex: 2;
+
+            h3 {
+              font-size: $f-h5;
+              font-weight: $f-black;
+              margin: 1rem 0;
+              text-transform: uppercase;
+            }
+            p {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+    // Certificates
+    .store-certificates-wrapper {
+      background-color: $c-white;
+    }
+
+    // Reviews
+    .store-reviews-wrapper {
+      background-color: $c-white;
+    }
+  }
+
+  //
+}

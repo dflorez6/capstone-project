@@ -20,6 +20,7 @@ function VendorRegistration() {
 
   // Form Fields
   const [avatar, setAvatar] = useState(null); // Store the selected image file
+  const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ function VendorRegistration() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Create a ref for the file input element
-  const inputFileRef = useRef(null); 
+  const inputFileRef = useRef(null);
 
   // Redux Toolkit
   const [register, { isLoading, error }] = useVendorRegisterMutation(); // Mutation
@@ -57,6 +58,7 @@ function VendorRegistration() {
       try {
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
+        formData.append("companyName", companyName);
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
@@ -95,6 +97,20 @@ function VendorRegistration() {
 
         <form className="form" id="" onSubmit={submitHandler}>
           <div className="row">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+              <label htmlFor="lastName">Company Name</label>
+              <input
+                type="text"
+                name="companyName"
+                id="companyName"
+                className="form-control"
+                placeholder="Enter company's legal name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </div>
+            {/* ./Input: Text */}
+
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="avatar">Profile Picture</label>
               <input

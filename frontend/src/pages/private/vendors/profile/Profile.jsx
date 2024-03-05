@@ -27,6 +27,7 @@ const Profile = () => {
 
   // Form Fields
   const [avatar, setAvatar] = useState(null); // Store the selected image file
+  const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,6 +57,7 @@ const Profile = () => {
   //----------
   // Update inputs from Redux Store for vendorInfo
   useEffect(() => {
+    setCompanyName(vendorInfo.companyName);
     setFirstName(vendorInfo.firstName);
     setLastName(vendorInfo.lastName);
     setEmail(vendorInfo.email);
@@ -65,6 +67,7 @@ const Profile = () => {
     setCity(vendorInfo.address.city || "");
     setProvince(vendorInfo.address.province || "");
   }, [
+    vendorInfo.companyName,
     vendorInfo.firstName,
     vendorInfo.lastName,
     vendorInfo.email,
@@ -108,6 +111,7 @@ const Profile = () => {
         // Form Data
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
+        formData.append("companyName", companyName);
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
@@ -186,6 +190,23 @@ const Profile = () => {
             </div>
           </div>
           {/* ./Input: Image Upload */}
+
+          <div className="row">
+            <div className="col-12 my-2">
+              <label htmlFor="firstName">Company Legal Name</label>
+              <input
+                type="text"
+                name="companyName"
+                id="companyName"
+                className="form-control"
+                placeholder="Enter company's legal name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                disabled
+              />
+            </div>
+            {/* ./Input: Text */}
+          </div>
 
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">

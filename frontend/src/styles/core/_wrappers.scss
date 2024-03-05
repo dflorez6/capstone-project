@@ -47,7 +47,7 @@
 
       // Collapsed
       &.collapsed {
-        margin-left: -8.5%;
+        margin-left: -10.25%;
       }
     }
 
@@ -55,14 +55,22 @@
     .content-wrapper {
       background-color: lightgray;
       flex-grow: 1;
-      padding: 0;      
+      padding: 0;
       transition: all 0.5s;
 
-      // Collapse Button
-      .btn-collapse {
-        padding: 1rem 2rem;
+      // Button: Sidebar Trigger
 
-        button {
+      // Collapse Button
+      .btn-sidebar-wrapper {
+        display: flex;
+        justify-content: end;
+        line-height: 1;
+        padding: 1rem 2rem 0.5rem;
+
+        .btn-sidebar-trigger {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
           margin: 0;
 
           // Icon
@@ -71,18 +79,15 @@
             font-size: 1.5rem;
             transition: all 1s ease-in-out;
           }
-
-          .collapsed-icon {
-            transform: rotate(180deg);
-            transition: all 1s ease-in-out;
-          }
         }
       }
     }
   }
 }
 
-// Page
+//====================
+// Pages
+//====================
 // TODO: Replace this depending on visibilty: public or private page
 .page-wrapper {
   margin-top: $h-navbar;
@@ -98,4 +103,29 @@
   margin-top: $h-navbar;
   min-height: calc(100vh - $h-navbar);
   padding: 0 2rem;
+}
+
+//====================
+// Panels
+//====================
+.panel-wrapper {
+  background-color: $c-white;
+  border-radius: 10px;
+  margin: 2rem 0;
+  padding: 1.5rem 1.5rem;
+
+  // Title
+  .panel-title-wrapper {
+    h2 {
+      font-size: $f-h3;
+      font-weight: $f-medium;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
+  }
+
+  // Content
+  .panel-content-wrapper {
+    background-color: transparent;
+  }
 }

@@ -1,5 +1,5 @@
 //====================
-// Model: City
+// Model: Service Category
 //====================
 // Import Dependencies
 import mongoose from "mongoose";
@@ -7,16 +7,18 @@ import mongoose from "mongoose";
 //--------------------
 // Schema Definition
 //--------------------
-const citySchema = mongoose.Schema(
+const serviceCategorySchema = mongoose.Schema(
   {
-    city: {
+    name: {
       type: String,
       required: true,
-      trim: true,    
+      trim: true,
     },
+
+    // Add more fields
   },
   {
-    timestamps: true, // Used to have createdAt & updatedAt fields
+    timestamps: true,
   }
 );
 
@@ -24,11 +26,14 @@ const citySchema = mongoose.Schema(
 // Indexes
 //--------------------
 // Create an index on the 'city' field in ascending order
-citySchema.index({ city: 1 });
+serviceCategorySchema.index({ _id: 1, name: 1 });
 
 //--------------------
 // Model Definition
 //--------------------
-const City = mongoose.model("City", citySchema);
+const ServiceCategory = mongoose.model(
+  "ServiceCategory",
+  serviceCategorySchema
+);
 
-export default City;
+export default ServiceCategory;
