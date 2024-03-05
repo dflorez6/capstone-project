@@ -326,11 +326,11 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
     > npm install react-toastify --save
 
-### Swiper Slider
+### React Paginate
 
 * Install the following packages
 
-    > npm install swiper --save
+    > npm install react-paginate --save
 
 <hr>
 

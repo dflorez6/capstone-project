@@ -149,10 +149,65 @@ const updateVendorStore = asyncHandler(async (req, res) => {
 // DELETE
 //--------------------
 // Description: Delete Vendor Store
-// Route: PUT /api/v1/vendor-stores/:storeSlug
+// Route: DELETE /api/v1/vendor-stores/:storeSlug
 // Access: Private
 const deleteVendorStore = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Vendor Store - Delete" });
+});
+
+// Description: Delete Vendor Store Image
+// Route: DELETE /api/v1/vendor-stores/:storeSlug/:imageId
+// Access: Private
+const deleteVendorStoreImage = asyncHandler(async (req, res) => {
+  try {
+    const { storeSlug, imageId } = req.params;
+
+    // Find vendorStore
+    const vendorStore = await VendorStore.findOne({ storeSlug });
+
+    // Check if Vendor Store exists
+    if (!vendorStore) {
+      res.status(404);
+      throw new Error("Vendor Store not found");
+    }
+
+    // Check if authenticatedUser(req.vendor) is the storeOwner
+    if (vendorStore.storeOwner._id.toString() === req.vendor._id.toString()) {
+      // Find the index of the image in storeImages array
+      const imageIndex = vendorStore.storeImages.findIndex(
+        (image) => image._id.toString() === imageId
+      );
+
+      // If the image with given imageId is not found
+      if (imageIndex === -1) {
+        res.status(404);
+        throw new Error("Image not found in Vendor Store");
+      }
+
+      // Get the publicId of the image to be deleted
+      const publicId = vendorStore.storeImages[imageIndex].publicId;
+
+      console.log("publicId: ", publicId);
+
+      // If the image has a publicId, delete it from Cloudinary
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+
+      // Remove the image from storeImages array
+      vendorStore.storeImages.splice(imageIndex, 1);
+
+      // Save the updated Vendor Store
+      await vendorStore.save();
+
+      res.status(200).json({ message: "Store Image deleted successfully" });
+    } else {
+      res.status(401);
+      throw new Error("Not authorized. Not the Store owner.");
+    }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 });
 
 export {
@@ -161,4 +216,5 @@ export {
   createVendorStore,
   updateVendorStore,
   deleteVendorStore,
+  deleteVendorStoreImage,
 };

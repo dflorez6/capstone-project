@@ -10,6 +10,7 @@ import {
   createVendorStore,
   updateVendorStore,
   deleteVendorStore,
+  deleteVendorStoreImage,
 } from "../../../controllers/api/v1/vendorStoresController.js";
 import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
@@ -29,14 +30,6 @@ router.route("/").post(protect, createVendorStore);
 router
   .route("/:storeSlug")
   .get(protect, showVendorStore)
-  /*
-  .put(
-    protect,
-    imgUploader.single("coverImage"),
-    imgUploader.array("storeImages", 10),
-    updateVendorStore
-  )
-  */
   .put(
     protect,
     // Use fields to allow Multer to parse multiple form fields
@@ -66,9 +59,18 @@ router
     ]),
     updateVendorStore
   )
+  /*
+  .put(
+    protect,
+    imgUploader.single("coverImage"),
+    imgUploader.array("storeImages", 10),
+    updateVendorStore
+  )
+  */
   // Multiple Multer Middleware
   //  .patch(protect, imgUploaderSingle.single("coverImage"), imgUploaderMultiple.array("storeImages"), updateVendorStore);
   .delete(protect, deleteVendorStore);
-// Another way of using router: Chain multiple actions to the same route
+
+router.route("/:storeSlug/:imageId").delete(protect, deleteVendorStoreImage);
 
 export default router;

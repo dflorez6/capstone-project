@@ -1,0 +1,44 @@
+//====================
+// Form
+//====================
+.app-pagination-wrapper {
+  .pagination {
+    justify-content: center;
+
+    li {
+      color: $c-text-primary;
+      padding: 0.15rem 0.75rem;
+    }
+
+    li:hover {
+    }
+
+    // Active
+    .active {
+      background-color: $c-purple-m;
+      border-radius: 5px;
+      color: $c-white;
+    }
+
+    // Previous
+    .previous {
+      a {
+        color: $c-text-primary;
+      }
+    }
+
+    // Next
+    .next {
+      a {
+        color: $c-text-primary;
+      }
+    }
+
+    // Disabled
+    .disabled {
+      a {
+        color: $c-disabled;
+      }
+    }
+  }
+}

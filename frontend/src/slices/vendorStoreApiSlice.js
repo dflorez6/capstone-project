@@ -34,6 +34,14 @@ export const vendorStoreApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    // Delete Vendor Store Image
+    deleteStoreImage: builder.mutation({
+      query: ({ storeSlug, imageId }) => ({
+        url: `${VENDOR_STORES_URL}/${storeSlug}/${imageId}`,
+        method: "DELETE",
+      }),
+    }),
+
     // Add API Endpoint
   }),
 });
@@ -42,4 +50,5 @@ export const {
   useGetVendorStoresQuery,
   useGetVendorStoreQuery,
   useUpdateVendorStoreMutation,
+  useDeleteStoreImageMutation,
 } = vendorStoreApiSlice; // Export hooks for usage in components

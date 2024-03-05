@@ -1,11 +1,13 @@
 // Dependencies
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import {
   useGetVendorStoreQuery,
   useUpdateVendorStoreMutation,
+  useDeleteStoreImageMutation,
 } from "../../../../slices/vendorStoreApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
@@ -56,6 +58,10 @@ function EditVendorStore() {
     updateVendorStore,
     { isError: updateVendorStoreError, isLoading: updateVendorStoreLoading },
   ] = useUpdateVendorStoreMutation();
+  const [
+    deleteStoreImage,
+    { isError: deleteStoreImageError, isLoading: deleteStoreImageLoading },
+  ] = useDeleteStoreImageMutation();
 
   //----------
   // Effects
@@ -74,6 +80,9 @@ function EditVendorStore() {
   }
   if (updateVendorStoreError) {
     console.log("Update Vendor Store Error: ", updateVendorStoreError);
+  }
+  if (deleteStoreImageError) {
+    console.log("Delete Vendor Store Image Error: ", deleteStoreImageError);
   }
 
   //----------
@@ -136,6 +145,20 @@ function EditVendorStore() {
     }
   };
 
+  // Delete Store Image Handler
+  const handleDeleteImage = async (imageId) => {
+    try {
+      // Delete the image using the deleteStoreImage mutation
+      await deleteStoreImage({ storeSlug: urlStoreSlug, imageId: imageId });
+      toast.success("Image deleted successfully");
+      vendorStoreRefetch(); // Refetch data after successful deletion
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+      console.log("Delete Store Image Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
   // File Change
   const handleCoverImageFileChange = (e) => {
     const file = e.target.files[0];
@@ -148,6 +171,26 @@ function EditVendorStore() {
   };
 
   //----------
+  // Pagination
+  //----------
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(0);
+  const imagesPerPage = 6; // Change this number as needed
+
+  // Calculate indexes of images to display on the current page
+  const indexOfLastImage = (currentPage + 1) * imagesPerPage;
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
+  const currentImages = vendorStore?.storeImages.slice(
+    indexOfFirstImage,
+    indexOfLastImage
+  );
+
+  // Pagination Handler
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  //----------
   // Output
   //----------
   return (
@@ -157,7 +200,7 @@ function EditVendorStore() {
         <>
           <div className="row">
             {/* Store Info */}
-            <div className="col-6">
+            <div className="col-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Info</h2>
@@ -258,7 +301,7 @@ function EditVendorStore() {
             {/* ./Store Info */}
 
             {/* Store Images */}
-            <div className="col-6">
+            <div className="col-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Images</h2>
@@ -297,31 +340,65 @@ function EditVendorStore() {
                   </form>
 
                   <hr />
-                  <p>Grid of image thumbnails + delete button</p>
 
-                  <div className="row">
-                    {vendorStore.storeImages.length > 0 && (
-                      <>
-                        {vendorStore.storeImages.map((image, index) => (
+                  {currentImages.length > 0 && (
+                    <>
+                      <div className="row">
+                        <div className="col-12 text-center">
+                          {/* Pagination  */}
+                          <div className="app-pagination-wrapper">
+                            <ReactPaginate
+                              pageCount={Math.ceil(
+                                vendorStore.storeImages.length / imagesPerPage
+                              )}
+                              breakLabel="..."
+                              nextLabel=">>"
+                              previousLabel="<<"
+                              pageRangeDisplayed={5}
+                              marginPagesDisplayed={2}
+                              renderOnZeroPageCount={null}
+                              onPageChange={handlePageChange}
+                              containerClassName={"pagination"}
+                              activeClassName={"active"}
+                            />
+                          </div>
+                          {/* ./Pagination */}
+                        </div>
+                      </div>
+
+                      {/* Images Grid */}
+                      <div className="row">
+                        {currentImages.map((image, index) => (
                           <>
-                            <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
+                            <div
+                              className="col-12 col-sm-12 col-md-4 col-lg-4 mb-4"
+                              key={index}
+                            >
                               <img
                                 src={image.url}
                                 alt={vendorStore.storeSlug}
                                 className="img-fluid"
-                                key={index}
                               />
                               <div className="text-end mt-2">
-                                <button type="button">
-                                  <i className="fa-regular fa-trash-can"></i>
-                                </button>
+                                {deleteStoreImageLoading ? (
+                                  <Loader />
+                                ) : (
+                                  // Show delete button if not loading
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteImage(image._id)}
+                                  >
+                                    <i className="fa-regular fa-trash-can"></i>
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </>
                         ))}
-                      </>
-                    )}
-                  </div>
+                      </div>
+                      {/* ./Images Grid */}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
