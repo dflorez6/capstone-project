@@ -11,11 +11,11 @@ import {
 } from "../../../../slices/vendorStoreApiSlice";
 import {
   useGetVendorServicesQuery,
-  useGetVendorServiceQuery,
   useCreateVendorServiceMutation,
   useUpdateVendorServiceMutation,
   useDeleteVendorServiceMutation,
 } from "../../../../slices/vendorServiceApiSlice";
+import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -33,12 +33,18 @@ function EditVendorStore() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
-  // Form Fields
+  // Form Fields: Vendor Store
   const [coverImage, setCoverImage] = useState(null); // Store the selected image file
   const [storeImages, setStoreImages] = useState([]); // Store the selected image files
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // storeImages // TODO: Implement Multiple Image Upload
+
+  // Form Fields: Vendor Service
+  const [serviceName, setServiceName] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
+  const [serviceYearsExperience, setServiceYearsExperience] = useState(0);
+  const [serviceCostHour, setServiceCostHour] = useState(0);
+  const [serviceCategory, setServiceCategory] = useState("");
 
   // Create a ref for the file input element
   const inputCoverImageFileRef = useRef(null);
@@ -60,6 +66,9 @@ function EditVendorStore() {
     refetch: vendorStoreRefetch,
   } = useGetVendorStoreQuery(urlStoreSlug); // vendorInfo.storeSlug
 
+  const { data: serviceCategories, isError: serviceCategoriesError } =
+    useGetServiceCategoriesQuery();
+
   // Redux Toolkit Mutations
   const [
     updateVendorStore,
@@ -69,12 +78,17 @@ function EditVendorStore() {
     deleteStoreImage,
     { isError: deleteStoreImageError, isLoading: deleteStoreImageLoading },
   ] = useDeleteStoreImageMutation();
+  const [
+    createVendorService,
+    { isError: vendorServiceError, isLoading: vendorServiceLoading },
+  ] = useCreateVendorServiceMutation();
 
   //----------
   // Effects
   //----------
   // Update inputs from Redux Store
   useEffect(() => {
+    // Vendor Store
     setTitle(vendorStore?.title || "");
     setDescription(vendorStore?.description || "");
   }, [vendorStore, urlStoreSlug]);
@@ -90,6 +104,9 @@ function EditVendorStore() {
   }
   if (deleteStoreImageError) {
     console.log("Delete Vendor Store Image Error: ", deleteStoreImageError);
+  }
+  if (serviceCategoriesError) {
+    console.log("Service Categories Error: ", serviceCategoriesError);
   }
 
   //----------
@@ -170,7 +187,36 @@ function EditVendorStore() {
   const addServiceHandler = async (e) => {
     e.preventDefault();
 
-    //
+    try {
+      // Format costHour to always display cents
+      const formattedCostHour = parseFloat(serviceCostHour).toFixed(2);
+
+      // Form Data
+      const newService = {
+        name: serviceName,
+        description: serviceDescription,
+        yearsExperience: serviceYearsExperience,
+        costHour: formattedCostHour,
+        serviceCategory: serviceCategory,
+        vendorStore: vendorStore._id,
+      };
+
+      const res = await createVendorService(newService).unwrap();
+
+      if (res) {
+        // Reset form fields to their default state
+        setServiceName("");
+        setServiceDescription("");
+        setServiceYearsExperience(0);
+        setServiceCostHour(0);
+        setServiceCategory("");
+        toast.success("Service added successfully");
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error); // Toastify implementation
+      console.log("Create Vendor Service Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   // Add Certificate
@@ -180,12 +226,11 @@ function EditVendorStore() {
     //
   };
 
-  // File Change
+  // File Change: Images
   const handleCoverImageFileChange = (e) => {
     const file = e.target.files[0];
     setCoverImage(file); // Update the state with the selected file
   };
-
   const handleStoreImagesFileChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to Array
     setStoreImages(files); // Update the state with the selected files
@@ -303,6 +348,7 @@ function EditVendorStore() {
 
                     {updateVendorStoreLoading && <Loader />}
 
+                    {/* Submit */}
                     <div className="row">
                       <div className="col-12">
                         <div className="submit-wrapper">
@@ -315,6 +361,7 @@ function EditVendorStore() {
                         </div>
                       </div>
                     </div>
+                    {/* ./Submit */}
                   </form>
                 </div>
               </div>
@@ -347,6 +394,8 @@ function EditVendorStore() {
                           onChange={handleStoreImagesFileChange} // Call handleStoreImagesFileChange on file selection
                         />
                       </div>
+
+                      {/* Submit */}
                       <div className="col-12 col-sm-12 col-md-4 col-lg-4">
                         <div className="submit-wrapper horizontal-form-submit">
                           <button
@@ -357,6 +406,7 @@ function EditVendorStore() {
                           </button>
                         </div>
                       </div>
+                      {/* ./Submit */}
                     </div>
                   </form>
 
@@ -438,43 +488,111 @@ function EditVendorStore() {
                   <form className="form" id="" onSubmit={addServiceHandler}>
                     <div className="row">
                       <div className="col-12 my-2">
-                        <label htmlFor="serviceCategory"></label>
-                        Select: serviceCategory
+                        <label htmlFor="serviceCategory">
+                          Service Category
+                        </label>
+                        <select
+                          name="serviceCategory"
+                          id="serviceCategory"
+                          className="form-control"
+                          value={serviceCategory}
+                          onChange={(e) => setServiceCategory(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select...
+                          </option>
+                          {serviceCategories &&
+                            serviceCategories?.map((city) => (
+                              <option key={city._id} value={city._id}>
+                                {city.name}
+                              </option>
+                            ))}
+                        </select>
                       </div>
 
+                      {/* TODO: Uncomment if a service name is required */}
+                      {/*
                       <div className="col-12 my-2">
-                        <label htmlFor="categoryDescription"></label>
-                        text: description --- change name because store uses
-                      </div>
-
-                      <div className="col-12 my-2">
-                        <label htmlFor="yearsExperience"></label>
-                        number: yearsExperience
-                      </div>
-
-                      <div className="col-12 my-2">
-                        <label htmlFor="costHour"></label>
-                        number: costHour
-                      </div>
-
-                      <div className="col-12 my-2">
-                        <label htmlFor=""></label>
-                        passed params: vendorStore
-                      </div>
-
-                      <div className="col-12 my-2">
-                        <label htmlFor="title">Title</label>
+                        <label htmlFor="serviceName">Service Name</label>
                         <input
                           type="text"
-                          name="title"
-                          id="title"
+                          name="serviceName"
+                          id="serviceName"
                           className="form-control"
-                          placeholder="e.g. Acme Corp"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
+                          placeholder=""
+                          value={serviceName}
+                          onChange={(e) => setServiceName(e.target.value)}
+                        />
+                      </div>
+                      */}
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceDescription">Desctiption</label>
+                        <textarea
+                          type="text"
+                          name="serviceDescription"
+                          id="serviceDescription"
+                          className="form-control"
+                          placeholder="Service description (Max 140 characters)"
+                          rows="3"
+                          value={serviceDescription}
+                          onChange={(e) =>
+                            setServiceDescription(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-2">
+                        <label htmlFor="yearsExperience">
+                          Years of Experience
+                        </label>
+                        <input
+                          type="number"
+                          name="yearsExperience"
+                          id="yearsExperience"
+                          className="form-control"
+                          placeholder=""
+                          min="0"
+                          step="0.1"
+                          value={serviceYearsExperience}
+                          onChange={(e) =>
+                            setServiceYearsExperience(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-2">
+                        <label htmlFor="costHour">Cost per hour</label>
+                        <input
+                          type="number"
+                          name="yearsExperience"
+                          id="yearsExperience"
+                          className="form-control"
+                          placeholder=""
+                          min="0"
+                          step="0.01"
+                          value={serviceCostHour}
+                          onChange={(e) => setServiceCostHour(e.target.value)}
                         />
                       </div>
                       {/* ./Input: Text */}
+
+                      {vendorServiceLoading && <Loader />}
+
+                      {/* Submit */}
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="submit-wrapper">
+                            <button
+                              type="submit"
+                              className="btn-app btn-app-purple"
+                            >
+                              Add Service
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      {/* ./Submit */}
                     </div>
                   </form>
                 </div>

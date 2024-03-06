@@ -11,7 +11,6 @@ const vendorServiceSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
       trim: true,
     },
     description: {
@@ -23,7 +22,7 @@ const vendorServiceSchema = mongoose.Schema(
       required: true,
     },
     costHour: {
-      type: String,
+      type: Number,
       required: true,
     },
     /*
