@@ -11,6 +11,8 @@ import {
 } from "../../../../slices/vendorServiceApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
+// Toast
+import { toast } from "react-toastify";
 // Styles
 import "./VendorStore.scss";
 // Assets
@@ -38,7 +40,6 @@ function VendorStore() {
     isError: vendorStoreError,
     isLoading: vendorStoreLoading,
   } = useGetVendorStoreQuery(urlStoreSlug); // vendorInfo.storeSlug
-
   const {
     data: vendorServices,
     isError: vendorServicesError,
@@ -46,18 +47,22 @@ function VendorStore() {
     refetch: vendorServicesRefetch,
   } = useGetVendorServicesQuery(vendorStore?._id);
 
+  // Redux Toolkit Mutations
+  const [
+    deleteVendorService,
+    {
+      isError: deleteVendorServiceError,
+      isLoading: deleteVendorServiceLoading,
+    },
+  ] = useDeleteVendorServiceMutation();
+
   //----------
   // Effects
   //----------
-  // Update inputs from Redux Store for vendorInfo
-  useEffect(
-    () => {
-      // add sideEffects here
-    },
-    [
-      // dependency array
-    ]
-  );
+  // Refetch vendor services when urlStoreSlug changes
+  useEffect(() => {
+    vendorServicesRefetch();
+  }, [vendorServicesRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -68,6 +73,9 @@ function VendorStore() {
   if (vendorServicesError) {
     console.log("Vendor Services Error: ", vendorServicesError);
   }
+  if (deleteVendorServiceError) {
+    console.log("Delete Vendor Service Error: ", deleteVendorServiceError);
+  }
 
   //----------
   // Handlers
@@ -77,6 +85,23 @@ function VendorStore() {
     e.preventDefault();
 
     // TODO: In case Im using this page also as the update page, complete the formSubmit Handler
+  };
+
+  // Delete Vendor Service Handler
+  const handleDeleteVendorService = async (serviceId) => {
+    try {
+      // Delete the image using the deleteStoreImage mutation
+      await deleteVendorService({
+        vendorStore: vendorStore?._id,
+        serviceId: serviceId,
+      });
+      toast.success("Service deleted successfully");
+      vendorServicesRefetch(); // Refetch data after successful deletion
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+      console.log("Delete Store Image Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   //----------
@@ -178,7 +203,35 @@ function VendorStore() {
                                 className="col-12 col-sm-12 col-md-4 col-lg-4"
                                 key={index}
                               >
+                                {/* Only storeOwner can edit the Store */}
+
                                 <div className="service-card-wrapper shadow">
+                                  {/* Actions */}
+                                  {vendorStore.storeOwner._id ===
+                                    vendorInfo._id && (
+                                    <>
+                                      <div className="service-card-actions">
+                                        {deleteVendorServiceLoading ? (
+                                          <Loader />
+                                        ) : (
+                                          <>
+                                            <button
+                                              type="button"
+                                              className="action-delete"
+                                              onClick={() =>
+                                                handleDeleteVendorService(
+                                                  service._id
+                                                )
+                                              }
+                                            >
+                                              <i className="fa-solid fa-trash-can action-icon"></i>
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
+                                  {/* ./Actions */}
                                   {/* Icon */}
                                   <div className="serivce-icon-wrapper">
                                     <img

@@ -124,7 +124,22 @@
           border-radius: 10px;
           margin: 1.25rem 0 0;
           padding: 3rem 1rem;
+          position: relative;
           text-align: center;
+
+          // Actions
+          .service-card-actions {
+            position: absolute;
+            right: 1rem;
+            text-align: right;
+            top: 1rem;
+
+            .action-delete {
+              .action-icon {
+                color: $c-red;
+              }
+            }
+          }
 
           // Icon
           .serivce-icon-wrapper {

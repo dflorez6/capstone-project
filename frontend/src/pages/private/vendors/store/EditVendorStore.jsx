@@ -108,6 +108,9 @@ function EditVendorStore() {
   if (serviceCategoriesError) {
     console.log("Service Categories Error: ", serviceCategoriesError);
   }
+  if (vendorServiceError) {
+    console.log("Vendor Service Error: ", vendorServiceError);
+  }
 
   //----------
   // Handlers
