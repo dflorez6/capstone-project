@@ -11,11 +11,23 @@ import { populate } from "dotenv";
 //--------------------
 // Action: Index
 // Description: List of Vendor Services
-// Route: GET /api/v1/vendor-services
+// Route: GET /api/v1/vendor-services/:vendorStore
 // Access: Public
 const getAllVendorServices = asyncHandler(async (req, res) => {
+  // Destructure req.params
+  const { vendorStore } = req.params;
+
   try {
-    const vendorServices = await VendorService.find().sort({ name: 1 }); // TODO: DB - To get order by DESC use -1
+    // Fetch Vendor Services with passed param vendorStore
+    const vendorServices = await VendorService.find({ vendorStore })
+      .sort({
+        name: 1,
+      })
+      .populate([
+        {
+          path: "serviceCategory",
+        },
+      ]);
     res.status(200).json(vendorServices);
   } catch (error) {
     res.status(500).json(error.message);

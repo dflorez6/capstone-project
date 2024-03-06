@@ -118,21 +118,12 @@
 
       // Service Cards
       .service-cards-wrapper {
-        align-items: stretch;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-
         // Service
         .service-card-wrapper {
-          align-items: center;
           background-color: $c-white;
           border-radius: 10px;
-          display: flex;
-          flex-direction: column;
-          padding: 3rem 1rem;
-          flex: 0 0 32%;
           margin: 1.25rem 0 0;
+          padding: 3rem 1rem;
           text-align: center;
 
           // Icon

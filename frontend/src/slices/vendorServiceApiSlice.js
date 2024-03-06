@@ -11,8 +11,8 @@ export const vendorServiceApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Index - Get All Vendor Services
     getVendorServices: builder.query({
-      query: () => ({
-        url: VENDOR_SERVICES_URL,
+      query: (vendorStore) => ({
+        url: `${VENDOR_SERVICES_URL}/${vendorStore}`,
         method: "GET",
       }),
     }),

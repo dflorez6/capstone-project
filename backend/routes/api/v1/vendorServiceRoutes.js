@@ -18,7 +18,7 @@ import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only a
 // Controller Actions
 //--------------------
 // Index
-router.get("/", getAllVendorServices);
+router.route("/:vendorStore").get(getAllVendorServices);
 
 // Create
 router.route("/").post(protect, createVendorService);

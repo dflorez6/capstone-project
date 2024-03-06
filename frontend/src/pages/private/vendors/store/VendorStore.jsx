@@ -6,13 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetVendorStoreQuery } from "../../../../slices/vendorStoreApiSlice";
 import {
   useGetVendorServicesQuery,
-  useGetVendorServiceQuery,
-  useCreateVendorServiceMutation,
   useUpdateVendorServiceMutation,
   useDeleteVendorServiceMutation,
 } from "../../../../slices/vendorServiceApiSlice";
 // Components
-import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
 // Styles
 import "./VendorStore.scss";
@@ -42,6 +39,13 @@ function VendorStore() {
     isLoading: vendorStoreLoading,
   } = useGetVendorStoreQuery(urlStoreSlug); // vendorInfo.storeSlug
 
+  const {
+    data: vendorServices,
+    isError: vendorServicesError,
+    isLoading: vendorServicesLoading,
+    refetch: vendorServicesRefetch,
+  } = useGetVendorServicesQuery(vendorStore?._id);
+
   //----------
   // Effects
   //----------
@@ -60,6 +64,9 @@ function VendorStore() {
   //----------
   if (vendorStoreError) {
     console.log("Vendor Store Error: ", vendorStoreError);
+  }
+  if (vendorServicesError) {
+    console.log("Vendor Services Error: ", vendorServicesError);
   }
 
   //----------
@@ -162,97 +169,73 @@ function VendorStore() {
 
                   <div className="panel-content-wrapper">
                     <div className="service-cards-wrapper">
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/4396/4396060.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>hvac</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
+                      {vendorServicesLoading && <Loader />}
+                      <div className="row">
+                        {vendorServices?.length > 0 ? (
+                          <>
+                            {vendorServices?.map((service, index) => (
+                              <div
+                                className="col-12 col-sm-12 col-md-4 col-lg-4"
+                                key={index}
+                              >
+                                <div className="service-card-wrapper shadow">
+                                  {/* Icon */}
+                                  <div className="serivce-icon-wrapper">
+                                    <img
+                                      src={
+                                        service.serviceCategory.categoryImage
+                                          .url
+                                      }
+                                      className="service-image"
+                                      alt={vendorStore.storeSlug}
+                                    />
+                                  </div>
+                                  {/* ./Icon */}
+                                  {/* Content */}
+                                  <div className="service-content-wrapper">
+                                    <h3>{service.serviceCategory.name}</h3>
+                                    <p>
+                                      Cost: $
+                                      <span className="cost-hour">
+                                        {service.costHour}
+                                      </span>{" "}
+                                      /hr
+                                    </p>
+                                    <p>
+                                      Experience:{" "}
+                                      <span>
+                                        {service.yearsExperience} years
+                                      </span>
+                                    </p>
+                                  </div>
+                                  {/* ./Content */}
+                                </div>
+                              </div>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <div className="col-12">
+                              <div className="service-card-wrapper shadow">
+                                {/* Icon */}
+                                <div className="serivce-icon-wrapper">
+                                  <img
+                                    src={imgPlaceholder}
+                                    className="service-image rounded-circle"
+                                    alt={vendorStore.storeSlug}
+                                  />
+                                </div>
+                                {/* ./Icon */}
+                                {/* Content */}
+                                <div className="service-content-wrapper">
+                                  <h3>No Services Added</h3>
+                                </div>
+                                {/* ./Content */}
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card*/}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/3185/3185876.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>electrical</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/8246/8246670.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>plumbing</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/4295/4295647.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>pest control</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
                     </div>
                   </div>
                 </div>
