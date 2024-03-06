@@ -26,6 +26,7 @@ const vendorServiceSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    /*
     serviceImages: [
       {
         publicId: {
@@ -38,6 +39,7 @@ const vendorServiceSchema = mongoose.Schema(
         },
       },
     ],
+    */
     serviceCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ServiceCategory",

@@ -26,7 +26,7 @@ const getAllVendorStores = asyncHandler(async (req, res) => {
 
 // Action: Show
 // Description: Vendor Store Detail
-// Route: PUT /api/v1/vendor-stores/:storeSlug
+// Route: GET /api/v1/vendor-stores/:storeSlug
 // Access: Private
 const showVendorStore = asyncHandler(async (req, res) => {
   try {
@@ -51,7 +51,7 @@ const showVendorStore = asyncHandler(async (req, res) => {
 //--------------------
 // Action: Create
 // Description: Create Vendor Store
-// Route: GET /api/v1/vendor-stores
+// Route: POST /api/v1/vendor-stores
 // Access: Private
 const createVendorStore = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Vendor Store - Create" });
@@ -123,8 +123,8 @@ const updateVendorStore = asyncHandler(async (req, res) => {
       }
 
       // Update the Vendor Store
-      vendorStore.title = title;
-      vendorStore.description = description;
+      if (title) vendorStore.title = title;
+      if (description) vendorStore.description = description;
       vendorStore.coverImage.url = req.files.coverImage
         ? coverImageData.url
         : vendorStore.coverImage.url; // Update the url only if a new file is uploaded
@@ -149,7 +149,7 @@ const updateVendorStore = asyncHandler(async (req, res) => {
 // DELETE
 //--------------------
 // Description: Delete Vendor Store
-// Route: DELETE /api/v1/vendor-stores/:storeSlug
+// Route: DELETE /api/v1/vendor-stores/:storeSlug/:imageId
 // Access: Private
 const deleteVendorStore = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Vendor Store - Delete" });

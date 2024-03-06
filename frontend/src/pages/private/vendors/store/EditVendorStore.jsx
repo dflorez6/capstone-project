@@ -9,6 +9,13 @@ import {
   useUpdateVendorStoreMutation,
   useDeleteStoreImageMutation,
 } from "../../../../slices/vendorStoreApiSlice";
+import {
+  useGetVendorServicesQuery,
+  useGetVendorServiceQuery,
+  useCreateVendorServiceMutation,
+  useUpdateVendorServiceMutation,
+  useDeleteVendorServiceMutation,
+} from "../../../../slices/vendorServiceApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -159,6 +166,20 @@ function EditVendorStore() {
     }
   };
 
+  // Add Service
+  const addServiceHandler = async (e) => {
+    e.preventDefault();
+
+    //
+  };
+
+  // Add Certificate
+  const addCertificateHandler = async (e) => {
+    e.preventDefault();
+
+    //
+  };
+
   // File Change
   const handleCoverImageFileChange = (e) => {
     const file = e.target.files[0];
@@ -200,7 +221,7 @@ function EditVendorStore() {
         <>
           <div className="row">
             {/* Store Info */}
-            <div className="col-6 d-flex align-items-stretch">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Info</h2>
@@ -301,7 +322,7 @@ function EditVendorStore() {
             {/* ./Store Info */}
 
             {/* Store Images */}
-            <div className="col-6 d-flex align-items-stretch">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Images</h2>
@@ -404,11 +425,86 @@ function EditVendorStore() {
             </div>
             {/* ./Store Images */}
           </div>
-          <p>
-            VendorStore <br />
-            StoreSlug: {vendorStore.storeSlug} <br />
-            Title: {vendorStore.title} <br />
-          </p>
+
+          <div className="row">
+            {/* Store Services */}
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
+              <div className="panel-wrapper flex-fill mt-4">
+                <div className="panel-title-wrapper">
+                  <h2>Services</h2>
+                </div>
+
+                <div className="panel-content-wrapper">
+                  <form className="form" id="" onSubmit={addServiceHandler}>
+                    <div className="row">
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceCategory"></label>
+                        Select: serviceCategory
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="categoryDescription"></label>
+                        text: description --- change name because store uses
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="yearsExperience"></label>
+                        number: yearsExperience
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="costHour"></label>
+                        number: costHour
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor=""></label>
+                        passed params: vendorStore
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="title">Title</label>
+                        <input
+                          type="text"
+                          name="title"
+                          id="title"
+                          className="form-control"
+                          placeholder="e.g. Acme Corp"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                        />
+                      </div>
+                      {/* ./Input: Text */}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {/* ./Store Services */}
+
+            {/* Store Certificates */}
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
+              <div className="panel-wrapper flex-fill mt-4">
+                <div className="panel-title-wrapper">
+                  <h2>Certificates</h2>
+                </div>
+
+                <div className="panel-content-wrapper">
+                  <form
+                    action=""
+                    className="form"
+                    id=""
+                    onSubmit={addCertificateHandler}
+                  >
+                    <div className="row">
+                      <p>form</p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {/* ./Store Certificates */}
+          </div>
         </>
       )}
     </section>

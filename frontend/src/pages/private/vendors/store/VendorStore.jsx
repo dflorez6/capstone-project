@@ -4,6 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useGetVendorStoreQuery } from "../../../../slices/vendorStoreApiSlice";
+import {
+  useGetVendorServicesQuery,
+  useGetVendorServiceQuery,
+  useCreateVendorServiceMutation,
+  useUpdateVendorServiceMutation,
+  useDeleteVendorServiceMutation,
+} from "../../../../slices/vendorServiceApiSlice";
 // Components
 import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
@@ -27,7 +34,7 @@ function VendorStore() {
   const url = window.location.pathname;
   const urlParts = url.split("/");
   const urlStoreSlug = urlParts[urlParts.length - 1]; // Get the last part of the URL
-  
+
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
     data: vendorStore,
@@ -253,6 +260,14 @@ function VendorStore() {
             </div>
             {/* ./Services */}
 
+            {/* Certificates */}
+            <div className="panel-wrapper shadow">
+              <div className="panel-title-wrapper">
+                <h2>Certificates</h2>
+              </div>
+            </div>
+            {/* ./Certificates */}
+
             {/* Gallery */}
             {vendorStore.storeImages.length > 0 && (
               <div className="panel-wrapper shadow p-0">
@@ -322,11 +337,6 @@ function VendorStore() {
             )}
             {/* ./Gallery */}
 
-            <div className="panel-wrapper store-certificates-wrapper shadow">
-              <p>Certificates</p>
-            </div>
-            {/* ./Certificates */}
-
             <div className="panel-wrapper store-reviews-wrapper shadow">
               <p>Reviews</p>
             </div>
@@ -334,18 +344,6 @@ function VendorStore() {
           </div>
         </>
       )}
-
-      <div className="row">
-        <div className="col-12">
-          {vendorStore && (
-            <>
-              <p>_id: {vendorStore._id}</p>
-              <p>storeSlug: {vendorStore.storeSlug} </p>
-              <p>Show: certificates, services, rating & reviews</p>
-            </>
-          )}
-        </div>
-      </div>
     </section>
   );
 }

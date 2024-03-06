@@ -152,12 +152,6 @@ const Header = () => {
                   </a>
                   <ul className="dropdown-menu">
                     <li>
-                      <Link to="/dashboard" className="dropdown-item">
-                        <i className="fa-solid fa-gear"></i>
-                        Dashboard
-                      </Link>
-                    </li>
-                    <li>
                       <Link
                         to={authRoute + "/profile"}
                         className="dropdown-item"
