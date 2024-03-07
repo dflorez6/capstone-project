@@ -87,6 +87,19 @@ function Sidebar() {
                 <>
                   {/* Vendor */}
                   <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-magnifying-glass link-icon"></i>
+                      <span className="link-text">Projects</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-calendar-days link-icon"></i>
+                      <span className="link-text">Work Orders</span>
+                    </Link>
+                  </li>
+
+                  <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
                       to={`/vendors/store/${vendorInfo.storeSlug}`}
@@ -95,6 +108,16 @@ function Sidebar() {
                       <span className="link-text">Store</span>
                     </Link>
                   </li>
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/vendors/store/${vendorInfo.storeSlug}/edit`}
+                    >
+                      <i className="fa-solid fa-pen-to-square"></i>
+                      <span className="link-text">Edit Store</span>
+                    </Link>
+                  </li>
+
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
@@ -109,14 +132,24 @@ function Sidebar() {
                 <>
                   {/* Property Manager */}
                   <li className="sidebar-navigation-item">
-                    <Link
-                      className="sidebar-navigation-link "
-                      to={`/`}
-                    >
-                      <i className="fa-solid fa-store link-icon"></i>
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-magnifying-glass link-icon"></i>
+                      <span className="link-text">Vendors</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-briefcase link-icon"></i>
                       <span className="link-text">Projects</span>
                     </Link>
                   </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-calendar-days link-icon"></i>
+                      <span className="link-text">Work Orders</span>
+                    </Link>
+                  </li>
+
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"

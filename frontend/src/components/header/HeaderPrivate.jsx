@@ -115,6 +115,11 @@ const Header = () => {
             <div className="ms-auto">
               <ul className="navbar-nav">
                 <li className="nav-item">
+                  <Link className="nav-link" to="/">
+                    <i className="fa-solid fa-bell"></i>
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">
                     Dashboard
                   </Link>
@@ -122,6 +127,12 @@ const Header = () => {
 
                 {authUser.accountType == "vendor" ? (
                   <>
+                    <Link className="nav-link" to={"/"}>
+                      Projects
+                    </Link>
+                    <Link className="nav-link" to={"/"}>
+                      Work Orders
+                    </Link>
                     <Link
                       className="nav-link"
                       to={`/vendors/store/${vendorInfo.storeSlug}`}
@@ -134,7 +145,13 @@ const Header = () => {
                   <>
                     {/* TODO: Update Prop Manager Links */}
                     <Link className="nav-link" to="/">
+                      Vendors
+                    </Link>
+                    <Link className="nav-link" to="/">
                       Projects
+                    </Link>
+                    <Link className="nav-link" to="/">
+                      Work Orders
                     </Link>
                   </>
                 )}
@@ -161,7 +178,6 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
                       <a
                         className="dropdown-item cursor-pointer"
                         onClick={logoutHandler}
