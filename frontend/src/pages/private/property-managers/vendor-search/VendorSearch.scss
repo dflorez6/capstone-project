@@ -1,0 +1,25 @@
+// Imports
+@import "../../../../styles/core/variables.scss";
+
+//====================
+// Vendor Search Page
+//====================
+.vendor-search-wrapper {
+  // Filters
+  .search-filters-wrapper {
+    .panel-wrapper {
+        margin: 0;
+
+        // Search Button
+        .submit-wrapper {
+            margin: 0;
+        }
+
+    }
+  }
+
+  // Results
+  .search-results-wrapper {
+    //
+  }
+}

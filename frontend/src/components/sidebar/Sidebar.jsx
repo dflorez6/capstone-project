@@ -132,7 +132,7 @@ function Sidebar() {
                 <>
                   {/* Property Manager */}
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/`}>
+                    <Link className="sidebar-navigation-link" to={"/vendors/search"}>
                       <i className="fa-solid fa-magnifying-glass link-icon"></i>
                       <span className="link-text">Vendors</span>
                     </Link>

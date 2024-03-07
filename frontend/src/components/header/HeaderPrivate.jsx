@@ -144,7 +144,7 @@ const Header = () => {
                 ) : (
                   <>
                     {/* TODO: Update Prop Manager Links */}
-                    <Link className="nav-link" to="/">
+                    <Link className="nav-link" to="/vendors/search">
                       Vendors
                     </Link>
                     <Link className="nav-link" to="/">

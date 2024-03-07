@@ -18,15 +18,25 @@ const getAllVendorServices = asyncHandler(async (req, res) => {
 
   try {
     // Fetch Vendor Services with passed param vendorStore
-    const vendorServices = await VendorService.find({ vendorStore })
-      .sort({
-        name: 1,
-      })
-      .populate([
-        {
-          path: "serviceCategory",
-        },
-      ]);
+    let vendorServices = await VendorService.find({ vendorStore }).populate([
+      {
+        path: "serviceCategory",
+      },
+    ]);
+
+    // Sort the vendor services by serviceCategory name
+    vendorServices.sort((a, b) => {
+      const nameA = a.serviceCategory.name.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.serviceCategory.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0; // names must be equal
+    });
+
     res.status(200).json(vendorServices);
   } catch (error) {
     res.status(500).json(error.message);

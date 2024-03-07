@@ -30,6 +30,9 @@ router
   .get(protect, getVendorProfile)
   .put(protect, imgUploader.single("avatar"), updateVendorProfile);
 
+// Index
+// router.get("/", getAllVendors);
+
 // Profile
 // router.get("/profile", getVendorProfile);
 
@@ -37,7 +40,6 @@ router
 // router.put("/profile", updateVendorProfile);
 
 // Index
-// router.get("/", index);
 
 // Create
 // router.post("/", create);

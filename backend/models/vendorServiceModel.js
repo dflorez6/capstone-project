@@ -25,20 +25,6 @@ const vendorServiceSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    /*
-    serviceImages: [
-      {
-        publicId: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
-    */
     serviceCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ServiceCategory",
@@ -69,3 +55,19 @@ vendorServiceSchema.index({ _id: 1, storeOwner: 1 });
 const VendorService = mongoose.model("VendorService", vendorServiceSchema);
 
 export default VendorService;
+
+// TODO: In case we need to add serviceImages
+/*
+  serviceImages: [
+    {
+      publicId: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+*/

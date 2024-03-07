@@ -4,6 +4,7 @@
 // Import Dependencies
 import asyncHandler from "express-async-handler";
 import VendorStore from "../../../models/vendorStoreModel.js";
+import VendorService from "../../../models/vendorServiceModel.js";
 // Image Uploader
 import cloudinary from "../../../services/cloudinary.config.js"; // Used when using cloudinary node package instead of multer
 
@@ -15,12 +16,84 @@ import cloudinary from "../../../services/cloudinary.config.js"; // Used when us
 // Route: GET /api/v1/vendor-stores
 // Access: Public
 const getAllVendorStores = asyncHandler(async (req, res) => {
+  // Destructure URL query params (e.g.: /?city=Waterloo)
+  const { companyName, serviceCategory, city, province, rating } = req.query;
+
+  // Initializations
+  let stores;
+
+  // Rating
+  // TODO: Pending for implementation, search by Store Rating
+
   try {
-    // Use the find() method without any conditions to retrieve all records
-    const vendorStores = await VendorStore.find().sort({ name: 1 }); // TODO: DB - To get order by DESC use -1
-    res.status(200).json(vendorStores);
+    // Check if query params are provided
+    if (companyName || city || province) {
+      //-----
+      // Query Params: companyName, city & province
+      //-----
+      stores = await VendorStore.find({
+        // Filter the stores based on the storeOwner's city or province (or both if provided)
+      })
+        .populate({
+          path: "storeOwner",
+          select: "-password",
+          match: {
+            $or: [
+              { companyName: companyName },
+              { "address.city": city },
+              { "address.province": province },
+            ],
+          },
+        })
+        .sort({ createdAt: -1 }); // Order DESC
+
+      // Filter out documents where storeOwner is null after population
+      stores = stores.filter((store) => store.storeOwner !== null);
+    } else if (serviceCategory) {
+      //-----
+      // Query Params: serviceCategory
+      //-----
+      // Find vendorServices with passed query param
+      const vendorServices = await VendorService.find({}).populate({
+        path: "serviceCategory",
+        match: { name: serviceCategory },
+      });
+
+      // Store only the services that match the query param
+      const filteredServices = vendorServices.filter(
+        (store) => store.serviceCategory !== null
+      );
+
+      // Extract the IDs of vendorStores associated with filtered vendorServices
+      const vendorStoreIds = filteredServices.map(
+        (service) => service.vendorStore
+      );
+
+      // Find the vendorStores associated with the extracted IDs
+      stores = await VendorStore.find({
+        _id: { $in: vendorStoreIds },
+      })
+        .populate({
+          path: "storeOwner",
+          select: "-password",
+        })
+        .sort({ createdAt: -1 });
+    } else {
+      //-----
+      // No Query Params: returns all stores
+      //-----
+      // No query params will return all stores
+      stores = await VendorStore.find()
+        .populate({
+          path: "storeOwner",
+        })
+        .sort({ createdAt: -1 }); // Order DESC
+    }
+
+    // Returned Stores
+    res.status(200).json(stores);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
