@@ -4,7 +4,6 @@
 // Import Dependencies
 import asyncHandler from "express-async-handler";
 import VendorService from "../../../models/vendorServiceModel.js";
-import { populate } from "dotenv";
 
 //--------------------
 // GET

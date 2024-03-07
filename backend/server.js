@@ -54,8 +54,10 @@ app.use(`${baseURL}/certificate-categories`, certificateCategoryRoutes);
 // Store
 import vendorStoreRoutes from "./routes/api/v1/vendorStoreRoutes.js";
 import vendorServiceRoutes from "./routes/api/v1/vendorServiceRoutes.js";
+import vendorCertificateRoutes from "./routes/api/v1/vendorCertificateRoutes.js";
 app.use(`${baseURL}/vendor-stores`, vendorStoreRoutes);
 app.use(`${baseURL}/vendor-services`, vendorServiceRoutes);
+app.use(`${baseURL}/vendor-certificates`, vendorCertificateRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Server!");
