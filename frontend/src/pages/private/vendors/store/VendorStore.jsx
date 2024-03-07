@@ -9,6 +9,11 @@ import {
   useUpdateVendorServiceMutation,
   useDeleteVendorServiceMutation,
 } from "../../../../slices/vendorServiceApiSlice";
+import {
+  useGetVendorCertificatesQuery,
+  useUpdateVendorCertificateMutation,
+  useDeleteVendorCertificateMutation,
+} from "../../../../slices/vendorCertificateApiSlice"; // TODO: IMPLEMENT: INDEX & DELETE actions
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -46,6 +51,12 @@ function VendorStore() {
     isLoading: vendorServicesLoading,
     refetch: vendorServicesRefetch,
   } = useGetVendorServicesQuery(vendorStore?._id);
+  const {
+    data: vendorCertificates,
+    isError: vendorCertificatesError,
+    isLoading: vendorCertificatesLoading,
+    refetch: vendorCertificatesRefetch,
+  } = useGetVendorCertificatesQuery(vendorStore?._id);
 
   // Redux Toolkit Mutations
   const [
@@ -55,6 +66,13 @@ function VendorStore() {
       isLoading: deleteVendorServiceLoading,
     },
   ] = useDeleteVendorServiceMutation();
+  const [
+    deleteVendorCertificate,
+    {
+      isError: deleteVendorCertificateError,
+      isLoading: deleteVendorCertificateLoading,
+    },
+  ] = useDeleteVendorCertificateMutation();
 
   //----------
   // Effects
@@ -62,7 +80,8 @@ function VendorStore() {
   // Refetch vendor services when urlStoreSlug changes
   useEffect(() => {
     vendorServicesRefetch();
-  }, [vendorServicesRefetch]);
+    vendorCertificatesRefetch();
+  }, [vendorServicesRefetch, vendorCertificatesRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -75,6 +94,15 @@ function VendorStore() {
   }
   if (deleteVendorServiceError) {
     console.log("Delete Vendor Service Error: ", deleteVendorServiceError);
+  }
+  if (vendorCertificatesError) {
+    console.log("Vendor Certificates Error: ", vendorCertificatesError);
+  }
+  if (deleteVendorCertificateError) {
+    console.log(
+      "Delete Vendor Certificates Error: ",
+      deleteVendorCertificateError
+    );
   }
 
   //----------
@@ -89,6 +117,12 @@ function VendorStore() {
 
   // Delete Vendor Service Handler
   const handleDeleteVendorService = async (serviceId) => {
+    // Show confirmation dialog before deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
+    if (!confirmed) return; // If not confirmed, do nothing
+
     try {
       // Delete the image using the deleteStoreImage mutation
       await deleteVendorService({
@@ -97,6 +131,29 @@ function VendorStore() {
       });
       toast.success("Service deleted successfully");
       vendorServicesRefetch(); // Refetch data after successful deletion
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+      console.log("Delete Store Image Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Delete Vendor Certificate Handler
+  const handleDeleteVendorCertificate = async (certificateId) => {
+    // Show confirmation dialog before deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this certificate?"
+    );
+    if (!confirmed) return; // If not confirmed, do nothing
+
+    try {
+      // Delete the image using the deleteStoreImage mutation
+      await deleteVendorCertificate({
+        vendorStore: vendorStore?._id,
+        certificateId: certificateId,
+      });
+      toast.success("Certificate deleted successfully");
+      vendorCertificatesRefetch(); // Refetch data after successful deletion
     } catch (error) {
       toast.error(error?.data?.message || error?.error);
       console.log("Delete Store Image Error:");
@@ -203,10 +260,9 @@ function VendorStore() {
                                 className="col-12 col-sm-12 col-md-4 col-lg-4"
                                 key={index}
                               >
-                                {/* Only storeOwner can edit the Store */}
-
                                 <div className="service-card-wrapper shadow">
                                   {/* Actions */}
+                                  {/* Only storeOwner can edit the Store */}
                                   {vendorStore.storeOwner._id ===
                                     vendorInfo._id && (
                                     <>
@@ -300,6 +356,85 @@ function VendorStore() {
             <div className="panel-wrapper shadow">
               <div className="panel-title-wrapper">
                 <h2>Certificates</h2>
+              </div>
+
+              <div className="panel-content-wrapper">
+                <div className="store-certificates-wrapper">
+                  {vendorCertificatesLoading && <Loader />}
+                  <div className="row">
+                    {vendorCertificates?.length > 0 ? (
+                      <>
+                        {vendorCertificates?.map((certificate, index) => (
+                          <div
+                            className="col-12 col-sm-12 col-md-3 col-lg-3"
+                            key={index}
+                          >
+                            <div className="store-certificate-wrapper">
+                              {/* Image */}
+                              <div className="certificate-image-wrapper">
+                                {certificate.certificateImage ? (
+                                  <>
+                                    <img
+                                      src={certificate.certificateImage.url}
+                                      alt={vendorStore.storeSlug}
+                                      className="img-fluid"
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <img
+                                      src={imgPlaceholder}
+                                      alt={vendorStore.storeSlug}
+                                      className="img-fluid"
+                                    />
+                                  </>
+                                )}
+                              </div>
+                              {/* ./Image */}
+                              {/* Info */}
+                              <div className="certificate-info-wrapper">
+                                <h4>{certificate.name}</h4>
+                                <h5>{certificate.certificateCategory.name}</h5>
+                              </div>
+                              {/* ./Info */}
+                              {/* Actions */}
+                              {/* Only storeOwner can edit the Store */}
+                              <div className="certificate-actions-wrapper">
+                                {deleteVendorCertificateLoading ? (
+                                  <Loader />
+                                ) : (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="action-delete"
+                                      onClick={() =>
+                                        handleDeleteVendorCertificate(
+                                          certificate._id
+                                        )
+                                      }
+                                    >
+                                      <i className="fa-solid fa-trash-can action-icon"></i>
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                              {/* ./Actions */}
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <div className="col-12 text-center">
+                          <div className="store-certificate-wrapper">
+                            <h5>NO CERTIFICATES ADDED</h5>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {/* */}
+                  </div>
+                </div>
               </div>
             </div>
             {/* ./Certificates */}

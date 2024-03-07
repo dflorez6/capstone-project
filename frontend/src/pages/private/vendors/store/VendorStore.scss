@@ -157,7 +157,7 @@
             flex: 2;
 
             h3 {
-              font-size: $f-h5;
+              font-size: 1rem;
               font-weight: $f-black;
               margin: 1rem 0;
               text-transform: uppercase;
@@ -172,6 +172,46 @@
     // Certificates
     .store-certificates-wrapper {
       background-color: $c-white;
+
+      // Certificate
+      .store-certificate-wrapper {
+        position: relative;
+
+        // Actions
+        .certificate-actions-wrapper {
+          text-align: center;
+
+          .action-delete {
+            .action-icon {
+              color: $c-red;
+            }
+          }
+        }
+
+        // Image
+        .certificate-image-wrapper {
+          margin: 1rem 0;
+          text-align: center;
+          img {
+            width: 50%;
+          }
+        }
+
+        // Info
+        .certificate-info-wrapper {
+          text-align: center;
+
+          h4 {
+            font-size: $f-h3;
+            margin: 0;
+          }
+          h5 {
+            font-size: 0.9rem;
+            font-weight: $f-medium;
+            opacity: 0.6;
+          }
+        }
+      }
     }
 
     // Reviews
