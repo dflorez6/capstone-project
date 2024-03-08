@@ -46,7 +46,7 @@ const Profile = () => {
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   // Redux Toolkit Mutations
-  const [updateProfile, { isLoading, error }] = useUpdateVendorMutation(); // Array destructiring
+  const [updateProfile, { isLoading: updateProfileLoading, error: updateProfileError }] = useUpdateVendorMutation(); // Array destructiring
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const { data: cities, isError: citiesError } = useGetCitiesQuery();
@@ -81,6 +81,9 @@ const Profile = () => {
   //----------
   // Redux Toolkit Slice Errors
   //----------
+  if (updateProfileError) {
+    console.log("Update Profile Error:", updateProfileError);
+  }
   if (citiesError) {
     console.log("Cities Error:", citiesError);
   }
@@ -384,7 +387,7 @@ const Profile = () => {
             {/* ./Input: Postal Code */}
           </div>
 
-          {isLoading && <Loader />}
+          {updateProfileLoading && <Loader />}
 
           <div className="row">
             <div className="col-12">

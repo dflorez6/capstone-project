@@ -38,6 +38,7 @@ import EditVendorStore from "./pages/private/vendors/store/EditVendorStore.jsx";
 // Property Managers
 //----------
 import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
+import VendorSearch from "./pages/private/property-managers/vendor-search/VendorSearch.jsx";
 // Styles
 import "./style.scss";
 
@@ -62,10 +63,17 @@ const router = createBrowserRouter(
         {/* Vendors */}
         <Route path="/vendors/profile" element={<VendorsProfile />} />
         <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />
-        <Route path="/vendors/store/:storeSlug/edit" element={<EditVendorStore />} />
+        <Route
+          path="/vendors/store/:storeSlug/edit"
+          element={<EditVendorStore />}
+        />
 
         {/* Property Managers */}
-        <Route path="/property-managers/profile" element={<PropertyManagersProfile />} />        
+        <Route
+          path="/property-managers/profile"
+          element={<PropertyManagersProfile />}
+        />
+        <Route path="/vendors/search" element={<VendorSearch />} />
       </Route>
     </Route>
   )

@@ -39,21 +39,25 @@ app.use(bodyParser.urlencoded({ extended: true })); // Use body-parser to parse 
 const baseURL = "/api/v1";
 // Users
 import vendorRoutes from "./routes/api/v1/vendorRoutes.js";
-import propertyManagerRoutes from "./routes/api/v1/propertyManagerRoutes.js"
+import propertyManagerRoutes from "./routes/api/v1/propertyManagerRoutes.js";
 app.use(`${baseURL}/vendors`, vendorRoutes);
 app.use(`${baseURL}/property-managers`, propertyManagerRoutes);
 // Auxiliary
 import cityRoutes from "./routes/api/v1/cityRoutes.js";
 import provinceRoutes from "./routes/api/v1/provinceRoutes.js";
-import serviceCategoryRoutes from "./routes/api/v1/serviceCategoryRoutes.js"
-import certificateCategoryRoutes from "./routes/api/v1/certificateCategoryRoutes.js"
+import serviceCategoryRoutes from "./routes/api/v1/serviceCategoryRoutes.js";
+import certificateCategoryRoutes from "./routes/api/v1/certificateCategoryRoutes.js";
 app.use(`${baseURL}/cities`, cityRoutes);
 app.use(`${baseURL}/provinces`, provinceRoutes);
 app.use(`${baseURL}/service-categories`, serviceCategoryRoutes);
 app.use(`${baseURL}/certificate-categories`, certificateCategoryRoutes);
 // Store
-import vendorStoreRoutes from "./routes/api/v1/vendorStoreRoutes.js"
+import vendorStoreRoutes from "./routes/api/v1/vendorStoreRoutes.js";
+import vendorServiceRoutes from "./routes/api/v1/vendorServiceRoutes.js";
+import vendorCertificateRoutes from "./routes/api/v1/vendorCertificateRoutes.js";
 app.use(`${baseURL}/vendor-stores`, vendorStoreRoutes);
+app.use(`${baseURL}/vendor-services`, vendorServiceRoutes);
+app.use(`${baseURL}/vendor-certificates`, vendorCertificateRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Server!");

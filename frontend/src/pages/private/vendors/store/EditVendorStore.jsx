@@ -9,6 +9,20 @@ import {
   useUpdateVendorStoreMutation,
   useDeleteStoreImageMutation,
 } from "../../../../slices/vendorStoreApiSlice";
+import {
+  useGetVendorServicesQuery,
+  useCreateVendorServiceMutation,
+  useUpdateVendorServiceMutation,
+  useDeleteVendorServiceMutation,
+} from "../../../../slices/vendorServiceApiSlice";
+import {
+  useGetVendorCertificatesQuery,
+  useCreateVendorCertificateMutation,
+  useUpdateVendorCertificateMutation,
+  useDeleteVendorCertificateMutation,
+} from "../../../../slices/vendorCertificateApiSlice";
+import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
+import { useGetCertificateCategoriesQuery } from "../../../../slices/certificateCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -26,16 +40,28 @@ function EditVendorStore() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
-  // Form Fields
+  // Form Fields: Vendor Store
   const [coverImage, setCoverImage] = useState(null); // Store the selected image file
   const [storeImages, setStoreImages] = useState([]); // Store the selected image files
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // storeImages // TODO: Implement Multiple Image Upload
 
-  // Create a ref for the file input element
+  // Form Fields: Vendor Service
+  const [serviceName, setServiceName] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
+  const [serviceYearsExperience, setServiceYearsExperience] = useState(0);
+  const [serviceCostHour, setServiceCostHour] = useState(0);
+  const [serviceCategory, setServiceCategory] = useState("");
+
+  // Form Fields: Vendor Certificate
+  const [certificateImage, setCertificateImage] = useState(null); // Store the selected image file
+  const [certificateName, setCertificateName] = useState("");
+  const [certificateCategory, setCertificateCategory] = useState("");
+
+  // Create a ref for the file input elements (image uploads)
   const inputCoverImageFileRef = useRef(null);
   const inputStoreImagesFileRef = useRef(null);
+  const inputCertificateImageFileRef = useRef(null);
 
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
@@ -52,6 +78,10 @@ function EditVendorStore() {
     isLoading: vendorStoreLoading,
     refetch: vendorStoreRefetch,
   } = useGetVendorStoreQuery(urlStoreSlug); // vendorInfo.storeSlug
+  const { data: serviceCategories, isError: serviceCategoriesError } =
+    useGetServiceCategoriesQuery();
+  const { data: certificateCategories, isError: certificateCategoriesError } =
+    useGetCertificateCategoriesQuery();
 
   // Redux Toolkit Mutations
   const [
@@ -62,12 +92,21 @@ function EditVendorStore() {
     deleteStoreImage,
     { isError: deleteStoreImageError, isLoading: deleteStoreImageLoading },
   ] = useDeleteStoreImageMutation();
+  const [
+    createVendorService,
+    { isError: vendorServiceError, isLoading: vendorServiceLoading },
+  ] = useCreateVendorServiceMutation();
+  const [
+    createVendorCertificate,
+    { isError: vendorCertificateError, isLoading: vendorCertificateLoading },
+  ] = useCreateVendorCertificateMutation();
 
   //----------
   // Effects
   //----------
   // Update inputs from Redux Store
   useEffect(() => {
+    // Vendor Store
     setTitle(vendorStore?.title || "");
     setDescription(vendorStore?.description || "");
   }, [vendorStore, urlStoreSlug]);
@@ -83,6 +122,18 @@ function EditVendorStore() {
   }
   if (deleteStoreImageError) {
     console.log("Delete Vendor Store Image Error: ", deleteStoreImageError);
+  }
+  if (serviceCategoriesError) {
+    console.log("Service Categories Error: ", serviceCategoriesError);
+  }
+  if (vendorServiceError) {
+    console.log("Vendor Service Error: ", vendorServiceError);
+  }
+  if (vendorCertificateError) {
+    console.log("Vendor Certificate Error: ", vendorCertificateError);
+  }
+  if (certificateCategoriesError) {
+    console.log("Certificate Categories Error: ", certificateCategoriesError);
   }
 
   //----------
@@ -147,6 +198,12 @@ function EditVendorStore() {
 
   // Delete Store Image Handler
   const handleDeleteImage = async (imageId) => {
+    // Show confirmation dialog before deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this image?"
+    );
+    if (!confirmed) return; // If not confirmed, do nothing
+
     try {
       // Delete the image using the deleteStoreImage mutation
       await deleteStoreImage({ storeSlug: urlStoreSlug, imageId: imageId });
@@ -159,15 +216,85 @@ function EditVendorStore() {
     }
   };
 
-  // File Change
+  // Add Service
+  const addServiceHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Format costHour to always display cents
+      const formattedCostHour = parseFloat(serviceCostHour).toFixed(2);
+
+      // Form Data
+      const newService = {
+        name: serviceName,
+        description: serviceDescription,
+        yearsExperience: serviceYearsExperience,
+        costHour: formattedCostHour,
+        serviceCategory: serviceCategory,
+        vendorStore: vendorStore._id,
+      };
+
+      const res = await createVendorService(newService).unwrap();
+
+      if (res) {
+        // Reset form fields to their default state
+        setServiceName("");
+        setServiceDescription("");
+        setServiceYearsExperience(0);
+        setServiceCostHour(0);
+        setServiceCategory("");
+        toast.success("Service added successfully");
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error); // Toastify implementation
+      console.log("Create Vendor Service Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Add Certificate
+  const addCertificateHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Form Data
+      const formData = new FormData();
+      // Append coverImage if selected
+      if (certificateImage) {
+        formData.append("certificateImage", certificateImage); // Append selected image file to FormData
+      }
+      formData.append("name", certificateName);
+      formData.append("certificateCategory", certificateCategory);
+      formData.append("vendorStore", vendorStore._id);
+
+      const res = await createVendorCertificate(formData).unwrap();
+
+      if (res) {
+        // Reset form fields to their default state
+        setCertificateCategory("");
+        setCertificateName("");
+        setCertificateImage(null);
+        toast.success("Certificate added successfully");
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error); // Toastify implementation
+      console.log("Create Vendor Service Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // File Change: Images
   const handleCoverImageFileChange = (e) => {
     const file = e.target.files[0];
     setCoverImage(file); // Update the state with the selected file
   };
-
   const handleStoreImagesFileChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to Array
     setStoreImages(files); // Update the state with the selected files
+  };
+  const handleCertificateImageFileChange = (e) => {
+    const file = e.target.files[0];
+    setCertificateImage(file); // Update the state with the selected file
   };
 
   //----------
@@ -200,7 +327,7 @@ function EditVendorStore() {
         <>
           <div className="row">
             {/* Store Info */}
-            <div className="col-6 d-flex align-items-stretch">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Info</h2>
@@ -280,20 +407,26 @@ function EditVendorStore() {
                       {/* ./Input: Textarea */}
                     </div>
 
-                    {updateVendorStoreLoading && <Loader />}
-
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="submit-wrapper">
-                          <button
-                            type="submit"
-                            className="btn-app btn-app-purple"
-                          >
-                            Update Store
-                          </button>
+                    {updateVendorStoreLoading ? (
+                      <Loader />
+                    ) : (
+                      <>
+                        {/* Submit */}
+                        <div className="row">
+                          <div className="col-12">
+                            <div className="submit-wrapper">
+                              <button
+                                type="submit"
+                                className="btn-app btn-app-purple"
+                              >
+                                Update Store
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                        {/* ./Submit */}
+                      </>
+                    )}
                   </form>
                 </div>
               </div>
@@ -301,7 +434,7 @@ function EditVendorStore() {
             {/* ./Store Info */}
 
             {/* Store Images */}
-            <div className="col-6 d-flex align-items-stretch">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
               <div className="panel-wrapper m-0">
                 <div className="panel-title-wrapper">
                   <h2>Store Images</h2>
@@ -315,7 +448,7 @@ function EditVendorStore() {
                   >
                     <div className="row">
                       <div className="col-12 col-sm-12 col-md-8 col-lg-8">
-                        <label htmlFor="storeImages"></label>
+                        <label htmlFor="storeImages">Add Images</label>
                         <input
                           type="file"
                           name="storeImages"
@@ -326,6 +459,8 @@ function EditVendorStore() {
                           onChange={handleStoreImagesFileChange} // Call handleStoreImagesFileChange on file selection
                         />
                       </div>
+
+                      {/* Submit */}
                       <div className="col-12 col-sm-12 col-md-4 col-lg-4">
                         <div className="submit-wrapper horizontal-form-submit">
                           <button
@@ -336,6 +471,7 @@ function EditVendorStore() {
                           </button>
                         </div>
                       </div>
+                      {/* ./Submit */}
                     </div>
                   </form>
 
@@ -404,11 +540,234 @@ function EditVendorStore() {
             </div>
             {/* ./Store Images */}
           </div>
-          <p>
-            VendorStore <br />
-            StoreSlug: {vendorStore.storeSlug} <br />
-            Title: {vendorStore.title} <br />
-          </p>
+
+          <div className="row">
+            {/* Store Services */}
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
+              <div className="panel-wrapper flex-fill mt-4">
+                <div className="panel-title-wrapper">
+                  <h2>Services</h2>
+                </div>
+
+                <div className="panel-content-wrapper">
+                  <form className="form" id="" onSubmit={addServiceHandler}>
+                    <div className="row">
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceCategory">
+                          Service Category
+                        </label>
+                        <select
+                          name="serviceCategory"
+                          id="serviceCategory"
+                          className="form-control"
+                          value={serviceCategory}
+                          onChange={(e) => setServiceCategory(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select...
+                          </option>
+                          {serviceCategories &&
+                            serviceCategories?.map((service) => (
+                              <option key={service._id} value={service._id}>
+                                {service.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+
+                      {/* TODO: Uncomment if a service name is required */}
+                      {/*
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceName">Service Name</label>
+                        <input
+                          type="text"
+                          name="serviceName"
+                          id="serviceName"
+                          className="form-control"
+                          placeholder=""
+                          value={serviceName}
+                          onChange={(e) => setServiceName(e.target.value)}
+                        />
+                      </div>
+                      */}
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceDescription">Desctiption</label>
+                        <textarea
+                          name="serviceDescription"
+                          id="serviceDescription"
+                          className="form-control"
+                          placeholder="Service description (Max 140 characters)"
+                          rows="3"
+                          value={serviceDescription}
+                          onChange={(e) =>
+                            setServiceDescription(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-2">
+                        <label htmlFor="yearsExperience">
+                          Years of Experience
+                        </label>
+                        <input
+                          type="number"
+                          name="yearsExperience"
+                          id="yearsExperience"
+                          className="form-control"
+                          placeholder=""
+                          min="0"
+                          step="0.1"
+                          value={serviceYearsExperience}
+                          onChange={(e) =>
+                            setServiceYearsExperience(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-md-6 col-lg-6 my-2">
+                        <label htmlFor="costHour">Cost per hour</label>
+                        <input
+                          type="number"
+                          name="yearsExperience"
+                          id="yearsExperience"
+                          className="form-control"
+                          placeholder=""
+                          min="0"
+                          step="0.01"
+                          value={serviceCostHour}
+                          onChange={(e) => setServiceCostHour(e.target.value)}
+                        />
+                      </div>
+                      {/* ./Input: Text */}
+
+                      {vendorServiceLoading ? (
+                        <Loader />
+                      ) : (
+                        <>
+                          {/* Submit */}
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="submit-wrapper">
+                                <button
+                                  type="submit"
+                                  className="btn-app btn-app-purple"
+                                >
+                                  Add Service
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          {/* ./Submit */}
+                        </>
+                      )}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {/* ./Store Services */}
+
+            {/* Store Certificates */}
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-stretch">
+              <div className="panel-wrapper flex-fill mt-4">
+                <div className="panel-title-wrapper">
+                  <h2>Certificates</h2>
+                </div>
+
+                <div className="panel-content-wrapper">
+                  <form
+                    action=""
+                    className="form"
+                    id=""
+                    onSubmit={addCertificateHandler}
+                  >
+                    <div className="row">
+                      <div className="col-12 my-2">
+                        <label htmlFor="serviceCategory">
+                          Certificate Category
+                        </label>
+                        <select
+                          name="serviceCategory"
+                          id="serviceCategory"
+                          className="form-control"
+                          value={certificateCategory}
+                          onChange={(e) =>
+                            setCertificateCategory(e.target.value)
+                          }
+                        >
+                          <option value="" disabled>
+                            Select...
+                          </option>
+                          {certificateCategories &&
+                            certificateCategories?.map((certificate) => (
+                              <option
+                                key={certificate._id}
+                                value={certificate._id}
+                              >
+                                {certificate.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="certificateImage">
+                          Certificate Image
+                        </label>
+                        <input
+                          type="file"
+                          name="certificateImage"
+                          id="certificateImage"
+                          className="form-control"
+                          multiple
+                          ref={inputCertificateImageFileRef} // Attach the ref to the input element
+                          onChange={handleCertificateImageFileChange} // Call handleStoreImagesFileChange on file selection
+                        />
+                      </div>
+
+                      <div className="col-12 my-2">
+                        <label htmlFor="certificateName">
+                          Certificate Name
+                        </label>
+                        <input
+                          type="text"
+                          name="certificateName"
+                          id="certificateName"
+                          className="form-control"
+                          placeholder="Certificate"
+                          value={certificateName}
+                          onChange={(e) => setCertificateName(e.target.value)}
+                        />
+                      </div>
+
+                      {vendorCertificateLoading ? (
+                        <Loader />
+                      ) : (
+                        <>
+                          {/* Submit */}
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="submit-wrapper">
+                                <button
+                                  type="submit"
+                                  className="btn-app btn-app-purple"
+                                >
+                                  Add Certificate
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          {/* ./Submit */}
+                        </>
+                      )}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {/* ./Store Certificates */}
+          </div>
         </>
       )}
     </section>

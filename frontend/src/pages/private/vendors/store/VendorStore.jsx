@@ -4,9 +4,20 @@ import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useGetVendorStoreQuery } from "../../../../slices/vendorStoreApiSlice";
+import {
+  useGetVendorServicesQuery,
+  useUpdateVendorServiceMutation,
+  useDeleteVendorServiceMutation,
+} from "../../../../slices/vendorServiceApiSlice";
+import {
+  useGetVendorCertificatesQuery,
+  useUpdateVendorCertificateMutation,
+  useDeleteVendorCertificateMutation,
+} from "../../../../slices/vendorCertificateApiSlice"; // TODO: IMPLEMENT: INDEX & DELETE actions
 // Components
-import FormContainer from "../../../../components/FormContainer";
 import Loader from "../../../../components/Loader";
+// Toast
+import { toast } from "react-toastify";
 // Styles
 import "./VendorStore.scss";
 // Assets
@@ -27,26 +38,50 @@ function VendorStore() {
   const url = window.location.pathname;
   const urlParts = url.split("/");
   const urlStoreSlug = urlParts[urlParts.length - 1]; // Get the last part of the URL
-  
+
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
     data: vendorStore,
     isError: vendorStoreError,
     isLoading: vendorStoreLoading,
   } = useGetVendorStoreQuery(urlStoreSlug); // vendorInfo.storeSlug
+  const {
+    data: vendorServices,
+    isError: vendorServicesError,
+    isLoading: vendorServicesLoading,
+    refetch: vendorServicesRefetch,
+  } = useGetVendorServicesQuery(vendorStore?._id);
+  const {
+    data: vendorCertificates,
+    isError: vendorCertificatesError,
+    isLoading: vendorCertificatesLoading,
+    refetch: vendorCertificatesRefetch,
+  } = useGetVendorCertificatesQuery(vendorStore?._id);
+
+  // Redux Toolkit Mutations
+  const [
+    deleteVendorService,
+    {
+      isError: deleteVendorServiceError,
+      isLoading: deleteVendorServiceLoading,
+    },
+  ] = useDeleteVendorServiceMutation();
+  const [
+    deleteVendorCertificate,
+    {
+      isError: deleteVendorCertificateError,
+      isLoading: deleteVendorCertificateLoading,
+    },
+  ] = useDeleteVendorCertificateMutation();
 
   //----------
   // Effects
   //----------
-  // Update inputs from Redux Store for vendorInfo
-  useEffect(
-    () => {
-      // add sideEffects here
-    },
-    [
-      // dependency array
-    ]
-  );
+  // Refetch vendor services when urlStoreSlug changes
+  useEffect(() => {
+    vendorServicesRefetch();
+    vendorCertificatesRefetch();
+  }, [vendorServicesRefetch, vendorCertificatesRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -54,15 +89,69 @@ function VendorStore() {
   if (vendorStoreError) {
     console.log("Vendor Store Error: ", vendorStoreError);
   }
+  if (vendorServicesError) {
+    console.log("Vendor Services Error: ", vendorServicesError);
+  }
+  if (deleteVendorServiceError) {
+    console.log("Delete Vendor Service Error: ", deleteVendorServiceError);
+  }
+  if (vendorCertificatesError) {
+    console.log("Vendor Certificates Error: ", vendorCertificatesError);
+  }
+  if (deleteVendorCertificateError) {
+    console.log(
+      "Delete Vendor Certificates Error: ",
+      deleteVendorCertificateError
+    );
+  }
 
   //----------
   // Handlers
   //----------
-  // Form Submit Handler
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  // Delete Vendor Service Handler
+  const handleDeleteVendorService = async (serviceId) => {
+    // Show confirmation dialog before deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
+    if (!confirmed) return; // If not confirmed, do nothing
 
-    // TODO: In case Im using this page also as the update page, complete the formSubmit Handler
+    try {
+      // Delete the image using the deleteStoreImage mutation
+      await deleteVendorService({
+        vendorStore: vendorStore?._id,
+        serviceId: serviceId,
+      });
+      toast.success("Service deleted successfully");
+      vendorServicesRefetch(); // Refetch data after successful deletion
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+      console.log("Delete Store Image Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Delete Vendor Certificate Handler
+  const handleDeleteVendorCertificate = async (certificateId) => {
+    // Show confirmation dialog before deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this certificate?"
+    );
+    if (!confirmed) return; // If not confirmed, do nothing
+
+    try {
+      // Delete the image using the deleteStoreImage mutation
+      await deleteVendorCertificate({
+        vendorStore: vendorStore?._id,
+        certificateId: certificateId,
+      });
+      toast.success("Certificate deleted successfully");
+      vendorCertificatesRefetch(); // Refetch data after successful deletion
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+      console.log("Delete Store Image Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   //----------
@@ -102,16 +191,17 @@ function VendorStore() {
                 <div className="store-title-wrapper">
                   <h1>{vendorStore.title}</h1>
                   {/* Only storeOwner can edit the Store */}
-                  {vendorStore.storeOwner._id === vendorInfo._id && (
-                    <>
-                      <Link
-                        to={`/vendors/store/${vendorStore.storeSlug}/edit`}
-                        className="btn-app btn-app-sm btn-app-dark-outline"
-                      >
-                        edit
-                      </Link>
-                    </>
-                  )}
+                  {vendorInfo &&
+                    vendorStore.storeOwner._id === vendorInfo._id && (
+                      <>
+                        <Link
+                          to={`/vendors/store/${vendorStore.storeSlug}/edit`}
+                          className="btn-app btn-app-sm btn-app-dark-outline"
+                        >
+                          edit
+                        </Link>
+                      </>
+                    )}
                 </div>
                 <div className="store-rating-wrapper">
                   <div className="store-rating-reviews-wrapper">
@@ -155,103 +245,201 @@ function VendorStore() {
 
                   <div className="panel-content-wrapper">
                     <div className="service-cards-wrapper">
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/4396/4396060.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>hvac</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
+                      {vendorServicesLoading && <Loader />}
+                      <div className="row">
+                        {vendorServices?.length > 0 ? (
+                          <>
+                            {vendorServices?.map((service, index) => (
+                              <div
+                                className="col-12 col-sm-12 col-md-4 col-lg-4"
+                                key={index}
+                              >
+                                <div className="service-card-wrapper shadow">
+                                  {/* Actions */}
+                                  {/* Only storeOwner can edit the Store */}
+                                  {vendorInfo &&
+                                    vendorStore.storeOwner._id ===
+                                      vendorInfo._id && (
+                                      <>
+                                        <div className="service-card-actions">
+                                          {deleteVendorServiceLoading ? (
+                                            <Loader />
+                                          ) : (
+                                            <>
+                                              <button
+                                                type="button"
+                                                className="action-delete"
+                                                onClick={() =>
+                                                  handleDeleteVendorService(
+                                                    service._id
+                                                  )
+                                                }
+                                              >
+                                                <i className="fa-solid fa-trash-can action-icon"></i>
+                                              </button>
+                                            </>
+                                          )}
+                                        </div>
+                                      </>
+                                    )}
+                                  {/* ./Actions */}
+                                  {/* Icon */}
+                                  <div className="serivce-icon-wrapper">
+                                    <img
+                                      src={
+                                        service.serviceCategory.categoryImage
+                                          .url
+                                      }
+                                      className="service-image"
+                                      alt={vendorStore.storeSlug}
+                                    />
+                                  </div>
+                                  {/* ./Icon */}
+                                  {/* Content */}
+                                  <div className="service-content-wrapper">
+                                    <h3>{service.serviceCategory.name}</h3>
+                                    <p>
+                                      Cost: $
+                                      <span className="cost-hour">
+                                        {service.costHour}
+                                      </span>{" "}
+                                      /hr
+                                    </p>
+                                    <p>
+                                      Experience:{" "}
+                                      <span>
+                                        {service.yearsExperience} years
+                                      </span>
+                                    </p>
+                                  </div>
+                                  {/* ./Content */}
+                                </div>
+                              </div>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <div className="col-12">
+                              <div className="service-card-wrapper shadow">
+                                {/* Icon */}
+                                <div className="serivce-icon-wrapper">
+                                  <img
+                                    src={imgPlaceholder}
+                                    className="service-image rounded-circle"
+                                    alt={vendorStore.storeSlug}
+                                  />
+                                </div>
+                                {/* ./Icon */}
+                                {/* Content */}
+                                <div className="service-content-wrapper">
+                                  <h3>No Services Added</h3>
+                                </div>
+                                {/* ./Content */}
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card*/}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/3185/3185876.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>electrical</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/8246/8246670.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>plumbing</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
-
-                      {/* Service Card */}
-                      <div className="service-card-wrapper shadow">
-                        {/* Icon */}
-                        <div className="serivce-icon-wrapper">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/128/4295/4295647.png"
-                            className="service-image"
-                            alt={vendorStore.storeSlug}
-                          />
-                        </div>
-                        {/* ./Icon */}
-                        <div className="service-content-wrapper">
-                          <h3>pest control</h3>
-                          <p>
-                            Cost: <span>$75 / hr</span>
-                          </p>
-                          <p>
-                            Experience: <span>5 years</span>
-                          </p>
-                        </div>
-                      </div>
-                      {/* ./Service Card */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* ./Services */}
+
+            {/* Certificates */}
+            <div className="panel-wrapper shadow">
+              <div className="panel-title-wrapper">
+                <h2>Certificates</h2>
+              </div>
+
+              <div className="panel-content-wrapper">
+                <div className="store-certificates-wrapper">
+                  {vendorCertificatesLoading && <Loader />}
+                  <div className="row">
+                    {vendorCertificates?.length > 0 ? (
+                      <>
+                        {vendorCertificates?.map((certificate, index) => (
+                          <div
+                            className="col-12 col-sm-12 col-md-3 col-lg-3"
+                            key={index}
+                          >
+                            <div className="store-certificate-wrapper">
+                              {/* Image */}
+                              <div className="certificate-image-wrapper">
+                                {certificate.certificateImage ? (
+                                  <>
+                                    <img
+                                      src={certificate.certificateImage.url}
+                                      alt={vendorStore.storeSlug}
+                                      className="img-fluid"
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <img
+                                      src={imgPlaceholder}
+                                      alt={vendorStore.storeSlug}
+                                      className="img-fluid"
+                                    />
+                                  </>
+                                )}
+                              </div>
+                              {/* ./Image */}
+                              {/* Info */}
+                              <div className="certificate-info-wrapper">
+                                <h4>{certificate.name}</h4>
+                                <h5>{certificate.certificateCategory.name}</h5>
+                              </div>
+                              {/* ./Info */}
+                              {/* Actions */}
+                              {/* Only storeOwner can edit the Store */}
+                              {vendorInfo &&
+                                vendorStore.storeOwner._id ===
+                                  vendorInfo._id && (
+                                  <>
+                                    <div className="certificate-actions-wrapper">
+                                      {deleteVendorCertificateLoading ? (
+                                        <Loader />
+                                      ) : (
+                                        <>
+                                          <button
+                                            type="button"
+                                            className="action-delete"
+                                            onClick={() =>
+                                              handleDeleteVendorCertificate(
+                                                certificate._id
+                                              )
+                                            }
+                                          >
+                                            <i className="fa-solid fa-trash-can action-icon"></i>
+                                          </button>
+                                        </>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+
+                              {/* ./Actions */}
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <div className="col-12 text-center">
+                          <div className="store-certificate-wrapper">
+                            <h5>NO CERTIFICATES ADDED</h5>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {/* */}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* ./Certificates */}
 
             {/* Gallery */}
             {vendorStore.storeImages.length > 0 && (
@@ -322,11 +510,6 @@ function VendorStore() {
             )}
             {/* ./Gallery */}
 
-            <div className="panel-wrapper store-certificates-wrapper shadow">
-              <p>Certificates</p>
-            </div>
-            {/* ./Certificates */}
-
             <div className="panel-wrapper store-reviews-wrapper shadow">
               <p>Reviews</p>
             </div>
@@ -334,18 +517,6 @@ function VendorStore() {
           </div>
         </>
       )}
-
-      <div className="row">
-        <div className="col-12">
-          {vendorStore && (
-            <>
-              <p>_id: {vendorStore._id}</p>
-              <p>storeSlug: {vendorStore.storeSlug} </p>
-              <p>Show: certificates, services, rating & reviews</p>
-            </>
-          )}
-        </div>
-      </div>
     </section>
   );
 }

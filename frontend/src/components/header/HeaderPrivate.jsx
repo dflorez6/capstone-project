@@ -6,6 +6,8 @@ import { useVendorLogoutMutation } from "../../slices/vendorsApiSlice";
 import { vendorClearCredentials } from "../../slices/vendorAuthSlice";
 import { usePropertyManagerLogoutMutation } from "../../slices/propertyManagersApiSlice";
 import { propertyManagerClearCredentials } from "../../slices/propertyManagerAuthSlice";
+// Toast
+import { toast } from "react-toastify";
 // Styles
 import "./Header.scss";
 // Assets
@@ -47,10 +49,12 @@ const Header = () => {
         await propertyManagerLogout().unwrap();
         dispatch(propertyManagerClearCredentials());
       }
+      toast.success("Logged out successfully");
       navigate("/login");
-    } catch (err) {
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
       console.log("Logout Error:");
-      console.log(err?.data?.message || err?.error);
+      console.log(error?.data?.message || error?.error);
     }
   };
 
@@ -65,6 +69,16 @@ const Header = () => {
   } else {
     authUser = propertyManagerInfo;
     authRoute = "/property-managers";
+  }
+
+  //----------
+  // Redux Toolkit Slice Errors
+  //----------
+  if (vendorError) {
+    console.log("Vendor Error: ", vendorError);
+  }
+  if (propertyManagerError) {
+    console.log("property Manager Error: ", propertyManagerError);
   }
 
   //----------
@@ -101,10 +115,46 @@ const Header = () => {
             <div className="ms-auto">
               <ul className="navbar-nav">
                 <li className="nav-item">
+                  <Link className="nav-link" to="/">
+                    <i className="fa-solid fa-bell"></i>
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">
                     Dashboard
                   </Link>
                 </li>
+
+                {authUser.accountType == "vendor" ? (
+                  <>
+                    <Link className="nav-link" to={"/"}>
+                      Projects
+                    </Link>
+                    <Link className="nav-link" to={"/"}>
+                      Work Orders
+                    </Link>
+                    <Link
+                      className="nav-link"
+                      to={`/vendors/store/${vendorInfo.storeSlug}`}
+                    >
+                      Store
+                    </Link>
+                    {/* TODO: Update Vendor Links */}
+                  </>
+                ) : (
+                  <>
+                    {/* TODO: Update Prop Manager Links */}
+                    <Link className="nav-link" to="/vendors/search">
+                      Vendors
+                    </Link>
+                    <Link className="nav-link" to="/">
+                      Projects
+                    </Link>
+                    <Link className="nav-link" to="/">
+                      Work Orders
+                    </Link>
+                  </>
+                )}
 
                 {/* Dropdown */}
                 <li className="nav-item dropdown">
@@ -119,12 +169,6 @@ const Header = () => {
                   </a>
                   <ul className="dropdown-menu">
                     <li>
-                      <Link to="/dashboard" className="dropdown-item">
-                        <i className="fa-solid fa-gear"></i>
-                        Dashboard
-                      </Link>
-                    </li>
-                    <li>
                       <Link
                         to={authRoute + "/profile"}
                         className="dropdown-item"
@@ -134,7 +178,6 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
                       <a
                         className="dropdown-item cursor-pointer"
                         onClick={logoutHandler}

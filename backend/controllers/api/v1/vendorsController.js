@@ -171,10 +171,8 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Check if a new avatar is uploaded
+    // Initialization
     let avatarData = {};
-
-    // let avatarUrl = vendor.avatar.url;
 
     // Check if a new file is uploaded
     if (req.file) {

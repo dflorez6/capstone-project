@@ -87,12 +87,44 @@ function Sidebar() {
                 <>
                   {/* Vendor */}
                   <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-magnifying-glass link-icon"></i>
+                      <span className="link-text">Projects</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-calendar-days link-icon"></i>
+                      <span className="link-text">Work Orders</span>
+                    </Link>
+                  </li>
+
+                  <li className="sidebar-navigation-item">
                     <Link
-                      className="sidebar-navigation-link "
+                      className="sidebar-navigation-link"
                       to={`/vendors/store/${vendorInfo.storeSlug}`}
                     >
                       <i className="fa-solid fa-store link-icon"></i>
                       <span className="link-text">Store</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/vendors/store/${vendorInfo.storeSlug}/edit`}
+                    >
+                      <i className="fa-solid fa-pen-to-square"></i>
+                      <span className="link-text">Edit Store</span>
+                    </Link>
+                  </li>
+
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={"/vendors/profile"}
+                    >
+                      <i className="fa-solid fa-user-gear"></i>
+                      <span className="link-text">Profile</span>
                     </Link>
                   </li>
                 </>
@@ -100,12 +132,31 @@ function Sidebar() {
                 <>
                   {/* Property Manager */}
                   <li className="sidebar-navigation-item">
-                    <Link
-                      className="sidebar-navigation-link "
-                      to={`/vendors/store/${vendorInfo.storeSlug}`}
-                    >
-                      <i className="fa-solid fa-store link-icon"></i>
+                    <Link className="sidebar-navigation-link" to={"/vendors/search"}>
+                      <i className="fa-solid fa-magnifying-glass link-icon"></i>
+                      <span className="link-text">Vendors</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-briefcase link-icon"></i>
                       <span className="link-text">Projects</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/`}>
+                      <i className="fa-solid fa-calendar-days link-icon"></i>
+                      <span className="link-text">Work Orders</span>
+                    </Link>
+                  </li>
+
+                  <li className="sidebar-navigation-item">
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={"/property-managers/profile"}
+                    >
+                      <i className="fa-solid fa-user-gear"></i>
+                      <span className="link-text">Profile</span>
                     </Link>
                   </li>
                 </>
