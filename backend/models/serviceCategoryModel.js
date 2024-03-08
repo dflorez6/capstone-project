@@ -14,7 +14,16 @@ const serviceCategorySchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-
+    categoryImage: {
+      publicId: {
+        type: String,
+        default: "",
+      },
+      url: {
+        type: String,
+        default: "",
+      },
+    },
     // Add more fields
   },
   {

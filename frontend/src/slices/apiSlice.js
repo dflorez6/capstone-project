@@ -8,6 +8,16 @@ const baseQuery = fetchBaseQuery({ baseUrl: "" }); // This is empty because a pr
 
 export const apiSlice = createApi({
   baseQuery,
-  tagTypes: ["Vendor", "City", "Province"], // Used for caching (add other types as needed e.g. Products, Projects, etc.)
+  tagTypes: [
+    "CertificateCategory",
+    "City",
+    "PropertyManager",
+    "Province",
+    "ServiceCategory",
+    "VendorCertificate",
+    "Vendor",
+    "VendorService",
+    "VendorStore",
+  ], // Used for caching (add other types as needed e.g. Products, Projects, etc.)
   endpoints: (builder) => ({}), // Parent of other API slices
 });

@@ -25,6 +25,9 @@ const seedCities = [
   {
     city: "Waterloo",
   },
+  {
+    city: "Vancouver",
+  },
 ];
 
 //--------------------
