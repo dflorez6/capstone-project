@@ -308,7 +308,6 @@ function Profile() {
 
           <div className="row">
             <div className="col-12 col-md-6 col-lg-6 my-2">
-              {/* TODO: Create a Select Component */}
               <label htmlFor="city">City</label>
               <select
                 name="city"

@@ -8,18 +8,86 @@
   // Filters
   .search-filters-wrapper {
     .panel-wrapper {
+      margin: 0;
+
+      // Search Button
+      .submit-wrapper {
         margin: 0;
-
-        // Search Button
-        .submit-wrapper {
-            margin: 0;
-        }
-
+      }
     }
   }
 
   // Results
   .search-results-wrapper {
+    margin: 2rem 0 0;
+
+    // Store Card
+    .store-card-wrapper {
+      background-color: $c-white;
+      border-radius: 10px;
+      box-shadow: var(--bs-box-shadow-sm);
+      margin: 0 0 2rem;
+
+      // Image
+      .card-image-wrapper {
+        .card-image {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          height: 175px;
+          object-fit: cover;
+          width: 100%;
+        }
+      }
+
+      // Content
+      .card-content-wrapper {
+        text-align: center;
+
+        .store-rating {
+          margin: 1rem 0;
+        }
+
+        .store-name {
+          h2 {
+            font-size: $f-h4;
+            font-weight: $f-medium;
+            margin: 0 0 0.25rem;
+          }
+        }
+
+        .store-location {
+          h3 {
+            display: inline-block;
+            font-size: $f-p;
+            font-weight: $f-light;
+
+            .icon-location {
+              margin-right: 0.5rem;
+            }
+          }
+        }
+      }
+
+      // Actions
+      .card-actions-wrapper {
+        margin: 1rem 0 0;
+        padding: 0 0 1.5rem;
+        text-align: center;
+      }
+    }
+
+    // Store Card Hover
+    .store-card-wrapper:hover {
+      box-shadow: var(--bs-box-shadow);
+    }
+
     //
   }
+
+  // Pagination
+  .app-pagination-wrapper {
+    margin: 0 0 2rem;
+  }
+
+  //
 }

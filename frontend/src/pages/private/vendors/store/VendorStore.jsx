@@ -108,13 +108,6 @@ function VendorStore() {
   //----------
   // Handlers
   //----------
-  // Form Submit Handler
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    // TODO: In case Im using this page also as the update page, complete the formSubmit Handler
-  };
-
   // Delete Vendor Service Handler
   const handleDeleteVendorService = async (serviceId) => {
     // Show confirmation dialog before deletion
@@ -198,16 +191,17 @@ function VendorStore() {
                 <div className="store-title-wrapper">
                   <h1>{vendorStore.title}</h1>
                   {/* Only storeOwner can edit the Store */}
-                  {vendorStore.storeOwner._id === vendorInfo._id && (
-                    <>
-                      <Link
-                        to={`/vendors/store/${vendorStore.storeSlug}/edit`}
-                        className="btn-app btn-app-sm btn-app-dark-outline"
-                      >
-                        edit
-                      </Link>
-                    </>
-                  )}
+                  {vendorInfo &&
+                    vendorStore.storeOwner._id === vendorInfo._id && (
+                      <>
+                        <Link
+                          to={`/vendors/store/${vendorStore.storeSlug}/edit`}
+                          className="btn-app btn-app-sm btn-app-dark-outline"
+                        >
+                          edit
+                        </Link>
+                      </>
+                    )}
                 </div>
                 <div className="store-rating-wrapper">
                   <div className="store-rating-reviews-wrapper">
@@ -263,30 +257,31 @@ function VendorStore() {
                                 <div className="service-card-wrapper shadow">
                                   {/* Actions */}
                                   {/* Only storeOwner can edit the Store */}
-                                  {vendorStore.storeOwner._id ===
-                                    vendorInfo._id && (
-                                    <>
-                                      <div className="service-card-actions">
-                                        {deleteVendorServiceLoading ? (
-                                          <Loader />
-                                        ) : (
-                                          <>
-                                            <button
-                                              type="button"
-                                              className="action-delete"
-                                              onClick={() =>
-                                                handleDeleteVendorService(
-                                                  service._id
-                                                )
-                                              }
-                                            >
-                                              <i className="fa-solid fa-trash-can action-icon"></i>
-                                            </button>
-                                          </>
-                                        )}
-                                      </div>
-                                    </>
-                                  )}
+                                  {vendorInfo &&
+                                    vendorStore.storeOwner._id ===
+                                      vendorInfo._id && (
+                                      <>
+                                        <div className="service-card-actions">
+                                          {deleteVendorServiceLoading ? (
+                                            <Loader />
+                                          ) : (
+                                            <>
+                                              <button
+                                                type="button"
+                                                className="action-delete"
+                                                onClick={() =>
+                                                  handleDeleteVendorService(
+                                                    service._id
+                                                  )
+                                                }
+                                              >
+                                                <i className="fa-solid fa-trash-can action-icon"></i>
+                                              </button>
+                                            </>
+                                          )}
+                                        </div>
+                                      </>
+                                    )}
                                   {/* ./Actions */}
                                   {/* Icon */}
                                   <div className="serivce-icon-wrapper">
@@ -399,25 +394,32 @@ function VendorStore() {
                               {/* ./Info */}
                               {/* Actions */}
                               {/* Only storeOwner can edit the Store */}
-                              <div className="certificate-actions-wrapper">
-                                {deleteVendorCertificateLoading ? (
-                                  <Loader />
-                                ) : (
+                              {vendorInfo &&
+                                vendorStore.storeOwner._id ===
+                                  vendorInfo._id && (
                                   <>
-                                    <button
-                                      type="button"
-                                      className="action-delete"
-                                      onClick={() =>
-                                        handleDeleteVendorCertificate(
-                                          certificate._id
-                                        )
-                                      }
-                                    >
-                                      <i className="fa-solid fa-trash-can action-icon"></i>
-                                    </button>
+                                    <div className="certificate-actions-wrapper">
+                                      {deleteVendorCertificateLoading ? (
+                                        <Loader />
+                                      ) : (
+                                        <>
+                                          <button
+                                            type="button"
+                                            className="action-delete"
+                                            onClick={() =>
+                                              handleDeleteVendorCertificate(
+                                                certificate._id
+                                              )
+                                            }
+                                          >
+                                            <i className="fa-solid fa-trash-can action-icon"></i>
+                                          </button>
+                                        </>
+                                      )}
+                                    </div>
                                   </>
                                 )}
-                              </div>
+
                               {/* ./Actions */}
                             </div>
                           </div>
