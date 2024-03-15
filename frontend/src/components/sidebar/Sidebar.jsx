@@ -132,15 +132,24 @@ function Sidebar() {
                 <>
                   {/* Property Manager */}
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={"/vendors/search"}>
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={"/vendors/search"}
+                    >
                       <i className="fa-solid fa-magnifying-glass link-icon"></i>
                       <span className="link-text">Vendors</span>
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/`}>
+                    <Link className="sidebar-navigation-link" to={`/projects`}>
                       <i className="fa-solid fa-briefcase link-icon"></i>
                       <span className="link-text">Projects</span>
+                    </Link>
+                  </li>
+                  <li className="sidebar-navigation-item">
+                    <Link className="sidebar-navigation-link" to={`/projects/new`}>
+                      <i className="fa-solid fa-pen-to-square link-icon"></i>
+                      <span className="link-text">Create Project</span>
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">

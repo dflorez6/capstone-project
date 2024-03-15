@@ -8,7 +8,6 @@ import { useGetVendorStoresQuery } from "../../../../slices/vendorStoreApiSlice"
 import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
 import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
-// TODO: Add Slices
 // Components
 import Loader from "../../../../components/Loader";
 // Styles
