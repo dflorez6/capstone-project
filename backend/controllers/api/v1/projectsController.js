@@ -22,7 +22,7 @@ const getAllProjects = asyncHandler(async (req, res) => {
     // Fetch Vendor Services with passed param vendorStore
     const projects = await Project.find({ propertyManager: propertyManagerId })
       .sort({
-        createdAt: 1,
+        createdAt: -1,
       })
       .populate([
         {

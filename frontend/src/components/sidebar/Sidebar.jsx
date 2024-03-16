@@ -141,13 +141,19 @@ function Sidebar() {
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/projects`}>
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/projects/${propertyManagerInfo._id}`}
+                    >
                       <i className="fa-solid fa-briefcase link-icon"></i>
                       <span className="link-text">Projects</span>
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/projects/new`}>
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/projects/new`}
+                    >
                       <i className="fa-solid fa-pen-to-square link-icon"></i>
                       <span className="link-text">Create Project</span>
                     </Link>

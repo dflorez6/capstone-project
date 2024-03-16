@@ -8,12 +8,91 @@
 // Index (All projects)
 //--------------------
 .projects-wrapper {
-//
+  // Content
+  .projects-content-wrapper {
+    // Card
+    .project-card-wrapper {
+      background-size: cover;
+      background-position: center center;
+      border-radius: 10px;
+      box-shadow: var(--bs-box-shadow-sm);
+
+      .card-overlay {
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+        padding: 4rem 1rem;
+        transition: all 0.3s ease-in-out;
+
+        // Title
+        .card-title {
+          h2 {
+            color: $c-white;
+            font-size: $f-h3;
+            font-weight: $f-bold;
+            margin: 0;
+            text-align: center;
+            text-transform: uppercase;
+          }
+        }
+
+        // Category
+        .card-category {
+          h3 {
+            color: $c-white;
+            font-size: $f-h4;
+            font-weight: $f-regular;
+            margin: 0 0 1rem;
+            text-align: center;
+          }
+        }
+
+        // Date
+        .card-content-date {
+          color: $c-white;
+          text-align: center;
+
+          p {
+            margin: 0;
+          }
+
+          .icon-wrapper {
+            display: inline-block;
+            margin-right: 0.5rem;
+          }
+          .date-start {
+            display: inline-block;
+          }
+          .dash {
+            display: inline-block;
+            margin: 0 0.5rem;
+          }
+          .date-end {
+            display: inline-block;
+          }
+        }
+
+        // Actions
+        .card-actions {
+          margin: 2rem 0 0;
+          text-align: center;
+        }
+      }
+    }
+
+    // Card Hover
+    .project-card-wrapper:hover {
+      box-shadow: var(--bs-box-shadow) !important;
+      .card-overlay {
+        background-color: rgba(0, 0, 0, 0.8);
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
 }
 
 //--------------------
 // New / Update
 //--------------------
 .projects-form-wrapper {
-//
+  //
 }

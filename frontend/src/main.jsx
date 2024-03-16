@@ -40,6 +40,7 @@ import VendorStoreEdit from "./pages/private/vendors/store/VendorStoreEdit.jsx";
 import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
 import VendorSearch from "./pages/private/property-managers/vendor-search/VendorSearch.jsx";
 import Projects from "./pages/private/property-managers/projects/Projects.jsx";
+import Project from "./pages/private/property-managers/projects/Project.jsx";
 import ProjectsNew from "./pages/private/property-managers/projects/ProjectsNew.jsx";
 // Styles
 import "./style.scss";
@@ -76,9 +77,9 @@ const router = createBrowserRouter(
           element={<PropertyManagersProfile />}
         />
         <Route path="/vendors/search" element={<VendorSearch />} />
-        <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:propertyManagerId" element={<Projects />} />
+        <Route path="/projects/:propertyManagerId/:projectId" element={<Project />} />        
         <Route path="/projects/new" element={<ProjectsNew />} />
-        
       </Route>
     </Route>
   )

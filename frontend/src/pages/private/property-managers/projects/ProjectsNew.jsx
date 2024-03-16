@@ -1,12 +1,15 @@
 // Dependencies
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
-// TODO: Add Slices
+import { useCreateProjectMutation } from "../../../../slices/projectsApiSlice";
+import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
+// Toast
+import { toast } from "react-toastify";
 // Styles
 import "./Projects.scss";
 // Assets
@@ -17,8 +20,11 @@ function ProjectsNew() {
   //----------
   // State
   //----------
+  const navigate = useNavigate(); // Initialize
+  const dispatch = useDispatch(); // Initialize
 
   // Form Fields
+  const [coverImage, setCoverImage] = useState(null); // Store the selected image file
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [managerEmail, setManagerEmail] = useState("");
@@ -27,8 +33,23 @@ function ProjectsNew() {
   const [endDateTime, setEndDateTime] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
 
-  // Image file
-  // TODO: coverImage
+  // Create a ref for the file input elements (image uploads)
+  const inputCoverImageFileRef = useRef(null);
+
+  // Redux Store
+  const { propertyManagerInfo } = useSelector(
+    (state) => state.propertyManagerAuth
+  ); // Gets Vendor Info through the useSelector Hook
+
+  // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
+  const { data: serviceCategories, isError: serviceCategoriesError } =
+    useGetServiceCategoriesQuery();
+
+  // Redux Toolkit Mutations
+  const [
+    createProject,
+    { isError: createProjectError, isLoading: createProjectLoading },
+  ] = useCreateProjectMutation();
 
   //----------
   // Effects
@@ -41,11 +62,12 @@ function ProjectsNew() {
   //----------
   // Redux Toolkit Slice Errors
   //----------
-  /*
-  if (vendorStoresError) {
-    console.log("Vendor Stores Error: ", vendorStoresError);
+  if (createProjectError) {
+    console.log("Project Create Error: ", createProjectError);
   }
-  */
+  if (serviceCategoriesError) {
+    console.log("Service Categories Error: ", serviceCategoriesError);
+  }
 
   //----------
   // Handlers
@@ -54,8 +76,40 @@ function ProjectsNew() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // TODO: Pass Prop Manager _id from req.propertyManager._id
-    /* propertyManager: objectId */
+    try {
+      // Form Data
+      const formData = new FormData();
+
+      // Append coverImage if selected
+      if (coverImage) {
+        formData.append("coverImage", coverImage); // Append selected image file to FormData
+      }
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("managerEmail", managerEmail);
+      formData.append("managerPhone", managerPhone);
+      formData.append("startDateTime", startDateTime);
+      formData.append("endDateTime", endDateTime);
+      formData.append("serviceCategory", serviceCategory);
+      formData.append("propertyManager", propertyManagerInfo._id);
+
+      const res = await createProject({
+        propertyManagerId: propertyManagerInfo._id,
+        data: formData,
+      }).unwrap(); // Pass FormData to createProject function & make API call
+      toast.success("Project created successfully");
+      navigate(`/projects/${propertyManagerInfo._id}/${res._id}`); // Redirect to the project details page
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error); // Toastify implementation
+      console.log("Create Vendor Service Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // File Change: Images
+  const handleCoverImageFileChange = (e) => {
+    const file = e.target.files[0];
+    setCoverImage(file); // Update the state with the selected file
   };
 
   //----------
@@ -110,17 +164,25 @@ function ProjectsNew() {
 
                       <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
                         <label htmlFor="serviceCategory">
-                          serviceCategory select
+                          Service Category
                         </label>
-                        <input
-                          type="text"
+                        <select
                           name="serviceCategory"
                           id="serviceCategory"
                           className="form-control"
-                          placeholder="serviceCategory"
                           value={serviceCategory}
                           onChange={(e) => setServiceCategory(e.target.value)}
-                        />
+                        >
+                          <option value="" disabled>
+                            Select...
+                          </option>
+                          {serviceCategories &&
+                            serviceCategories?.map((service) => (
+                              <option key={service._id} value={service._id}>
+                                {service.name}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                       {/* Input: Field */}
 
@@ -145,15 +207,16 @@ function ProjectsNew() {
                           name="coverImage"
                           id="coverImage"
                           className="form-control"
-                          placeholder="coverImage"
+                          ref={inputCoverImageFileRef} // Attach the ref to the input element
+                          onChange={handleCoverImageFileChange}
                         />
                       </div>
                       {/* Input: Field */}
 
-                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                      <div className="col-12 my-2">
                         <label htmlFor="startDateTime">startDateTime</label>
                         <input
-                          type="text"
+                          type="datetime-local"
                           name="startDateTime"
                           id="startDateTime"
                           className="form-control"
@@ -164,10 +227,10 @@ function ProjectsNew() {
                       </div>
                       {/* Input: Field */}
 
-                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                      <div className="col-12 my-2">
                         <label htmlFor="endDateTime">endDateTime</label>
                         <input
-                          type="text"
+                          type="datetime-local"
                           name="endDateTime"
                           id="endDateTime"
                           className="form-control"
@@ -205,8 +268,8 @@ function ProjectsNew() {
                           name="description"
                           id="description"
                           className="form-control"
-                          placeholder="description"
-                          rows="7"
+                          placeholder="Enter the project's description"
+                          rows="10"
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
@@ -217,18 +280,26 @@ function ProjectsNew() {
                   {/* ./Right Col */}
                 </div>
 
-                {/* TODO: ADD isLoading from the Slice */}
-                {/* Submit */}
-                <div className="row">
-                  <div className="col-12">
-                    <div className="submit-wrapper">
-                      <button type="submit" className="btn-app btn-app-purple">
-                        Create Project
-                      </button>
+                {createProjectLoading ? (
+                  <Loader />
+                ) : (
+                  <>
+                    {/* Submit */}
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="submit-wrapper">
+                          <button
+                            type="submit"
+                            className="btn-app btn-app-purple"
+                          >
+                            Create Project
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                {/* ./Submit */}
+                    {/* ./Submit */}
+                  </>
+                )}
               </form>
             </div>
             {/* ./Form */}
