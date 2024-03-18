@@ -126,7 +126,7 @@ function VendorStore() {
       vendorServicesRefetch(); // Refetch data after successful deletion
     } catch (error) {
       toast.error(error?.data?.message || error?.error);
-      console.log("Delete Store Image Error:");
+      console.log("Delete Error:");
       console.log(error?.data?.message || error?.error);
     }
   };

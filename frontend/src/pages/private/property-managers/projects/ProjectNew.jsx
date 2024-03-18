@@ -1,7 +1,6 @@
 // Dependencies
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateProjectMutation } from "../../../../slices/projectsApiSlice";
@@ -12,8 +11,6 @@ import Loader from "../../../../components/Loader";
 import { toast } from "react-toastify";
 // Styles
 import "./Projects.scss";
-// Assets
-import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
 
 // Component
 function ProjectsNew() {
@@ -111,23 +108,6 @@ function ProjectsNew() {
     const file = e.target.files[0];
     setCoverImage(file); // Update the state with the selected file
   };
-
-  //----------
-  // Pagination
-  //----------
-  /*
-  // State for pagination
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3; // TODO: Set for 3 at the moment to be able to show pagination
-
-  // Calculate indexes of items to display on the current page
-  const indexOfLastStore = (currentPage + 1) * itemsPerPage;
-  const indexOfFirstStore = indexOfLastStore - itemsPerPage;
-  const currentStores = vendorStores?.slice(
-    indexOfFirstStore,
-    indexOfLastStore
-  );
-*/
 
   //----------
   // Output

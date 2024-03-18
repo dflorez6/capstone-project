@@ -105,6 +105,9 @@ function VendorSearch() {
     setCurrentPage(selected);
   };
 
+  // Check if there are any projects to display
+  const hasItems = vendorStores && vendorStores.length > 0;
+
   //----------
   // Output
   //----------
@@ -234,74 +237,75 @@ function VendorSearch() {
           {/* Results */}
           <div className="search-results-wrapper">
             <div className="row">
-              {currentStores.map((store, index) => (
-                <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
-                  <div className="store-card-wrapper">
-                    {/* Image */}
-                    <div className="card-image-wrapper">
-                      {store.coverImage.url === "" ? (
-                        <>
-                          <img
-                            src={imgPlaceholder}
-                            alt={store.storeSlug}
-                            className="card-image"
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <img
-                            src={store.coverImage.url}
-                            alt={store.storeSlug}
-                            className="card-image"
-                          />
-                        </>
-                      )}
-                    </div>
-                    {/* ./Image */}
-                    {/* Content */}
-                    <div className="card-content-wrapper">
-                      <div className="store-rating">
-                        <i className="fa-solid fa-star"></i>
-                        <i className="fa-solid fa-star"></i>
-                        <i className="fa-solid fa-star"></i>
-                        <i className="fa-solid fa-star"></i>
-                        <i className="fa-regular fa-star"></i>
+              {hasItems &&
+                currentStores.map((store, index) => (
+                  <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
+                    <div className="store-card-wrapper">
+                      {/* Image */}
+                      <div className="card-image-wrapper">
+                        {store.coverImage.url === "" ? (
+                          <>
+                            <img
+                              src={imgPlaceholder}
+                              alt={store.storeSlug}
+                              className="card-image"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src={store.coverImage.url}
+                              alt={store.storeSlug}
+                              className="card-image"
+                            />
+                          </>
+                        )}
                       </div>
-                      <div className="store-name">
-                        <h2>{store.storeOwner.companyName}</h2>
+                      {/* ./Image */}
+                      {/* Content */}
+                      <div className="card-content-wrapper">
+                        <div className="store-rating">
+                          <i className="fa-solid fa-star"></i>
+                          <i className="fa-solid fa-star"></i>
+                          <i className="fa-solid fa-star"></i>
+                          <i className="fa-solid fa-star"></i>
+                          <i className="fa-regular fa-star"></i>
+                        </div>
+                        <div className="store-name">
+                          <h2>{store.storeOwner.companyName}</h2>
+                        </div>
+                        <div className="store-location">
+                          <h3>
+                            {store.storeOwner.address ? (
+                              <>
+                                <i className="fa-solid fa-location-dot icon-location"></i>
+                                {store.storeOwner.address.city}
+                                {", "}
+                                {store.storeOwner.address.province}
+                              </>
+                            ) : (
+                              <>
+                                <i className="fa-solid fa-location-dot icon-location"></i>
+                                Not set
+                              </>
+                            )}
+                          </h3>
+                        </div>
                       </div>
-                      <div className="store-location">
-                        <h3>
-                          {store.storeOwner.address ? (
-                            <>
-                              <i className="fa-solid fa-location-dot icon-location"></i>
-                              {store.storeOwner.address.city}
-                              {", "}
-                              {store.storeOwner.address.province}
-                            </>
-                          ) : (
-                            <>
-                              <i className="fa-solid fa-location-dot icon-location"></i>
-                              Not set
-                            </>
-                          )}
-                        </h3>
+                      {/* ./Content */}
+                      {/* Actions */}
+                      <div className="card-actions-wrapper">
+                        <Link
+                          to={`/vendors/store/${store.storeSlug}`}
+                          className="btn-app btn-app-xs btn-app-purple-outline"
+                        >
+                          View
+                        </Link>
                       </div>
+                      {/* ./Actions */}
                     </div>
-                    {/* ./Content */}
-                    {/* Actions */}
-                    <div className="card-actions-wrapper">
-                      <Link
-                        to={`/vendors/store/${store.storeSlug}`}
-                        className="btn-app btn-app-xs btn-app-purple-outline"
-                      >
-                        View
-                      </Link>
-                    </div>
-                    {/* ./Actions */}
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           {/* ./Results */}
@@ -310,7 +314,7 @@ function VendorSearch() {
           <div className="row">
             <div className="col-12">
               <div className="app-pagination-wrapper">
-                {currentStores.length > 0 ? (
+                {hasItems && (
                   <ReactPaginate
                     pageCount={Math.ceil(vendorStores.length / itemsPerPage)}
                     breakLabel="..."
@@ -319,13 +323,12 @@ function VendorSearch() {
                     pageRangeDisplayed={5}
                     marginPagesDisplayed={2}
                     onPageChange={handlePageChange}
-                    containerClassName={"pagination"}
-                    activeClassName={"active"}
+                    containerClassName="pagination"
+                    activeClassName="active"
                   />
-                ) : (
-                  <>
-                    <h4 className="text-center">No stores found</h4>
-                  </>
+                )}
+                {!hasItems && (
+                  <h4 className="text-center">No projects created yet</h4>
                 )}
               </div>
             </div>
