@@ -27,6 +27,7 @@ function Profile() {
 
   // Form Fields
   const [avatar, setAvatar] = useState(null); // Store the selected image file
+  const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -60,6 +61,7 @@ function Profile() {
   //----------
   // Update inputs from Redux Store for vendorInfo
   useEffect(() => {
+    setCompanyName(propertyManagerInfo.companyName);
     setFirstName(propertyManagerInfo.firstName);
     setLastName(propertyManagerInfo.lastName);
     setEmail(propertyManagerInfo.email);
@@ -69,6 +71,7 @@ function Profile() {
     setProvince(propertyManagerInfo.address.province || "");
     setPostalCode(propertyManagerInfo.address.postalCode || "");
   }, [
+    propertyManagerInfo.companyName,
     propertyManagerInfo.firstName,
     propertyManagerInfo.lastName,
     propertyManagerInfo.email,
@@ -112,6 +115,7 @@ function Profile() {
         // Form Data
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
+        formData.append("companyName", companyName);
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
@@ -190,6 +194,23 @@ function Profile() {
             </div>
           </div>
           {/* ./Input: Image Upload */}
+
+          <div className="row">
+            <div className="col-12 my-2">
+              <label htmlFor="firstName">Company Legal Name</label>
+              <input
+                type="text"
+                name="companyName"
+                id="companyName"
+                className="form-control"
+                placeholder="Enter company's legal name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                disabled
+              />
+            </div>
+          </div>
+          {/* ./Input: Text */}
 
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">

@@ -12,9 +12,93 @@ import cloudinary from "../../../services/cloudinary.config.js"; // Used when us
 //--------------------
 // Action: Index
 // Description: List of Projects
-// Route: GET /api/v1/projects/:propertyManagerId
+// Route: GET /api/v1/projects
 // Access: Public
 const getAllProjects = asyncHandler(async (req, res) => {
+  // Destructure URL query params (e.g.: /?city=Waterloo)
+  const { companyName, serviceCategory, city, province } = req.query;
+
+  // Initializations
+  let projects;
+
+  try {
+    // Check if query params are provided
+    if (companyName || city || province) {
+      //-----
+      // Query Params: companyName, city & province
+      //-----
+      projects = await Project.find({
+        // Filter the project based on the propertyManager's companyName, city or province (or all if provided)
+      })
+        .populate([
+          {
+            path: "propertyManager",
+            select: "-password",
+            match: {
+              $or: [
+                { companyName: companyName },
+                { "address.city": city },
+                { "address.province": province },
+              ],
+            },
+          },
+          {
+            path: "serviceCategory",
+          },
+        ])
+        .sort({ createdAt: -1 }); // Order DESC
+
+      // Filter out documents where propertyManager is null after population
+      projects = projects.filter((project) => project.propertyManager !== null);
+    } else if (serviceCategory) {
+      //-----
+      // Query Params: serviceCategory
+      //-----
+      // Find projects based on the provided serviceCategory
+      projects = await Project.find({
+        serviceCategory: serviceCategory, // Expected to receive the serviceCategory ID
+      })
+        .populate([
+          {
+            path: "propertyManager",
+            select: "-password",
+          },
+          {
+            path: "serviceCategory",
+          },
+        ])
+        .sort({ createdAt: -1 }); // Order DESC
+    } else {
+      //-----
+      // No Query Params: returns all stores
+      //-----
+      projects = await Project.find()
+        .sort({
+          createdAt: -1,
+        })
+        .populate([
+          {
+            path: "propertyManager",
+            select: "-password",
+          },
+          {
+            path: "serviceCategory",
+          },
+        ]);
+    }
+
+    // Returned Stores
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Action: Index
+// Description: List of Projects
+// Route: GET /api/v1/projects/:propertyManagerId
+// Access: Public
+const getPropertyManagerProjects = asyncHandler(async (req, res) => {
   // Destructure req.params
   const { propertyManagerId } = req.params;
 
@@ -84,8 +168,6 @@ const showProject = asyncHandler(async (req, res) => {
 const createProject = asyncHandler(async (req, res) => {
   // Destructure req.params
   const { propertyManagerId } = req.params;
-
-  console.log("propertyManagerId: ", propertyManagerId);
 
   // Destructure req.body
   const {
@@ -297,6 +379,7 @@ const deleteProject = asyncHandler(async (req, res) => {
 
 export {
   getAllProjects,
+  getPropertyManagerProjects,
   showProject,
   createProject,
   updateProject,

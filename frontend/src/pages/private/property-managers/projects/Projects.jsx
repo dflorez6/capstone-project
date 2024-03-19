@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import {
-  useGetProjectsQuery,
+  useGetPropertyManagerProjectsQuery,
   useDeleteProjectMutation,
 } from "../../../../slices/projectsApiSlice";
 // Components
@@ -41,7 +41,7 @@ function Projects() {
     isError: projectsError,
     isLoading: projectsLoading,
     refetch: projectsRefetch,
-  } = useGetProjectsQuery(urlPropertyManagerId); // urlPropertyManagerId // TRY WITH propertyManagerInfo._id
+  } = useGetPropertyManagerProjectsQuery(urlPropertyManagerId); // urlPropertyManagerId // TRY WITH propertyManagerInfo._id
 
   // Redux Toolkit Mutations
   const [

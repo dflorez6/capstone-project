@@ -127,7 +127,7 @@ const Header = () => {
 
                 {authUser.accountType == "vendor" ? (
                   <>
-                    <Link className="nav-link" to={"/"}>
+                    <Link className="nav-link" to={"/projects"}>
                       Projects
                     </Link>
                     <Link className="nav-link" to={"/"}>

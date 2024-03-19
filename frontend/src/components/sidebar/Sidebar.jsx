@@ -6,6 +6,8 @@ import { useVendorLogoutMutation } from "../../slices/vendorsApiSlice";
 import { vendorClearCredentials } from "../../slices/vendorAuthSlice";
 import { usePropertyManagerLogoutMutation } from "../../slices/propertyManagersApiSlice";
 import { propertyManagerClearCredentials } from "../../slices/propertyManagerAuthSlice";
+// Toast
+import { toast } from "react-toastify";
 
 // Component
 function Sidebar() {
@@ -43,10 +45,12 @@ function Sidebar() {
         await propertyManagerLogout().unwrap();
         dispatch(propertyManagerClearCredentials());
       }
+      toast.success("Logged out successfully");
       navigate("/login");
-    } catch (err) {
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
       console.log("Logout Error:");
-      console.log(err?.data?.message || err?.error);
+      console.log(error?.data?.message || error?.error);
     }
   };
 
@@ -87,7 +91,7 @@ function Sidebar() {
                 <>
                   {/* Vendor */}
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/`}>
+                    <Link className="sidebar-navigation-link" to={`/projects`}>
                       <i className="fa-solid fa-magnifying-glass link-icon"></i>
                       <span className="link-text">Projects</span>
                     </Link>

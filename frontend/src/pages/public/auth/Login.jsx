@@ -1,13 +1,14 @@
 // Dependencies
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useVendorLoginMutation } from "../../../slices/vendorsApiSlice";
 import { vendorSetCredentials } from "../../../slices/vendorAuthSlice";
 import { usePropertyManagerLoginMutation } from "../../../slices/propertyManagersApiSlice";
 import { propertyManagerSetCredentials } from "../../../slices/propertyManagerAuthSlice";
+// Toast
+import { toast } from "react-toastify";
 // Components
 import Loader from "../../../components/Loader";
 // Styles
@@ -63,6 +64,7 @@ const Login = () => {
         password: vendorPassword,
       }).unwrap(); // Makes API Request
       dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+      toast.success("Welcome to VendorLynx!");
       navigate("/dashboard"); // Redirects to Dashboard Page
     } catch (err) {
       toast.error(err?.data?.message || err?.error); // Toastify implementation
@@ -81,6 +83,7 @@ const Login = () => {
         password: propertyManagerPassword,
       }).unwrap(); // Makes API Request
       dispatch(propertyManagerSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+      toast.success("Welcome to VendorLynx!");
       navigate("/dashboard"); // Redirects to Dashboard Page
     } catch (err) {
       toast.error(err?.data?.message || err?.error); // Toastify implementation

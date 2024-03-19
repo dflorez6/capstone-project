@@ -6,6 +6,7 @@ import express from "express";
 const router = express.Router();
 import {
   getAllProjects,
+  getPropertyManagerProjects,
   showProject,
   createProject,
   updateProject,
@@ -19,10 +20,13 @@ import imgUploader from "../../../services/multer.js";
 //--------------------
 // Controller Actions
 //--------------------
-// Index & Create
+// Index
+router.get("/", getAllProjects);
+
+// PropertyManagerProjects & Create
 router
   .route("/:propertyManagerId")
-  .get(getAllProjects)
+  .get(getPropertyManagerProjects)
   .post(protect, imgUploader.single("coverImage"), createProject);
 
 // Show, Update, Delete

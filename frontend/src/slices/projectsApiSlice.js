@@ -9,8 +9,16 @@ const PROJECTS_URL = "/api/v1/projects";
 export const projectApiSlice = apiSlice.injectEndpoints({
   // Endpoints
   endpoints: (builder) => ({
-    // Index - Get All Projects
+    // Index - Get All Projects (Search Page)
     getProjects: builder.query({
+      query: ({ companyName, serviceCategory, city, province }) => ({
+        url: `${PROJECTS_URL}?companyName=${companyName}&serviceCategory=${serviceCategory}&city=${city}&province=${province}`,
+        method: "GET",
+      }),
+    }),
+
+    // Index - Get Property Manager Projects
+    getPropertyManagerProjects: builder.query({
       query: (propertyManagerId) => ({
         url: `${PROJECTS_URL}/${propertyManagerId}`,
         method: "GET",
@@ -27,7 +35,7 @@ export const projectApiSlice = apiSlice.injectEndpoints({
 
     // Create Project
     createProject: builder.mutation({
-      query: ({propertyManagerId, data}) => ({
+      query: ({ propertyManagerId, data }) => ({
         url: `${PROJECTS_URL}/${propertyManagerId}`,
         method: "POST",
         body: data,
@@ -57,6 +65,7 @@ export const projectApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetProjectsQuery,
+  useGetPropertyManagerProjectsQuery,
   useGetProjectQuery,
   useCreateProjectMutation,
   useUpdateProjectMutation,

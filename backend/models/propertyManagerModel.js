@@ -16,6 +16,12 @@ const propertyManagerSchema = mongoose.Schema(
       type: String,
       default: "propertyManager",
     },
+    companyName: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     firstName: {
       type: String,
       required: true,
@@ -89,6 +95,8 @@ propertyManagerSchema.pre("save", async function (next) {
 propertyManagerSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// TODO: MAKE SURE TO DELETE ALL RELATED PROJECTS WHEN A PROP MANAGER IS DELETED
 
 //--------------------
 // Model Definition
