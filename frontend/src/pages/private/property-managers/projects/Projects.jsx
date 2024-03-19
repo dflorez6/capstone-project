@@ -172,7 +172,7 @@ function Projects() {
                     >
                       <div className="card-overlay">
                         {/* Actions */}
-                        {/* Only propertyManager can edit the Store */}
+                        {/* Only propertyManager can edit the Project */}
                         {propertyManagerInfo &&
                           project.propertyManager?._id ===
                             propertyManagerInfo?._id && (

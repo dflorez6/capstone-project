@@ -78,11 +78,6 @@ function ProjectEdit() {
     setStartDateTime(formatDateTimeForInput(project?.startDateTime) || "");
     setEndDateTime(formatDateTimeForInput(project?.endDateTime) || "");
     setServiceCategory(project?.serviceCategory._id || "");
-
-    console.log(
-      "formatDateTimeForInput(project?.startDateTime): ",
-      formatDateTimeForInput(project?.startDateTime)
-    );
   }, [project, urlPropertyManagerId, urlProjectId]);
 
   //----------
@@ -354,10 +349,10 @@ function ProjectEdit() {
                           <div className="row">
                             <div className="col-12 text-center mt-3">
                               <Link
-                                to={`/projects/${propertyManagerInfo._id}`}
+                                to={`/projects/${propertyManagerInfo._id}/${project._id}`}
                                 className="f-primary"
                               >
-                                <i className="fa-solid fa-chevron-left"></i>Back
+                                <i className="fa-solid fa-chevron-left"></i> Back
                               </Link>
                             </div>
                           </div>

@@ -284,7 +284,7 @@ function ProjectsNew() {
                             to={`/projects/${propertyManagerInfo._id}`}
                             className="f-primary"
                           >
-                            <i className="fa-solid fa-chevron-left"></i>Back
+                            <i className="fa-solid fa-chevron-left"></i> Back
                           </Link>
                         </div>
                       </div>
