@@ -8,6 +8,8 @@
 // Index (All projects)
 //--------------------
 .projects-wrapper {
+  padding: 0 2rem 2rem;
+
   // Content
   .projects-content-wrapper {
     // Card
@@ -67,6 +69,7 @@
         // Date
         .card-content-date {
           color: $c-white;
+          margin: 0 0 0.5rem;
           text-align: center;
 
           p {
@@ -112,5 +115,5 @@
 // New / Update
 //--------------------
 .projects-form-wrapper {
-  //
+  background-color: transparent;
 }

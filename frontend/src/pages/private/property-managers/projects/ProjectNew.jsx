@@ -164,7 +164,7 @@ function ProjectsNew() {
                             ))}
                         </select>
                       </div>
-                      {/* Input: Field */}
+                      {/* Input: Select */}
 
                       <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
                         <label htmlFor="name">Name</label>
@@ -254,7 +254,7 @@ function ProjectsNew() {
                           onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                       </div>
-                      {/* Input: Field */}
+                      {/* Input: Textarea */}
                     </div>
                   </div>
                   {/* ./Right Col */}
@@ -264,8 +264,8 @@ function ProjectsNew() {
                   <Loader />
                 ) : (
                   <>
-                    {/* Submit */}
                     <div className="row">
+                      {/* Submit */}
                       <div className="col-12">
                         <div className="submit-wrapper">
                           <button
@@ -276,8 +276,20 @@ function ProjectsNew() {
                           </button>
                         </div>
                       </div>
+                      {/* ./Submit */}
+                      {/* ./Back */}
+                      <div className="row">
+                        <div className="col-12 text-center mt-3">
+                          <Link
+                            to={`/projects/${propertyManagerInfo._id}`}
+                            className="f-primary"
+                          >
+                            <i className="fa-solid fa-chevron-left"></i>Back
+                          </Link>
+                        </div>
+                      </div>
+                      {/* ./Back */}
                     </div>
-                    {/* ./Submit */}
                   </>
                 )}
               </form>

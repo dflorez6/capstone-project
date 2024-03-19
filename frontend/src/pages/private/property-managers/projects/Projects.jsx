@@ -103,6 +103,20 @@ function Projects() {
       : imgPlaceholder;
   };
 
+  // Function to format datetime string to date
+  const formatDate = (projectDateTime) => {
+    const date = new Date(projectDateTime); // Parse datetime string
+    const options = { year: "numeric", month: "short", day: "2-digit" }; // Date formatting options
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  // Function to format datetime string to time
+  const formatTime = (projectDateTime) => {
+    const dateObj = new Date(projectDateTime); // Parse datetime string
+    const options = { hour: "2-digit", minute: "2-digit" }; // Time formatting options
+    return dateObj.toLocaleTimeString("en-US", options);
+  };
+
   //----------
   // Pagination
   //----------
@@ -195,24 +209,32 @@ function Projects() {
                         </div>
                         <div className="card-category">
                           {/* TODO: Maybe use the ServiceCategory Icon */}
-                          <h3>Electrical</h3>
+                          <h3>{project.serviceCategory.name}</h3>
                         </div>
 
                         <div className="card-content-date">
                           <div className="icon-wrapper">
                             <i className="fa-solid fa-calendar-days icon"></i>
                           </div>
-                          <p className="date-start">Start</p>
+                          <p className="date-start">
+                            {formatDate(project.startDateTime)}
+                          </p>
                           <p className="dash">-</p>
-                          <p className="date-start">End</p>
+                          <p className="date-end">
+                            {formatDate(project.endDateTime)}
+                          </p>
                         </div>
                         <div className="card-content-date">
                           <div className="icon-wrapper">
                             <i className="fa-solid fa-clock icon"></i>
                           </div>
-                          <p className="date-start">Start</p>
+                          <p className="date-start">
+                            {formatTime(project.startDateTime)}
+                          </p>
                           <p className="dash">-</p>
-                          <p className="date-start">End</p>
+                          <p className="date-end">
+                            {formatTime(project.endDateTime)}
+                          </p>
                         </div>
                         <div className="card-actions">
                           <Link
