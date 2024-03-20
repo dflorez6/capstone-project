@@ -137,6 +137,8 @@ const logoutVendor = asyncHandler(async (req, res) => {
 // Route: GET /api/v1/vendors/profile
 // Access: Private
 const getVendorProfile = asyncHandler(async (req, res) => {
+  // TODO: Original Code. 
+  /*
   // Get the vendor from the request object
   const vendor = {
     _id: req.vendor._id,
@@ -150,6 +152,10 @@ const getVendorProfile = asyncHandler(async (req, res) => {
     address: req.vendor.address,
     storeSlug: req.storeSlug,
   };
+  */
+
+  // Trying a different approach: fetch the record instead of using the request object
+  const vendor = await Vendor.findById(req.vendor._id).select("-password");
 
   res.status(200).json(vendor);
 });

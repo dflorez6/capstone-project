@@ -35,6 +35,13 @@ export const vendorsApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    showVendor: builder.query({
+      query: () => ({
+        url: `${VENDORS_URL}/profile`,
+        method: "GET",
+      }),
+    }),
+
     // Update Profile
     updateVendor: builder.mutation({
       query: (data) => ({
@@ -52,5 +59,6 @@ export const {
   useVendorLoginMutation,
   useVendorLogoutMutation,
   useVendorRegisterMutation,
+  useShowVendorQuery,
   useUpdateVendorMutation,
 } = vendorsApiSlice; // Export hooks for usage in components

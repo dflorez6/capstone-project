@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { vendorSetCredentials } from "../../../../slices/vendorAuthSlice";
-import { useUpdateVendorMutation } from "../../../../slices/vendorsApiSlice";
+import {
+  useShowVendorQuery,
+  useUpdateVendorMutation,
+} from "../../../../slices/vendorsApiSlice";
 import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
 import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 // Toast
@@ -45,6 +48,14 @@ const Profile = () => {
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
+  // Redux Toolkit Queries
+  const {
+    data: vendor,
+    isLoading: vendorLoading,
+    error: vendorError,
+    refetch: vendorRefetch,
+  } = useShowVendorQuery();
+
   // Redux Toolkit Mutations
   const [
     updateProfile,
@@ -58,6 +69,8 @@ const Profile = () => {
   //----------
   // Effects
   //----------
+  // Original code
+  /*
   // Update inputs from Redux Store for vendorInfo
   useEffect(() => {
     setCompanyName(vendorInfo.companyName);
@@ -80,10 +93,31 @@ const Profile = () => {
     vendorInfo.address.province,
     vendorInfo.address.postalCode,
   ]); // Dependency Array
+  */
+
+  // Update inputs from fetched vendor data
+  useEffect(() => {
+    setCompanyName(vendor?.companyName);
+    setFirstName(vendor?.firstName);
+    setLastName(vendor?.lastName);
+    setEmail(vendor?.email);
+    setPhone(vendor?.phone || "");
+    setStreet(vendor?.address.street || "");
+    setPostalCode(vendor?.address.postalCode || "");
+    setCity(vendor?.address.city || "");
+    setProvince(vendor?.address.province || "");
+    // vendorRefetch(); // Refetch Vendor Info // TODO: Check if it goes here or in the submit form hanbdler
+  }, [
+    // vendorRefetch, // TODO: Check if it goes here or in the submit form hanbdler
+    vendor,
+  ]); // Dependency Array
 
   //----------
   // Redux Toolkit Slice Errors
   //----------
+  if (vendorError) {
+    console.log("Fetch Vendor Error:", vendorError);
+  }
   if (updateProfileError) {
     console.log("Update Profile Error:", updateProfileError);
   }
@@ -94,7 +128,7 @@ const Profile = () => {
     console.log("Provinces Error:", provincesError);
   }
 
-  console.log("Profile Update: " );
+  console.log("Profile Update: ");
 
   //----------
   // Handlers
@@ -132,6 +166,7 @@ const Profile = () => {
         const res = await updateProfile(formData).unwrap(); // Pass FormData to updateProfile function & make API call
 
         dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
+        vendorRefetch();
         toast.success("Profile updated successfully");
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
@@ -157,7 +192,7 @@ const Profile = () => {
   //----------
   return (
     <section className="private-page-wrapper profile-wrapper">
-      {vendorInfo && updateProfileLoading ? (
+      {vendor && vendorLoading ? (
         <Loader />
       ) : (
         <>
