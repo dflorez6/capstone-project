@@ -59,19 +59,6 @@ const Header = () => {
   };
 
   //----------
-  // Global Variables
-  //----------
-  let authUser;
-  let authRoute;
-  if (vendorInfo) {
-    authUser = vendorInfo;
-    authRoute = "/vendors";
-  } else {
-    authUser = propertyManagerInfo;
-    authRoute = "/property-managers";
-  }
-
-  //----------
   // Redux Toolkit Slice Errors
   //----------
   if (vendorError) {
@@ -79,6 +66,24 @@ const Header = () => {
   }
   if (propertyManagerError) {
     console.log("property Manager Error: ", propertyManagerError);
+  }
+
+  //----------
+  // Global Variables
+  //----------
+  let authUser;
+  let authRoute;
+  let authId;
+  let vendorStoreSlug;
+  if (vendorInfo) {
+    authUser = vendorInfo;
+    authRoute = "/vendors";
+    authId = vendorInfo._id;
+    vendorStoreSlug = vendorInfo.storeSlug;
+  } else {
+    authUser = propertyManagerInfo;
+    authRoute = "/property-managers";
+    authId = propertyManagerInfo._id;
   }
 
   //----------
@@ -135,7 +140,7 @@ const Header = () => {
                     </Link>
                     <Link
                       className="nav-link"
-                      to={`/vendors/store/${vendorInfo.storeSlug}`}
+                      to={`/vendors/store/${vendorStoreSlug}`}
                     >
                       Store
                     </Link>
@@ -147,7 +152,7 @@ const Header = () => {
                     <Link className="nav-link" to="/vendors/search">
                       Vendors
                     </Link>
-                    <Link className="nav-link" to={`/projects/${propertyManagerInfo._id}`}>
+                    <Link className="nav-link" to={`/projects/${authId}`}>
                       Projects
                     </Link>
                     <Link className="nav-link" to="/">
