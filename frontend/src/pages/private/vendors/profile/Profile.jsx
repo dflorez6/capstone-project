@@ -94,6 +94,8 @@ const Profile = () => {
     console.log("Provinces Error:", provincesError);
   }
 
+  console.log("Profile Update: " );
+
   //----------
   // Handlers
   //----------
@@ -128,6 +130,9 @@ const Profile = () => {
         formData.append("address[postalCode]", postalCode);
 
         const res = await updateProfile(formData).unwrap(); // Pass FormData to updateProfile function & make API call
+
+        console.log("Profile Update res: ", res);
+
         dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile updated successfully");
       } catch (error) {
