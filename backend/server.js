@@ -62,10 +62,6 @@ app.use(`${baseURL}/vendor-certificates`, vendorCertificateRoutes);
 import projectRoutes from "./routes/api/v1/projectRoutes.js";
 app.use(`${baseURL}/projects`, projectRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello Server!");
-});
-
 //====================
 // Production
 //====================
