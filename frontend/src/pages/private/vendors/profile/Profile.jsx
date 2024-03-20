@@ -97,15 +97,17 @@ const Profile = () => {
 
   // Update inputs from fetched vendor data
   useEffect(() => {
-    setCompanyName(vendor?.companyName);
-    setFirstName(vendor?.firstName);
-    setLastName(vendor?.lastName);
-    setEmail(vendor?.email);
-    setPhone(vendor?.phone || "");
-    setStreet(vendor?.address.street || "");
-    setPostalCode(vendor?.address.postalCode || "");
-    setCity(vendor?.address.city || "");
-    setProvince(vendor?.address.province || "");
+    if (vendor) {
+      setCompanyName(vendor?.companyName);
+      setFirstName(vendor?.firstName);
+      setLastName(vendor?.lastName);
+      setEmail(vendor?.email);
+      setPhone(vendor?.phone || "");
+      setStreet(vendor?.address.street || "");
+      setPostalCode(vendor?.address.postalCode || "");
+      setCity(vendor?.address.city || "");
+      setProvince(vendor?.address.province || "");
+    }
     // vendorRefetch(); // Refetch Vendor Info // TODO: Check if it goes here or in the submit form hanbdler
   }, [
     // vendorRefetch, // TODO: Check if it goes here or in the submit form hanbdler
