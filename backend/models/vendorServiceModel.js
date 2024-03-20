@@ -46,8 +46,8 @@ const vendorServiceSchema = mongoose.Schema(
 //--------------------
 // Indexes
 //--------------------
-// Create an index on the 'city' field in ascending order
-vendorServiceSchema.index({ _id: 1, storeOwner: 1 });
+// Create an index on the field in ascending order
+vendorServiceSchema.index({ _id: 1, serviceCategory: 1, vendorStore: 1});
 
 //--------------------
 // Model Definition

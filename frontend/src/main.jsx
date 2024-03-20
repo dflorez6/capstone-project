@@ -33,12 +33,17 @@ import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
 //----------
 import VendorsProfile from "./pages/private/vendors/profile/Profile.jsx";
 import VendorStore from "./pages/private/vendors/store/VendorStore.jsx";
-import EditVendorStore from "./pages/private/vendors/store/EditVendorStore.jsx";
+import VendorStoreEdit from "./pages/private/vendors/store/VendorStoreEdit.jsx";
+import ProjectSearch from "./pages/private/vendors/project-search/ProjectSearch.jsx";
 //----------
 // Property Managers
 //----------
 import PropertyManagersProfile from "./pages/private/property-managers/profile/Profile.jsx";
 import VendorSearch from "./pages/private/property-managers/vendor-search/VendorSearch.jsx";
+import Projects from "./pages/private/property-managers/projects/Projects.jsx";
+import Project from "./pages/private/property-managers/projects/Project.jsx";
+import ProjectNew from "./pages/private/property-managers/projects/ProjectNew.jsx";
+import ProjectEdit from "./pages/private/property-managers/projects/ProjectEdit.jsx";
 // Styles
 import "./style.scss";
 
@@ -61,12 +66,14 @@ const router = createBrowserRouter(
       <Route path="" element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         {/* Vendors */}
-        <Route path="/vendors/profile" element={<VendorsProfile />} />
         <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />
+        <Route path="/projects" element={<ProjectSearch />} />        
+        <Route path="/vendors/profile" element={<VendorsProfile />} />
         <Route
           path="/vendors/store/:storeSlug/edit"
-          element={<EditVendorStore />}
+          element={<VendorStoreEdit />}
         />
+
 
         {/* Property Managers */}
         <Route
@@ -74,6 +81,16 @@ const router = createBrowserRouter(
           element={<PropertyManagersProfile />}
         />
         <Route path="/vendors/search" element={<VendorSearch />} />
+        <Route path="/projects/:propertyManagerId" element={<Projects />} />
+        <Route
+          path="/projects/:propertyManagerId/:projectId"
+          element={<Project />}
+        />
+        <Route path="/projects/new" element={<ProjectNew />} />
+        <Route
+          path="/projects/:propertyManagerId/:projectId/edit"
+          element={<ProjectEdit />}
+        />
       </Route>
     </Route>
   )

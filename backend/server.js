@@ -58,6 +58,9 @@ import vendorCertificateRoutes from "./routes/api/v1/vendorCertificateRoutes.js"
 app.use(`${baseURL}/vendor-stores`, vendorStoreRoutes);
 app.use(`${baseURL}/vendor-services`, vendorServiceRoutes);
 app.use(`${baseURL}/vendor-certificates`, vendorCertificateRoutes);
+// Projects
+import projectRoutes from "./routes/api/v1/projectRoutes.js";
+app.use(`${baseURL}/projects`, projectRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Server!");
@@ -66,10 +69,10 @@ app.get("/", (req, res) => {
 //====================
 // Production
 //====================
-// TODO: Uncomment when ready for the first production test
 // Serve static assets if in production
-/*
 if (process.env.NODE_ENV === "production") {
+  console.log("Production");
+
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/frontend/dist"))); // Set static folder
 
@@ -78,9 +81,9 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   );
 } else {
+  console.log("Development");
   app.get("/", (req, res) => res.send("Server is ready"));
 }
-*/
 
 //====================
 // Custom Middleware

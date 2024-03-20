@@ -126,7 +126,7 @@ function VendorStore() {
       vendorServicesRefetch(); // Refetch data after successful deletion
     } catch (error) {
       toast.error(error?.data?.message || error?.error);
-      console.log("Delete Store Image Error:");
+      console.log("Delete Error:");
       console.log(error?.data?.message || error?.error);
     }
   };
@@ -190,18 +190,6 @@ function VendorStore() {
               <div className="store-info-wrapper">
                 <div className="store-title-wrapper">
                   <h1>{vendorStore.title}</h1>
-                  {/* Only storeOwner can edit the Store */}
-                  {vendorInfo &&
-                    vendorStore.storeOwner._id === vendorInfo._id && (
-                      <>
-                        <Link
-                          to={`/vendors/store/${vendorStore.storeSlug}/edit`}
-                          className="btn-app btn-app-sm btn-app-dark-outline"
-                        >
-                          edit
-                        </Link>
-                      </>
-                    )}
                 </div>
                 <div className="store-rating-wrapper">
                   <div className="store-rating-reviews-wrapper">
@@ -221,6 +209,18 @@ function VendorStore() {
                   </div>
 
                   <div className="store-rating-actions">
+                    {/* Only storeOwner can edit the Store */}
+                    {vendorInfo &&
+                      vendorStore.storeOwner._id === vendorInfo._id && (
+                        <>
+                          <Link
+                            to={`/vendors/store/${vendorStore.storeSlug}/edit`}
+                            className="btn-app btn-app-sm btn-app-dark-outline me-4"
+                          >
+                            edit
+                          </Link>
+                        </>
+                      )}
                     <Link to="" className="btn-app btn-app-sm btn-app-purple ">
                       contact
                     </Link>

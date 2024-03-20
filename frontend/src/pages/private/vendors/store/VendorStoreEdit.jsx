@@ -146,6 +146,7 @@ function EditVendorStore() {
     try {
       // Form Data
       const formData = new FormData();
+      
       // Append coverImage if selected
       if (coverImage) {
         formData.append("coverImage", coverImage); // Append selected image file to FormData
@@ -259,6 +260,7 @@ function EditVendorStore() {
     try {
       // Form Data
       const formData = new FormData();
+
       // Append coverImage if selected
       if (certificateImage) {
         formData.append("certificateImage", certificateImage); // Append selected image file to FormData

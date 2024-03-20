@@ -20,6 +20,7 @@ function PropertyManagerRegistration() {
 
   // Form Fields
   const [avatar, setAvatar] = useState(null); // Store the selected image file
+  const [companyName, setCompanyName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,6 +60,7 @@ function PropertyManagerRegistration() {
       try {
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
+        formData.append("companyName", companyName);
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
@@ -93,7 +95,20 @@ function PropertyManagerRegistration() {
         <h1>Property Manager Registration</h1>
 
         <form className="form" id="" onSubmit={submitHandler}>
-        <div className="row">
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+              <label htmlFor="lastName">Company Name</label>
+              <input
+                type="text"
+                name="companyName"
+                id="companyName"
+                className="form-control"
+                placeholder="Enter company's legal name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </div>
+            {/* ./Input: Text */}
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="avatar">Profile Picture</label>
               <input
@@ -107,7 +122,7 @@ function PropertyManagerRegistration() {
             </div>
           </div>
           {/* ./Input: Image Upload */}
-          
+
           <div className="row">
             <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
               <label htmlFor="firstName">First Name</label>

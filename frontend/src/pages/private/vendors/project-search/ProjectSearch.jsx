@@ -4,19 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useGetVendorStoresQuery } from "../../../../slices/vendorStoreApiSlice";
+import { useGetProjectsQuery } from "../../../../slices/projectsApiSlice";
 import { useGetCitiesQuery } from "../../../../slices/cityApiSlice";
 import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
 // Styles
-import "./VendorSearch.scss";
+import "./ProjectSearch.scss";
 // Assets
 import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
 
 // Component
-function VendorSearch() {
+function ProjectSearch() {
   //----------
   // State
   //----------
@@ -28,15 +28,14 @@ function VendorSearch() {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
-  // TODO: Rating
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
-    data: vendorStores,
-    isError: vendorStoresError,
-    isLoading: vendorStoresLoading,
-    refetch: vendorStoresRefetch,
-  } = useGetVendorStoresQuery({ companyName, serviceCategory, city, province });
+    data: projects,
+    isError: projectsError,
+    isLoading: projectsLoading,
+    refetch: projectsRefetch,
+  } = useGetProjectsQuery({ companyName, serviceCategory, city, province });
 
   // Redux Toolkit Queries for Selects
   const { data: cities, isError: citiesError } = useGetCitiesQuery();
@@ -49,14 +48,16 @@ function VendorSearch() {
   //----------
   // Refetch vendor stores
   useEffect(() => {
-    vendorStoresRefetch();
-  }, [vendorStoresRefetch, companyName, serviceCategory, city, province]);
+    projectsRefetch();
+  }, [projectsRefetch, companyName, serviceCategory, city, province]);
+
+  console.log("serviceCategory: ", serviceCategory);
 
   //----------
   // Redux Toolkit Slice Errors
   //----------
-  if (vendorStoresError) {
-    console.log("Vendor Stores Error: ", vendorStoresError);
+  if (projectsError) {
+    console.log("Projects Error: ", projectsError);
   }
   if (citiesError) {
     console.log("Cities Error: ", citiesError);
@@ -65,7 +66,7 @@ function VendorSearch() {
     console.log("Provinces Error: ", provincesError);
   }
   if (serviceCategoriesError) {
-    console.log("Service Categories Error: ", serviceCategoriesError);
+    console.log("Service Category Error: ", serviceCategoriesError);
   }
 
   //----------
@@ -75,7 +76,7 @@ function VendorSearch() {
   const searchFormSubmitHandler = async (e) => {
     e.preventDefault();
 
-    vendorStoresRefetch();
+    projectsRefetch();
   };
 
   // Clear Filters
@@ -96,10 +97,7 @@ function VendorSearch() {
   // Calculate indexes of items to display on the current page
   const indexOfLastStore = (currentPage + 1) * itemsPerPage;
   const indexOfFirstStore = indexOfLastStore - itemsPerPage;
-  const currentStores = vendorStores?.slice(
-    indexOfFirstStore,
-    indexOfLastStore
-  );
+  const currentProjects = projects?.slice(indexOfFirstStore, indexOfLastStore);
 
   // Pagination Handler
   const handlePageChange = ({ selected }) => {
@@ -107,14 +105,14 @@ function VendorSearch() {
   };
 
   // Check if there are any projects to display
-  const hasItems = vendorStores && vendorStores.length > 0;
+  const hasItems = projects && projects.length > 0;
 
   //----------
   // Output
   //----------
   return (
-    <section className="private-page-wrapper vendor-search-wrapper">
-      {vendorStoresLoading ? (
+    <section className="private-page-wrapper project-search-wrapper">
+      {projectsLoading ? (
         <Loader />
       ) : (
         <>
@@ -135,31 +133,6 @@ function VendorSearch() {
                       onChange={(e) => setCompanyName(e.target.value)}
                     />
                   </div>
-
-                  {/*
-                  <div className="col-12 col-sm-12 col-md-2 col-lg-2">
-                    <div className="submit-wrapper horizontal-form-submit">
-                      <button
-                        type="submit"
-                        className="btn-app btn-app-xs btn-app-purple w-100"
-                      >
-                        Search
-                      </button>
-                    </div>
-                  </div>
-                    */}
-                  <div className="col-12 col-sm-12 col-md-3 col-lg-3 offset-md-3 offset-lg-3">
-                    <div className="submit-wrapper horizontal-form-submit">
-                      {/* TODO: CLEAR FILTERS BUTTON IMPLEMENT HANDLER FUNCTION */}
-                      <button
-                        type="button"
-                        className="btn-app btn-app-xs btn-app-dark w-100"
-                        onClick={clearFiltersHandler}
-                      >
-                        Clear Filters
-                      </button>
-                    </div>
-                  </div>
                 </div>
                 {/* ./Search */}
 
@@ -176,7 +149,7 @@ function VendorSearch() {
                       <option value="">Service Categories</option>
                       {serviceCategories &&
                         serviceCategories?.map((service) => (
-                          <option key={service._id} value={service.name}>
+                          <option key={service._id} value={service._id}>
                             {service.name}
                           </option>
                         ))}
@@ -220,13 +193,15 @@ function VendorSearch() {
                   </div>
 
                   <div className="col-12 col-sm-12 col-md-3 col-lg-3">
-                    <select name="rating" id="rating" className="form-control">
-                      <option selected disabled>
-                        Rating
-                      </option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                    </select>
+                    <div className="submit-wrapper horizontal-form-submit">
+                      <button
+                        type="button"
+                        className="btn-app btn-app-xs btn-app-dark w-100"
+                        onClick={clearFiltersHandler}
+                      >
+                        Clear Filters
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* ./Filters */}
@@ -239,73 +214,77 @@ function VendorSearch() {
           <div className="search-results-wrapper">
             <div className="row">
               {hasItems &&
-                currentStores.map((store, index) => (
-                  <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
-                    <div className="store-card-wrapper">
-                      {/* Image */}
-                      <div className="card-image-wrapper">
-                        {store.coverImage.url === "" ? (
-                          <>
-                            <img
-                              src={imgPlaceholder}
-                              alt={store.storeSlug}
-                              className="card-image"
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <img
-                              src={store.coverImage.url}
-                              alt={store.storeSlug}
-                              className="card-image"
-                            />
-                          </>
-                        )}
-                      </div>
-                      {/* ./Image */}
-                      {/* Content */}
-                      <div className="card-content-wrapper">
-                        <div className="store-rating">
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
+                currentProjects.map((project, index) => (
+                  <>
+                    <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
+                      <div className="project-card-wrapper">
+                        {/* Image */}
+                        <div className="card-image-wrapper">
+                          {project.coverImage.url === "" ? (
+                            <>
+                              <img
+                                src={imgPlaceholder}
+                                alt={project.name}
+                                className="card-image"
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <img
+                                src={project.coverImage.url}
+                                alt={project.name}
+                                className="card-image"
+                              />
+                            </>
+                          )}
                         </div>
-                        <div className="store-name">
-                          <h2>{store.storeOwner.companyName}</h2>
+                        {/* ./Image */}
+                        {/* Content */}
+                        <div className="card-content-wrapper">
+                          <div className="project-name">
+                            <h2>{project.name}</h2>
+                          </div>
+                          <div className="project-category">
+                            <h3>{project.serviceCategory.name}</h3>
+                          </div>
+                          <div className="project-company">
+                            <h4>
+                              <i className="fa-solid fa-building icon-company"></i>
+                              {project.propertyManager.companyName}
+                            </h4>
+                          </div>
+                          <div className="project-location">
+                            <p>
+                              {project.propertyManager.address ? (
+                                <>
+                                  <i className="fa-solid fa-location-dot icon-location"></i>
+                                  {project.propertyManager.address.city}
+                                  {", "}
+                                  {project.propertyManager.address.province}
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fa-solid fa-location-dot icon-location"></i>
+                                  Not set
+                                </>
+                              )}
+                            </p>
+                          </div>
                         </div>
-                        <div className="store-location">
-                          <h3>
-                            {store.storeOwner.address ? (
-                              <>
-                                <i className="fa-solid fa-location-dot icon-location"></i>
-                                {store.storeOwner.address.city}
-                                {", "}
-                                {store.storeOwner.address.province}
-                              </>
-                            ) : (
-                              <>
-                                <i className="fa-solid fa-location-dot icon-location"></i>
-                                Not set
-                              </>
-                            )}
-                          </h3>
+                        {/* ./Content */}
+                        {/* Actions */}
+                        <div className="card-actions-wrapper">
+                          <Link
+                            to={`/projects/${project.propertyManager._id}/${project._id}`}
+                            className="btn-app btn-app-xs btn-app-purple-outline"
+                          >
+                            View
+                          </Link>
                         </div>
+                        {/* ./Actions */}
                       </div>
-                      {/* ./Content */}
-                      {/* Actions */}
-                      <div className="card-actions-wrapper">
-                        <Link
-                          to={`/vendors/store/${store.storeSlug}`}
-                          className="btn-app btn-app-xs btn-app-purple-outline"
-                        >
-                          View
-                        </Link>
-                      </div>
-                      {/* ./Actions */}
                     </div>
-                  </div>
+                  </>
                 ))}
             </div>
           </div>
@@ -317,7 +296,7 @@ function VendorSearch() {
               <div className="app-pagination-wrapper">
                 {hasItems && (
                   <ReactPaginate
-                    pageCount={Math.ceil(vendorStores.length / itemsPerPage)}
+                    pageCount={Math.ceil(projects.length / itemsPerPage)}
                     breakLabel="..."
                     nextLabel=">>"
                     previousLabel="<<"
@@ -341,4 +320,4 @@ function VendorSearch() {
   );
 }
 
-export default VendorSearch;
+export default ProjectSearch;

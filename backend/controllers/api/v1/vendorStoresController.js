@@ -82,7 +82,6 @@ const getAllVendorStores = asyncHandler(async (req, res) => {
       //-----
       // No Query Params: returns all stores
       //-----
-      // No query params will return all stores
       stores = await VendorStore.find()
         .populate({
           path: "storeOwner",
