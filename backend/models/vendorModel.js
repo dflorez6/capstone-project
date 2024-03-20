@@ -104,11 +104,15 @@ vendorSchema.pre("save", async function (next) {
     next();
   }
 
+  console.log("Log before checking if the document is new", this.isNew);
+
   // Only create a new VendorStore if the document is new (created for the first time)
   if (!this.isNew) {
     next();
     return; // Exit early as we don't need to create a new VendorStore for updates
   }
+
+  console.log("Log after checking if the document is new", this.isNew);
 
   // If password is modified or is new (Vendor created)
   const salt = await bcrypt.genSalt(10); // 10 is the number of rounds
