@@ -118,7 +118,6 @@ vendorSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10); // 10 is the number of rounds
   this.password = await bcrypt.hash(this.password, salt); // Hash the password before its saved into the DB
 
-  /*
   // Generate & format storeSlug based on the companyName
   let companyName = this.companyName.toLowerCase();
   let formattedStoreSlug = companyName.replace(/\s+/g, "-");
@@ -141,7 +140,6 @@ vendorSchema.pre("save", async function (next) {
     console.log("VendorStore Creation Error", error);
     next(error); // Pass any errors to the next middleware
   }
-  */
 });
 
 // Compare passwords (plain text password vs hashed password)
