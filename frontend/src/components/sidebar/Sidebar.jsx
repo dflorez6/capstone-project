@@ -55,6 +55,24 @@ function Sidebar() {
   };
 
   //----------
+  // Global Variables
+  //----------
+  let authUser;
+  let authRoute;
+  let authId;
+  let vendorStoreSlug;
+  if (vendorInfo) {
+    authUser = vendorInfo;
+    authRoute = "/vendors";
+    authId = vendorInfo._id;
+    vendorStoreSlug = vendorInfo.storeSlug;
+  } else {
+    authUser = propertyManagerInfo;
+    authRoute = "/property-managers";
+    authId = propertyManagerInfo._id;
+  }
+
+  //----------
   // Output
   //----------
   return (
@@ -106,7 +124,7 @@ function Sidebar() {
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
-                      to={`/vendors/store/${vendorInfo.storeSlug}`}
+                      to={`/vendors/store/${vendorStoreSlug}`}
                     >
                       <i className="fa-solid fa-store link-icon"></i>
                       <span className="link-text">Store</span>
@@ -115,7 +133,7 @@ function Sidebar() {
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
-                      to={`/vendors/store/${vendorInfo.storeSlug}/edit`}
+                      to={`/vendors/store/${vendorStoreSlug}/edit`}
                     >
                       <i className="fa-solid fa-pen-to-square"></i>
                       <span className="link-text">Edit Store</span>
@@ -147,7 +165,7 @@ function Sidebar() {
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
-                      to={`/projects/${propertyManagerInfo._id}`}
+                      to={`/projects/${authId}`}
                     >
                       <i className="fa-solid fa-briefcase link-icon"></i>
                       <span className="link-text">Projects</span>
