@@ -154,255 +154,265 @@ const Profile = () => {
   //----------
   return (
     <section className="private-page-wrapper profile-wrapper">
-      <FormContainer>
-        <h1>Update Vendor Profile</h1>
+      {vendorInfo && updateProfileLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <FormContainer>
+            <h1>Update Vendor Profile</h1>
 
-        <form className="form" id="" onSubmit={submitHandler}>
-          <div className="row">
-            <div className="col-12">
-              <hr />
-              <h2 className="f-h4 m-0">Account</h2>
-            </div>
-          </div>
-          {/* ./Form Section Title */}
-
-          <div className="row">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="">Current Photo</label>
-              {vendorInfo.avatar.url === "" ? (
-                <>
-                  <img
-                    src={profilePlaceholder}
-                    alt={vendorInfo.lastName}
-                    className="avatar"
-                  />
-                </>
-              ) : (
-                <img src={vendorInfo.avatar.url} alt="" className="avatar" />
-              )}
-            </div>
-
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="avatar">Update Photo</label>
-              <input
-                type="file"
-                name="avatar"
-                id="avatar"
-                className="form-control"
-                ref={inputFileRef} // Attach the ref to the input element
-                onChange={handleFileChange} // Call handleFileChange on file selection
-              />
-            </div>
-          </div>
-          {/* ./Input: Image Upload */}
-
-          <div className="row">
-            <div className="col-12 my-2">
-              <label htmlFor="firstName">Company Legal Name</label>
-              <input
-                type="text"
-                name="companyName"
-                id="companyName"
-                className="form-control"
-                placeholder="Enter company's legal name"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                disabled
-              />
-            </div>
-          </div>
-          {/* ./Input: Text */}
-
-          <div className="row">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                className="form-control"
-                placeholder="Enter first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Text */}
-
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="lastName">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                className="form-control"
-                placeholder="Enter last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Text */}
-          </div>
-
-          <div className="row">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="form-control"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Email */}
-
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="phone">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                id="phone"
-                className="form-control"
-                placeholder="Enter phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Phone */}
-          </div>
-
-          <div className="row">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="form-control"
-                placeholder="Enter Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Password */}
-
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                className="form-control"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Password */}
-          </div>
-
-          {/* Form Section Title */}
-          <div className="row">
-            <div className="col-12 my-2">
-              <hr />
-              <h2 className="f-h4 m-0">Address</h2>
-            </div>
-          </div>
-          {/* ./Form Section Title */}
-
-          <div className="row">
-            <div className="col-12 my-2">
-              <label htmlFor="street">Street</label>
-              <input
-                type="text"
-                name="street"
-                id="street"
-                className="form-control"
-                placeholder="Enter first name"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-            </div>
-          </div>
-          {/* ./Input: Street */}
-
-          <div className="row">
-            <div className="col-12 col-md-6 col-lg-6 my-2">
-              {/* TODO: Create a Select Component */}
-              <label htmlFor="city">City</label>
-              <select
-                name="city"
-                id="city"
-                className="form-control"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select...
-                </option>
-                {cities &&
-                  cities.map((city) => (
-                    <option key={city.id} value={city.city}>
-                      {city.city}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            {/* ./Input: City */}
-
-            <div className="col-12 col-md-3 col-lg-3 my-2">
-              <label htmlFor="province">Province</label>
-              <select
-                name="province"
-                id="province"
-                className="form-control"
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select...
-                </option>
-                {provinces &&
-                  provinces.map((province) => (
-                    <option key={province.id} value={province.province}>
-                      {province.provinceCode}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            {/* ./Input: Province */}
-
-            <div className="col-12 col-md-3 col-lg-3 my-2">
-              <label htmlFor="postalCode">Postal Code</label>
-              <input
-                type="text"
-                name="postalCode"
-                id="postalCode"
-                className="form-control"
-                placeholder="Postal Code"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
-              />
-            </div>
-            {/* ./Input: Postal Code */}
-          </div>
-
-          {updateProfileLoading && <Loader />}
-
-          <div className="row">
-            <div className="col-12">
-              <div className="submit-wrapper">
-                <button type="submit" className="btn-app btn-app-purple">
-                  Update
-                </button>
+            <form className="form" id="" onSubmit={submitHandler}>
+              <div className="row">
+                <div className="col-12">
+                  <hr />
+                  <h2 className="f-h4 m-0">Account</h2>
+                </div>
               </div>
-            </div>
-          </div>
-          {/* ./Submit */}
-        </form>
-      </FormContainer>
+              {/* ./Form Section Title */}
+
+              <div className="row">
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="">Current Photo</label>
+                  {vendorInfo.avatar.url === "" ? (
+                    <>
+                      <img
+                        src={profilePlaceholder}
+                        alt={vendorInfo.lastName}
+                        className="avatar"
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={vendorInfo.avatar.url}
+                      alt=""
+                      className="avatar"
+                    />
+                  )}
+                </div>
+
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="avatar">Update Photo</label>
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="avatar"
+                    className="form-control"
+                    ref={inputFileRef} // Attach the ref to the input element
+                    onChange={handleFileChange} // Call handleFileChange on file selection
+                  />
+                </div>
+              </div>
+              {/* ./Input: Image Upload */}
+
+              <div className="row">
+                <div className="col-12 my-2">
+                  <label htmlFor="firstName">Company Legal Name</label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    id="companyName"
+                    className="form-control"
+                    placeholder="Enter company's legal name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    disabled
+                  />
+                </div>
+              </div>
+              {/* ./Input: Text */}
+
+              <div className="row">
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    className="form-control"
+                    placeholder="Enter first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Text */}
+
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    className="form-control"
+                    placeholder="Enter last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Text */}
+              </div>
+
+              <div className="row">
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="email">Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    className="form-control"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Email */}
+
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="phone">Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    className="form-control"
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Phone */}
+              </div>
+
+              <div className="row">
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    className="form-control"
+                    placeholder="Enter Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Password */}
+
+                <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    className="form-control"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Password */}
+              </div>
+
+              {/* Form Section Title */}
+              <div className="row">
+                <div className="col-12 my-2">
+                  <hr />
+                  <h2 className="f-h4 m-0">Address</h2>
+                </div>
+              </div>
+              {/* ./Form Section Title */}
+
+              <div className="row">
+                <div className="col-12 my-2">
+                  <label htmlFor="street">Street</label>
+                  <input
+                    type="text"
+                    name="street"
+                    id="street"
+                    className="form-control"
+                    placeholder="Enter first name"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* ./Input: Street */}
+
+              <div className="row">
+                <div className="col-12 col-md-6 col-lg-6 my-2">
+                  {/* TODO: Create a Select Component */}
+                  <label htmlFor="city">City</label>
+                  <select
+                    name="city"
+                    id="city"
+                    className="form-control"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select...
+                    </option>
+                    {cities &&
+                      cities.map((city) => (
+                        <option key={city._id} value={city.city}>
+                          {city.city}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {/* ./Input: City */}
+
+                <div className="col-12 col-md-3 col-lg-3 my-2">
+                  <label htmlFor="province">Province</label>
+                  <select
+                    name="province"
+                    id="province"
+                    className="form-control"
+                    value={province}
+                    onChange={(e) => setProvince(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select...
+                    </option>
+                    {provinces &&
+                      provinces.map((province) => (
+                        <option key={province._id} value={province.province}>
+                          {province.provinceCode}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {/* ./Input: Province */}
+
+                <div className="col-12 col-md-3 col-lg-3 my-2">
+                  <label htmlFor="postalCode">Postal Code</label>
+                  <input
+                    type="text"
+                    name="postalCode"
+                    id="postalCode"
+                    className="form-control"
+                    placeholder="Postal Code"
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
+                  />
+                </div>
+                {/* ./Input: Postal Code */}
+              </div>
+
+              {updateProfileLoading && <Loader />}
+
+              <div className="row">
+                <div className="col-12">
+                  <div className="submit-wrapper">
+                    <button type="submit" className="btn-app btn-app-purple">
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* ./Submit */}
+            </form>
+          </FormContainer>
+        </>
+      )}
     </section>
   );
 };
