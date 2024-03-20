@@ -127,7 +127,7 @@ const Header = () => {
 
                 {authUser.accountType == "vendor" ? (
                   <>
-                    <Link className="nav-link" to={"/"}>
+                    <Link className="nav-link" to={"/projects"}>
                       Projects
                     </Link>
                     <Link className="nav-link" to={"/"}>
@@ -147,7 +147,7 @@ const Header = () => {
                     <Link className="nav-link" to="/vendors/search">
                       Vendors
                     </Link>
-                    <Link className="nav-link" to="/">
+                    <Link className="nav-link" to={`/projects/${propertyManagerInfo._id}`}>
                       Projects
                     </Link>
                     <Link className="nav-link" to="/">

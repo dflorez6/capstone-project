@@ -16,8 +16,16 @@ import cloudinary from "../../../services/cloudinary.config.js"; // Used when us
 // Access: Public
 const registerPropertyManager = asyncHandler(async (req, res) => {
   // Desctructure the request body
-  const { firstName, lastName, email, password, avatar, phone, address } =
-    req.body;
+  const {
+    companyName,
+    firstName,
+    lastName,
+    email,
+    password,
+    avatar,
+    phone,
+    address,
+  } = req.body;
 
   // Check if Property Manager exists
   const propertyManagerExists = await PropertyManager.findOne({ email }); // findOne() returns a promise
@@ -38,12 +46,14 @@ const registerPropertyManager = asyncHandler(async (req, res) => {
 
     // Create the Property Manager
     const propertyManager = await PropertyManager.create({
+      companyName,
       firstName,
       lastName,
       email,
       password,
       avatar,
       phone,
+      address,
       avatar: avatarData, // Assign avatar data to the vendor
     });
 
@@ -56,6 +66,7 @@ const registerPropertyManager = asyncHandler(async (req, res) => {
       res.status(201).json({
         _id: propertyManager._id,
         accountType: propertyManager.accountType,
+        companyName: propertyManager.companyName,
         firstName: propertyManager.firstName,
         lastName: propertyManager.lastName,
         email: propertyManager.email,
@@ -89,6 +100,7 @@ const authPropertyManager = asyncHandler(async (req, res) => {
     res.status(201).json({
       _id: propertyManager._id,
       accountType: propertyManager.accountType,
+      companyName: propertyManager.companyName,
       firstName: propertyManager.firstName,
       lastName: propertyManager.lastName,
       email: propertyManager.email,
@@ -128,6 +140,7 @@ const getPropertyManagerProfile = asyncHandler(async (req, res) => {
   const propertyManager = {
     _id: req.propertyManager._id,
     accountType: req.propertyManager.accountType,
+    companyName: req.propertyManager.companyName,
     firstName: req.propertyManager.firstName,
     lastName: req.propertyManager.lastName,
     email: req.propertyManager.email,
@@ -203,6 +216,7 @@ const updatePropertyManagerProfile = asyncHandler(async (req, res) => {
 
     res.status(200).json({
       _id: updatedPropertyManager._id,
+      companyName: updatedPropertyManager.companyName,
       firstName: updatedPropertyManager.firstName,
       lastName: updatedPropertyManager.lastName,
       email: updatedPropertyManager.email,

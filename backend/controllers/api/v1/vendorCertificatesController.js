@@ -101,8 +101,6 @@ const createVendorCertificate = asyncHandler(async (req, res) => {
       vendorStore,
     });
 
-    console.log(vendorCertificate);
-
     // Check if Vendor Certificate was created
     if (vendorCertificate) {
       // Response
@@ -161,7 +159,7 @@ const updateVendorCertificate = asyncHandler(async (req, res) => {
     // AND fetched vendorCertificate storeOwner id === authenticated vendor id
     if (
       vendorStore === vendorCertificate.vendorStore._id.toString() &&
-      vendorCertificate.vendorStore.storeOwner.toString() ==
+      vendorCertificate.vendorStore.storeOwner.toString() ===
         req.vendor._id.toString()
     ) {
       // Initialization
@@ -241,7 +239,16 @@ const deleteVendorCertificate = asyncHandler(async (req, res) => {
       // Perform delete operation
       await VendorCertificate.deleteOne({ _id: certificateId });
 
-      res.status(200).json({ message: "Vendor Certificate deleted successfully" });
+      // Delete the image from Cloudinary
+      if (vendorCertificate.certificateImage.publicId) {
+        await cloudinary.uploader.destroy(
+          vendorCertificate.certificateImage.publicId
+        );
+      }
+
+      res
+        .status(200)
+        .json({ message: "Vendor Certificate deleted successfully" });
     } else {
       res.status(401);
       throw new Error("Not authorized. Not the Store owner.");
