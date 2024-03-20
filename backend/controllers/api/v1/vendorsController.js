@@ -170,6 +170,8 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
     throw new Error("Vendor not found");
   }
 
+  console.log("Profile Update req.body outside Try: ", req.body);
+
   try {
     // Initialization
     let avatarData = {};
@@ -185,6 +187,8 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
       avatarData.url = req.file.path; // The file path will be the Cloudinary URL
       avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
     }
+
+    console.log("Profile Update req.body inside Try: ", req.body);
 
     // Update the Vendor
     vendor.firstName = req.body.firstName || vendor.firstName;
