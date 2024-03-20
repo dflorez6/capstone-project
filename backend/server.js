@@ -69,10 +69,10 @@ app.get("/", (req, res) => {
 //====================
 // Production
 //====================
-// TODO: Uncomment when ready for the first production test
 // Serve static assets if in production
-/*
 if (process.env.NODE_ENV === "production") {
+  console.log("Production");
+
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/frontend/dist"))); // Set static folder
 
@@ -81,9 +81,9 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   );
 } else {
+  console.log("Development");
   app.get("/", (req, res) => res.send("Server is ready"));
 }
-*/
 
 //====================
 // Custom Middleware
