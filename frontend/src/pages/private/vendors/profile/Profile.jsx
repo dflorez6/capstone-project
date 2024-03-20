@@ -117,7 +117,6 @@ const Profile = () => {
         // Form Data
         const formData = new FormData();
         formData.append("avatar", avatar); // Append selected image file to FormData
-        formData.append("companyName", companyName);
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
         formData.append("email", email);
