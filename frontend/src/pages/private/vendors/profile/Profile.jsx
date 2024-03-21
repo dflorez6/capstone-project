@@ -130,7 +130,7 @@ const Profile = () => {
     console.log("Provinces Error:", provincesError);
   }
 
-  console.log("Profile Update: ");
+  console.log("Profile Update");
 
   //----------
   // Handlers
@@ -151,6 +151,8 @@ const Profile = () => {
           province,
           postalCode,
         };
+
+        console.log("Profile Update: submitHandler");
 
         // Form Data
         const formData = new FormData();
@@ -199,7 +201,7 @@ const Profile = () => {
       ) : (
         <>
           <FormContainer>
-            <h1>Update Profile</h1>
+            <h1>Update Your Profile</h1>
 
             <form className="form" id="" onSubmit={submitHandler}>
               <div className="row">
