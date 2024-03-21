@@ -199,7 +199,7 @@ const Profile = () => {
       ) : (
         <>
           <FormContainer>
-            <h1>Update Vendor Profile</h1>
+            <h1>Update Profile</h1>
 
             <form className="form" id="" onSubmit={submitHandler}>
               <div className="row">
