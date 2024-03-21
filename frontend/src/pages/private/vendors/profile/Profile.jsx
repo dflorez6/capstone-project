@@ -213,17 +213,17 @@ const Profile = () => {
               <div className="row">
                 <div className="col-12 col-sm-12 col-md-6 col-lg-6 my-2">
                   <label htmlFor="">Current Photo</label>
-                  {vendorInfo.avatar.url === "" ? (
+                  {vendor.avatar.url === "" ? (
                     <>
                       <img
                         src={profilePlaceholder}
-                        alt={vendorInfo.lastName}
+                        alt={vendor.lastName}
                         className="avatar"
                       />
                     </>
                   ) : (
                     <img
-                      src={vendorInfo.avatar.url}
+                      src={vendor.avatar.url}
                       alt=""
                       className="avatar"
                     />
