@@ -107,7 +107,7 @@ const Profile = () => {
       setPostalCode(vendor?.address.postalCode || "");
       setCity(vendor?.address.city || "");
       setProvince(vendor?.address.province || "");
-    }
+    } // TODO: ACA QUEDE
     // vendorRefetch(); // Refetch Vendor Info // TODO: Check if it goes here or in the submit form hanbdler
   }, [
     // vendorRefetch, // TODO: Check if it goes here or in the submit form hanbdler
@@ -167,8 +167,8 @@ const Profile = () => {
 
         const res = await updateProfile(formData).unwrap(); // Pass FormData to updateProfile function & make API call
 
-        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         vendorRefetch();
+        dispatch(vendorSetCredentials({ ...res })); // Sets Credentials in Redux Store & LocalStorage
         toast.success("Profile updated successfully");
       } catch (error) {
         toast.error(error?.data?.message || error?.error); // Toastify implementation
@@ -194,7 +194,7 @@ const Profile = () => {
   //----------
   return (
     <section className="private-page-wrapper profile-wrapper">
-      {vendor && vendorLoading ? (
+      {vendorLoading ? (
         <Loader />
       ) : (
         <>
