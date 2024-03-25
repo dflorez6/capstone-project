@@ -11,7 +11,7 @@ import {
   updateVendorService,
   deleteVendorService,
 } from "../../../controllers/api/v1/vendorServicesController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 
 //--------------------
@@ -21,14 +21,14 @@ import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only a
 router.route("/:vendorStore").get(getAllVendorServices);
 
 // Create
-router.route("/").post(protect, createVendorService);
+router.route("/").post(vendorProtect, createVendorService);
 
 // Show, Update, Delete
 router
   .route("/:vendorStore/:serviceId")
-  .get(protect, showVendorService)
-  .put(protect, updateVendorService)
-  .patch(protect, updateVendorService)
-  .delete(protect, deleteVendorService);
+  .get(vendorProtect, showVendorService)
+  .put(vendorProtect, updateVendorService)
+  .patch(vendorProtect, updateVendorService)
+  .delete(vendorProtect, deleteVendorService);
 
 export default router;

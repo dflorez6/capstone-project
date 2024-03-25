@@ -11,7 +11,7 @@ import {
   updateProvince,
   deleteProvince,
 } from "../../../controllers/api/v1/provincesController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 
 //--------------------
@@ -21,15 +21,15 @@ import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only a
 router.get("/", getAllProvinces);
 
 // Create
-router.route("/").post(protect, createProvince);
+router.route("/").post(vendorProtect, createProvince);
 
 // Show, Update, Delete
 router
   .route("/:id")
-  .get(protect, showProvince)
-  .put(protect, updateProvince)
-  .patch(protect, updateProvince)
-  .delete(protect, deleteProvince);
+  .get(vendorProtect, showProvince)
+  .put(vendorProtect, updateProvince)
+  .patch(vendorProtect, updateProvince)
+  .delete(vendorProtect, deleteProvince);
 // Another way of using router: Chain multiple actions to the same route
 
 export default router;
