@@ -69,32 +69,6 @@ const Profile = () => {
   //----------
   // Effects
   //----------
-  // Original code
-  /*
-  // Update inputs from Redux Store for vendorInfo
-  useEffect(() => {
-    setCompanyName(vendorInfo.companyName);
-    setFirstName(vendorInfo.firstName);
-    setLastName(vendorInfo.lastName);
-    setEmail(vendorInfo.email);
-    setPhone(vendorInfo.phone || "");
-    setStreet(vendorInfo.address.street || "");
-    setPostalCode(vendorInfo.address.postalCode || "");
-    setCity(vendorInfo.address.city || "");
-    setProvince(vendorInfo.address.province || "");
-  }, [
-    vendorInfo.companyName,
-    vendorInfo.firstName,
-    vendorInfo.lastName,
-    vendorInfo.email,
-    vendorInfo.phone,
-    vendorInfo.address.street,
-    vendorInfo.address.city,
-    vendorInfo.address.province,
-    vendorInfo.address.postalCode,
-  ]); // Dependency Array
-  */
-
   // Update inputs from fetched vendor data
   useEffect(() => {
     if (vendor) {
@@ -107,12 +81,8 @@ const Profile = () => {
       setPostalCode(vendor?.address.postalCode || "");
       setCity(vendor?.address.city || "");
       setProvince(vendor?.address.province || "");
-    } // TODO: ACA QUEDE
-    // vendorRefetch(); // Refetch Vendor Info // TODO: Check if it goes here or in the submit form hanbdler
-  }, [
-    // vendorRefetch, // TODO: Check if it goes here or in the submit form hanbdler
-    vendor,
-  ]); // Dependency Array
+    }
+  }, [vendor]); // Dependency Array
 
   //----------
   // Redux Toolkit Slice Errors
@@ -129,8 +99,6 @@ const Profile = () => {
   if (provincesError) {
     console.log("Provinces Error:", provincesError);
   }
-
-  console.log("Profile Update");
 
   //----------
   // Handlers
@@ -151,8 +119,6 @@ const Profile = () => {
           province,
           postalCode,
         };
-
-        console.log("Profile Update: submitHandler");
 
         // Form Data
         const formData = new FormData();
@@ -201,7 +167,7 @@ const Profile = () => {
       ) : (
         <>
           <FormContainer>
-            <h1>Update Your Profile</h1>
+            <h1>Profile Update</h1>
 
             <form className="form" id="" onSubmit={submitHandler}>
               <div className="row">
@@ -224,11 +190,7 @@ const Profile = () => {
                       />
                     </>
                   ) : (
-                    <img
-                      src={vendor.avatar.url}
-                      alt=""
-                      className="avatar"
-                    />
+                    <img src={vendor.avatar.url} alt="" className="avatar" />
                   )}
                 </div>
 

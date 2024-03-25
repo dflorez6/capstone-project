@@ -154,7 +154,7 @@ function Profile() {
   return (
     <section className="private-page-wrapper profile-wrapper">
       <FormContainer>
-        <h1>Update Property Manager Profile</h1>
+        <h1>Profile Update</h1>
 
         <form className="form" id="" onSubmit={submitHandler}>
           <div className="row">
@@ -177,7 +177,11 @@ function Profile() {
                   />
                 </>
               ) : (
-                <img src={propertyManagerInfo.avatar.url} alt="" className="avatar" />
+                <img
+                  src={propertyManagerInfo.avatar.url}
+                  alt=""
+                  className="avatar"
+                />
               )}
             </div>
 

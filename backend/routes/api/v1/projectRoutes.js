@@ -12,7 +12,7 @@ import {
   updateProject,
   deleteProject,
 } from "../../../controllers/api/v1/projectsController.js";
-import { protect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Mnager has access
+import { propertyManagerProtect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Mnager has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 // Image Uploader
 import imgUploader from "../../../services/multer.js";
@@ -27,14 +27,14 @@ router.get("/", getAllProjects);
 router
   .route("/:propertyManagerId")
   .get(getPropertyManagerProjects)
-  .post(protect, imgUploader.single("coverImage"), createProject);
+  .post(propertyManagerProtect, imgUploader.single("coverImage"), createProject);
 
 // Show, Update, Delete
 router
   .route("/:propertyManagerId/:projectId")
-  .get(protect, showProject)
-  .put(protect, imgUploader.single("coverImage"), updateProject)
-  .patch(protect, imgUploader.single("coverImage"), updateProject)
-  .delete(protect, deleteProject);
+  .get(propertyManagerProtect, showProject)
+  .put(propertyManagerProtect, imgUploader.single("coverImage"), updateProject)
+  .patch(propertyManagerProtect, imgUploader.single("coverImage"), updateProject)
+  .delete(propertyManagerProtect, deleteProject);
 
 export default router;

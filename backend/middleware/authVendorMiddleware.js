@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import Vendor from "../models/vendorModel.js";
 
-const protect = asyncHandler(async (req, res, next) => {
+const vendorProtect = asyncHandler(async (req, res, next) => {
   let token;
 
   // Check if token exists
@@ -32,4 +32,4 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 // Export module
-export { protect };
+export { vendorProtect };

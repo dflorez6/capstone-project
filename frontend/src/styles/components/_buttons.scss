@@ -159,6 +159,21 @@
     color: $c-white;
   }
 
+    // Green
+    &.btn-app-green {
+      background-color: $c-aqua;
+      border-color: $c-aqua;
+      color: $c-text-primary;
+    }
+  
+    &.btn-app-green:hover,
+    &.btn-app-green:active,
+    &.btn-app-green:focus {
+      background-color: $c-aqua;
+      border-color: $c-aqua;
+      color: $c-text-primary;
+    }
+
   // Yellow
   &.btn-app-yellow {
     background-color: $c-yellow;

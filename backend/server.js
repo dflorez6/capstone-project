@@ -60,7 +60,9 @@ app.use(`${baseURL}/vendor-services`, vendorServiceRoutes);
 app.use(`${baseURL}/vendor-certificates`, vendorCertificateRoutes);
 // Projects
 import projectRoutes from "./routes/api/v1/projectRoutes.js";
+import projectApplicationRoutes from "./routes/api/v1/projectApplicationRoutes.js";
 app.use(`${baseURL}/projects`, projectRoutes);
+app.use(`${baseURL}/project-applications`, projectApplicationRoutes);
 
 //====================
 // Production
