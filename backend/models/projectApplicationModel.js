@@ -46,7 +46,7 @@ const projectApplicationSchema = mongoose.Schema(
 // Indexes
 //--------------------
 // Create an index on the 'project' & 'vendor' fields in ascending order
-projectApplicationSchema.index({ project: 1, vendor: 1 });
+projectApplicationSchema.index({ vendor: 1, project: 1 }, { unique: true });
 
 //--------------------
 // Model Definition

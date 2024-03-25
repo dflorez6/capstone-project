@@ -14,13 +14,15 @@ import {
 import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 import { propertyManagerProtect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Manager has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level per
+// Image Uploader
+import imgUploader from "../../../services/multer.js";
 
 //--------------------
 // Controller Actions
 //--------------------
 // Vendor
 // Create
-router.route("/").post(vendorProtect, createProjectApplication);
+router.route("/").post(vendorProtect, imgUploader.none(), createProjectApplication);
 
 // Property Manager
 // Index
