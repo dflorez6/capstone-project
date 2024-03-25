@@ -11,7 +11,7 @@ import {
   updateCertificateCategory,
   deleteCertificateCategory,
 } from "../../../controllers/api/v1/certificateCategoriesController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 
 //--------------------
@@ -21,15 +21,15 @@ import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only a
 router.get("/", getAllCertificateCategories);
 
 // Create
-router.route("/").post(protect, createCertificateCategory);
+router.route("/").post(vendorProtect, createCertificateCategory);
 
 // Show, Update, Delete
 router
   .route("/:storeSlug")
-  .get(protect, showCertificateCategory)
-  .put(protect, updateCertificateCategory)
-  .patch(protect, updateCertificateCategory)
-  .delete(protect, deleteCertificateCategory);
+  .get(vendorProtect, showCertificateCategory)
+  .put(vendorProtect, updateCertificateCategory)
+  .patch(vendorProtect, updateCertificateCategory)
+  .delete(vendorProtect, deleteCertificateCategory);
 // Another way of using router: Chain multiple actions to the same route
 
 export default router;

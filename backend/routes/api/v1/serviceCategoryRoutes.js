@@ -11,7 +11,7 @@ import {
   updateServiceCategory,
   deleteServiceCategory,
 } from "../../../controllers/api/v1/serviceCategoriesController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 
 //--------------------
@@ -21,15 +21,15 @@ import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only a
 router.get("/", getAllServiceCategories);
 
 // Create
-router.route("/").post(protect, createServiceCategory);
+router.route("/").post(vendorProtect, createServiceCategory);
 
 // Show, Update, Delete
 router
   .route("/:id")
-  .get(protect, showServiceCategory)
-  .put(protect, updateServiceCategory)
-  .patch(protect, updateServiceCategory)
-  .delete(protect, deleteServiceCategory);
+  .get(vendorProtect, showServiceCategory)
+  .put(vendorProtect, updateServiceCategory)
+  .patch(vendorProtect, updateServiceCategory)
+  .delete(vendorProtect, deleteServiceCategory);
 // Another way of using router: Chain multiple actions to the same route
 
 export default router;

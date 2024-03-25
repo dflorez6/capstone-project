@@ -11,7 +11,7 @@ import {
   updateVendorCertificate,
   deleteVendorCertificate,
 } from "../../../controllers/api/v1/vendorCertificatesController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // TODO: For future versions or if there is time, refactor protected route to add ADMIN level permissions
 // Image Uploader
 import imgUploader from "../../../services/multer.js";
@@ -26,7 +26,7 @@ router.route("/:vendorStore").get(getAllVendorCertificates);
 router
   .route("/")
   .post(
-    protect,
+    vendorProtect,
     imgUploader.single("certificateImage"),
     createVendorCertificate
   );
@@ -34,13 +34,17 @@ router
 // Show, Update, Delete
 router
   .route("/:vendorStore/:certificateId")
-  .get(protect, showVendorCertificate)
-  .put(protect, imgUploader.single("certificateImage"), updateVendorCertificate)
-  .patch(
-    protect,
+  .get(vendorProtect, showVendorCertificate)
+  .put(
+    vendorProtect,
     imgUploader.single("certificateImage"),
     updateVendorCertificate
   )
-  .delete(protect, deleteVendorCertificate);
+  .patch(
+    vendorProtect,
+    imgUploader.single("certificateImage"),
+    updateVendorCertificate
+  )
+  .delete(vendorProtect, deleteVendorCertificate);
 
 export default router;

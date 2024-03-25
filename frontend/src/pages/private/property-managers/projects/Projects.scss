@@ -214,7 +214,35 @@
           }
         }
       }
+    }
 
+    // Applications
+    .project-applications-wrapper {
+      // Table
+      .app-table {
+        thead {
+          tr {
+            th {
+              text-transform: capitalize;
+            }
+          }
+        }
+        tbody {
+          tr {
+            td {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+
+      .avatar {
+        width: 40px;
+      }
+    }
+
+    // Work Orders
+    .project-work-orders-wrapper {
       //
     }
 

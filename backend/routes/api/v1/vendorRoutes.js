@@ -11,7 +11,7 @@ import {
   getVendorProfile,
   updateVendorProfile,
 } from "../../../controllers/api/v1/vendorsController.js";
-import { protect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
+import { vendorProtect } from "../../../middleware/authVendorMiddleware.js"; // Only authenticated Vendor has access
 // Image Uploader
 import imgUploader from "../../../services/multer.js";
 
@@ -27,8 +27,8 @@ router.post("/logout", logoutVendor);
 // Another way of using router: Chain multiple actions to the same route
 router
   .route("/profile")
-  .get(protect, getVendorProfile)
-  .put(protect, imgUploader.single("avatar"), updateVendorProfile);
+  .get(vendorProtect, getVendorProfile)
+  .put(vendorProtect, imgUploader.single("avatar"), updateVendorProfile);
 
 // Index
 // router.get("/", getAllVendors);

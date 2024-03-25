@@ -7,7 +7,7 @@ import asyncHandler from "express-async-handler";
 import Vendor from "../models/propertyManagerModel.js";
 import PropertyManager from "../models/propertyManagerModel.js";
 
-const protect = asyncHandler(async (req, res, next) => {
+const propertyManagerProtect = asyncHandler(async (req, res, next) => {
   let token;
 
   // Check if token exists
@@ -33,4 +33,4 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 // Export module
-export { protect };
+export { propertyManagerProtect };
