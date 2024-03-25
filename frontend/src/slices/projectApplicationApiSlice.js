@@ -28,7 +28,7 @@ export const projectApplicationsApiSlice = apiSlice.injectEndpoints({
 
     // Accept Project Application
     acceptProjectApplication: builder.mutation({
-      query: ({ data }) => ({
+      query: (data) => ({
         url: `${PROJECT_APPLICATIONS_URL}/accept`,
         method: "PUT",
         body: data,
@@ -37,7 +37,7 @@ export const projectApplicationsApiSlice = apiSlice.injectEndpoints({
 
     // Reject Project Application
     rejectProjectApplication: builder.mutation({
-      query: ({ data }) => ({
+      query: (data) => ({
         url: `${PROJECT_APPLICATIONS_URL}/reject`,
         method: "PUT",
         body: data,

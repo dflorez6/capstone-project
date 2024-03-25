@@ -22,7 +22,9 @@ import imgUploader from "../../../services/multer.js";
 //--------------------
 // Vendor
 // Create
-router.route("/").post(vendorProtect, imgUploader.none(), createProjectApplication);
+router
+  .route("/")
+  .post(vendorProtect, imgUploader.none(), createProjectApplication);
 
 // Property Manager
 // Index
@@ -33,20 +35,16 @@ router
 // Show
 router
   .route("/:propertyManagerId/:projectApplicationId")
-  .get(propertyManagerProtect, showProjectApplication)
-  .put(propertyManagerProtect, acceptApplication)
-  .patch(propertyManagerProtect, acceptApplication)
-  .put(propertyManagerProtect, rejectApplication)
-  .patch(propertyManagerProtect, rejectApplication);
+  .get(propertyManagerProtect, showProjectApplication);
 
 // Accept, Reject
 router
   .route("/accept")
-  .put(propertyManagerProtect, acceptApplication)
-  .patch(propertyManagerProtect, acceptApplication);
+  .put(propertyManagerProtect, imgUploader.none(), acceptApplication)
+  .patch(propertyManagerProtect, imgUploader.none(), acceptApplication);
 router
   .route("/reject")
-  .put(propertyManagerProtect, rejectApplication)
-  .patch(propertyManagerProtect, rejectApplication);
+  .put(propertyManagerProtect, imgUploader.none(), rejectApplication)
+  .patch(propertyManagerProtect, imgUploader.none(), rejectApplication);
 
 export default router;

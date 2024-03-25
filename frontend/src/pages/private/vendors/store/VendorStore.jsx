@@ -221,7 +221,7 @@ function VendorStore() {
                           </Link>
                         </>
                       )}
-                    <Link to="" className="btn-app btn-app-sm btn-app-purple ">
+                    <Link to={`mailto:${vendorStore.storeOwner.email}`} className="btn-app btn-app-sm btn-app-purple ">
                       contact
                     </Link>
                   </div>

@@ -18,6 +18,8 @@ import { toast } from "react-toastify";
 import "./Projects.scss";
 // Assets
 import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
+import avatarPlaceholder from "../../../../assets/img/placeholder-square.jpg";
+import { rejectApplication } from "../../../../../../backend/controllers/api/v1/projectApplicationsController";
 
 // Component
 const Project = () => {
@@ -59,7 +61,7 @@ const Project = () => {
     isLoading: projectApplicationsLoading,
     refetch: projectApplicationsRefetch,
   } = useGetProjectApplicationsQuery({
-    propertyManagerId: project?.propertyManager._id.toString(),
+    propertyManagerId: project?.propertyManager?._id.toString(),
   });
 
   // Redux Toolkit Mutations
@@ -71,13 +73,29 @@ const Project = () => {
     },
   ] = useCreateProjectApplicationMutation();
 
+  const [
+    acceptProjectApplication,
+    {
+      isError: acceptProjectApplicationError,
+      isLoading: acceptProjectApplicationLoading,
+    },
+  ] = useAcceptProjectApplicationMutation();
+
+  const [
+    rejectProjectApplication,
+    {
+      isError: rejectProjectApplicationError,
+      isLoading: rejectProjectApplicationLoading,
+    },
+  ] = useRejectProjectApplicationMutation();
+
   //----------
   // Effects
   //----------
   // Refetch vendor stores
   useEffect(() => {
-    //
-  }, []);
+    projectApplicationsRefetch();
+  }, [projectApplicationsRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -90,6 +108,18 @@ const Project = () => {
   }
   if (projectApplicationsError) {
     console.log("Project Applications Error: ", projectApplicationsError);
+  }
+  if (acceptProjectApplicationError) {
+    console.log(
+      "Accept Project Applications Error: ",
+      acceptProjectApplicationError
+    );
+  }
+  if (rejectProjectApplicationError) {
+    console.log(
+      "Reject Project Applications Error: ",
+      rejectProjectApplicationError
+    );
   }
 
   //----------
@@ -116,14 +146,51 @@ const Project = () => {
       project: project._id,
     };
 
-    console.log(data);
-
     // Dispatch Create Project Application
     try {
       await createProjectApplication(data).unwrap();
       toast.success("Project application sent successfully");
       await projectRefetch();
     } catch (error) {
+      toast.error("You have already sent an application to this project");
+      console.log("Project Application Error: ", error);
+    }
+  };
+
+  // Accept Project Application
+  const handleAcceptProjectApplication = async (projectApplicationId) => {
+    // Prepare Data
+    const data = {
+      projectApplicationId,
+    };
+
+    try {
+      await acceptProjectApplication(data).unwrap();
+      projectApplicationsRefetch();
+      toast.success("Project application accepted successfully");
+    } catch (error) {
+      toast.error(
+        "Application status has already been update for this project"
+      );
+      console.log("Project Application Error: ", error);
+    }
+  };
+
+  // Reject Project Application
+  const handleRejectProjectApplication = async (projectApplicationId) => {
+    // Prepare Data
+    const data = {
+      projectApplicationId,
+    };
+
+    try {
+      await rejectProjectApplication(data).unwrap();
+      projectApplicationsRefetch();
+      toast.success("Project application rejected successfully");
+    } catch (error) {
+      toast.error(
+        "Application status has already been update for this project"
+      );
       console.log("Project Application Error: ", error);
     }
   };
@@ -147,7 +214,7 @@ const Project = () => {
     const options = { month: "short", day: "2-digit", year: "numeric" };
     return date.toLocaleDateString("en-US", options);
   }
-  
+
   //----------
   // Output
   //----------
@@ -219,25 +286,24 @@ const Project = () => {
                     ) : (
                       <>
                         <Link
-                          to=""
+                          to={`mailto:${project.propertyManager.email}`}
                           className="btn-app btn-app-sm btn-app-dark-outline me-3"
                         >
                           contact
                         </Link>
 
-                      {/* TODO: ACA QUEDE */}
-                      {/* TODO: DISABLE BUTTON IF VENDOR HAS ALREADY APPLIED */}
+                        {/* TODO: DISABLE BUTTON IF VENDOR HAS ALREADY APPLIED */}
                         {createProjectApplicationLoading ? (
                           <Loader />
                         ) : (
                           <>
-                            <Link
+                            <button
                               to=""
                               className="btn-app btn-app-sm btn-app-purple"
                               onClick={handleCreateProjectApplication}
                             >
                               apply
-                            </Link>
+                            </button>
                           </>
                         )}
                       </>
@@ -302,7 +368,7 @@ const Project = () => {
                                       {application.vendor.avatar.url === "" ? (
                                         <>
                                           <img
-                                            src={imgPlaceholder}
+                                            src={avatarPlaceholder}
                                             alt={project._id}
                                             className="rounded-circle avatar"
                                           />
@@ -318,23 +384,47 @@ const Project = () => {
                                       )}
                                     </td>
                                     <td>{application.vendor.companyName}</td>
-                                    <td>{formatDate(convertUTCtoToronto(application.applicationDate))}</td>
+                                    <td>
+                                      {formatDate(
+                                        convertUTCtoToronto(
+                                          application.applicationDate
+                                        )
+                                      )}
+                                    </td>
                                     <td>{application.applicationStatus}</td>
                                     <td>
-                                      <Link
-                                        to={""}
-                                        className="btn-app btn-app-xs btn-app-red"
-                                      >
-                                        <i className="fa-solid fa-xmark"></i>
-                                        <span className="ms-1">Reject</span>
-                                      </Link>
-                                      <Link
-                                        to={""}
-                                        className="btn-app btn-app-xs btn-app-green ms-3"
-                                      >
-                                        <i className="fa-solid fa-check"></i>
-                                        <span className="ms-1">Accept</span>
-                                      </Link>
+                                      {rejectProjectApplicationLoading ||
+                                      acceptProjectApplicationLoading ? (
+                                        <Loader />
+                                      ) : (
+                                        <>
+                                          <button
+                                            type="button"
+                                            className="btn-app btn-app-xs btn-app-red"
+                                            onClick={() =>
+                                              handleRejectProjectApplication(
+                                                application._id
+                                              )
+                                            }
+                                          >
+                                            <i className="fa-solid fa-xmark"></i>
+                                            <span className="ms-1">Reject</span>
+                                          </button>
+
+                                          <button
+                                            type="button"
+                                            className="btn-app btn-app-xs btn-app-green ms-3"
+                                            onClick={() =>
+                                              handleAcceptProjectApplication(
+                                                application._id
+                                              )
+                                            }
+                                          >
+                                            <i className="fa-solid fa-check"></i>
+                                            <span className="ms-1">Accept</span>
+                                          </button>
+                                        </>
+                                      )}
                                     </td>
                                   </tr>
                                 ))}

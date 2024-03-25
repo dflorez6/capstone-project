@@ -80,6 +80,8 @@ const createProjectApplication = asyncHandler(async (req, res) => {
         project: projectApplication.project,
         vendor: projectApplication.vendor,
       });
+
+      // TODO: Trigger notification to Property Manager
     } else {
       res.status(400);
       throw new Error("Invalid Project Application data");
@@ -124,6 +126,8 @@ const acceptApplication = asyncHandler(async (req, res) => {
       projectApplication.applicationStatus = "accepted"; // Set to the enum value
       const updatedProjectApplication = await projectApplication.save();
 
+      // TODO: Trigger notification to Vendor
+
       res.status(200).json(updatedProjectApplication);
     } else {
       res.status(401);
@@ -166,6 +170,8 @@ const rejectApplication = asyncHandler(async (req, res) => {
       projectApplication.applicationStatus = "rejected"; // Set to the enum value
       const updatedProjectApplication = await projectApplication.save();
 
+      // TODO: Trigger notification to Vendor
+
       res.status(200).json(updatedProjectApplication);
     } else {
       res.status(401);
@@ -176,7 +182,7 @@ const rejectApplication = asyncHandler(async (req, res) => {
   }
 });
 
-// TODO: Implement: Update Notification Status 
+// TODO: Implement: Update Notification Status
 // TODO: I HAVE TO THINK ABOUT HOW TO HANDLE THIS PART. ONCE I GET INTO THE NOTIFICATIONS PART I WILL REVISIT THIS
 // Action: Reject
 // Description: Update Project Application Status. Accessed by Property Manager
