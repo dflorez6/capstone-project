@@ -51,8 +51,6 @@ function ProjectSearch() {
     projectsRefetch();
   }, [projectsRefetch, companyName, serviceCategory, city, province]);
 
-  console.log("serviceCategory: ", serviceCategory);
-
   //----------
   // Redux Toolkit Slice Errors
   //----------
@@ -92,7 +90,7 @@ function ProjectSearch() {
   //----------
   // State for pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3; // TODO: Set for 3 at the moment to be able to show pagination
+  const itemsPerPage = 6; // TODO: Set for 3 at the moment to be able to show pagination
 
   // Calculate indexes of items to display on the current page
   const indexOfLastStore = (currentPage + 1) * itemsPerPage;

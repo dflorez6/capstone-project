@@ -19,7 +19,6 @@ import "./Projects.scss";
 // Assets
 import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
 import avatarPlaceholder from "../../../../assets/img/placeholder-square.jpg";
-import { rejectApplication } from "../../../../../../backend/controllers/api/v1/projectApplicationsController";
 
 // Component
 const Project = () => {
@@ -142,8 +141,9 @@ const Project = () => {
     // Prepare Data
     const data = {
       applicationDate: utcTime,
-      vendor: vendorInfo ? vendorInfo._id : "",
-      project: project._id,
+      vendor: vendorInfo ? vendorInfo?._id : "",
+      project: project?._id,
+      propertyManager: project?.propertyManager._id,
     };
 
     // Dispatch Create Project Application

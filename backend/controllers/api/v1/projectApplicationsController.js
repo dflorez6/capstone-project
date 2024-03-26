@@ -2,9 +2,14 @@
 // Controller: Project Applications
 //====================
 // Import Dependencies
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import ProjectApplication from "../../../models/projectApplicationModel.js";
 import Project from "../../../models/projectModel.js";
+// Notifications
+import { createNotification } from "./notificationsController.js";
+import { NotificationTypes } from "../../../constants/notificationTypes.js";
+import { NotificationMessages } from "../../../constants/notificationMessages.js";
 
 //--------------------
 // GET
@@ -17,6 +22,7 @@ const getAllProjectApplications = asyncHandler(async (req, res) => {
   // Destructure req.params
   const { propertyManagerId } = req.params;
 
+  // TODO: REFACTOR THIS METHOD TO ONLY SHOW THE APPLICATIONS RECEIVED FOR A SPECIFIC PROP MANAGER IN A SPECIFIC PROJECT
   try {
     // Find projects with passed query param
     const projects = await Project.find({ propertyManager: propertyManagerId });
@@ -59,7 +65,7 @@ const showProjectApplication = asyncHandler(async (req, res) => {
 // Access: Private
 const createProjectApplication = asyncHandler(async (req, res) => {
   // Destructure req.body
-  const { applicationDate, project, vendor } = req.body;
+  const { applicationDate, project, vendor, propertyManager } = req.body;
 
   try {
     // Create the Project Application
@@ -68,6 +74,10 @@ const createProjectApplication = asyncHandler(async (req, res) => {
       project,
       vendor,
     });
+
+    //  const project = await Project.findById(project);
+
+    //    console.log("project: ", project);
 
     // Check if Project Application was created
     if (projectApplication) {
@@ -81,7 +91,25 @@ const createProjectApplication = asyncHandler(async (req, res) => {
         vendor: projectApplication.vendor,
       });
 
-      // TODO: Trigger notification to Property Manager
+      // Build notification data object
+      const notificationData = {
+        senderId: new mongoose.Types.ObjectId(projectApplication.vendor), // Casting to ObjectId in case it comes as a string
+        senderType: "Vendor",
+        recipientId: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
+        recipientType: "PropertyManager",
+        notificationType: NotificationTypes.PROJECT_APPLICATION_CREATED,
+        message: NotificationMessages.PROJECT_APPLICATION_CREATED,
+        data: {
+          projectApplicationId: projectApplication._id,
+          project: projectApplication.project,
+          // TODO: We can get propertyManagerId & projectId from project to rebuild the url /projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Create Notification
+      createNotification(notificationData);
+      // Trigger notification to Property Manager
+      // TODO: Implement: Trigger notification to Property Manager
     } else {
       res.status(400);
       throw new Error("Invalid Project Application data");
@@ -94,7 +122,7 @@ const createProjectApplication = asyncHandler(async (req, res) => {
 //--------------------
 // PUT / PATCH
 //--------------------
-// Action: Accept
+// Action: Update
 // Description: Update Project Application Status. Accessed by Property Manager
 // Route: PUT /api/v1/project-applications/accept
 // Access: Private
@@ -138,7 +166,7 @@ const acceptApplication = asyncHandler(async (req, res) => {
   }
 });
 
-// Action: Reject
+// Action: Update
 // Description: Update Project Application Status. Accessed by Property Manager
 // Route: PUT /api/v1/project-applications/reject
 // Access: Private
@@ -183,11 +211,7 @@ const rejectApplication = asyncHandler(async (req, res) => {
 });
 
 // TODO: Implement: Update Notification Status
-// TODO: I HAVE TO THINK ABOUT HOW TO HANDLE THIS PART. ONCE I GET INTO THE NOTIFICATIONS PART I WILL REVISIT THIS
-// Action: Reject
-// Description: Update Project Application Status. Accessed by Property Manager
-// Route: PUT /api/v1/project-applications/reject
-// Access: Private
+// TODO: I HAVE TO THINK ABOUT HOW TO HANDLE THIS PART. ONCE I GET INTO THE NOTIFICATIONS PART I WILL REVISIT THIS LATER
 
 export {
   getAllProjectApplications,
