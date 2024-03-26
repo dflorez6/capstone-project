@@ -16,26 +16,16 @@ import { NotificationMessages } from "../../../constants/notificationMessages.js
 //--------------------
 // Action: Index
 // Description: List of Project Applications. Accessed by Property Manager
-// Route: GET /api/v1/project-applications/:propertyManagerId
+// Route: GET /api/v1/project-applications/:projectId
 // Access: Private
 const getAllProjectApplications = asyncHandler(async (req, res) => {
   // Destructure req.params
-  const { propertyManagerId } = req.params;
+  const { projectId } = req.params;
 
-  // TODO: REFACTOR THIS METHOD TO ONLY SHOW THE APPLICATIONS RECEIVED FOR A SPECIFIC PROP MANAGER IN A SPECIFIC PROJECT
   try {
-    // Find projects with passed query param
-    const projects = await Project.find({ propertyManager: propertyManagerId });
-
-    // Store only the projects that match the query param
-    const filteredProjects = projects.filter((project) => project._id !== null);
-
-    // Extract project IDs from the projects array
-    const projectIds = projects.map((project) => project._id);
-
-    // Find projectApplications where project IDs match
+    // Find project applications where project ID and property manager ID match
     const projectApplications = await ProjectApplication.find({
-      project: { $in: projectIds }, // Find project applications with project IDs in projectIds array
+      project: projectId,
     })
       .sort({ createdAt: -1 })
       .populate("project")
@@ -45,15 +35,6 @@ const getAllProjectApplications = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json(error.message);
   }
-});
-
-// Action: Show
-// Description: Project Application Detail. Accessed by Property Manager
-// Route: GET /api/v1/project-applications/:propertyManagerId/:projectApplicationId
-// Access: Private
-const showProjectApplication = asyncHandler(async (req, res) => {
-  // TODO: Implement if needed
-  res.status(200).json("Show project application");
 });
 
 //--------------------
@@ -215,7 +196,6 @@ const rejectApplication = asyncHandler(async (req, res) => {
 
 export {
   getAllProjectApplications,
-  showProjectApplication,
   createProjectApplication,
   acceptApplication,
   rejectApplication,

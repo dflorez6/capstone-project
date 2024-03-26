@@ -11,8 +11,8 @@ export const projectApplicationsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Index - Get All Project Applications (Property Manager)
     getProjectApplications: builder.query({
-      query: ({ propertyManagerId }) => ({
-        url: `${PROJECT_APPLICATIONS_URL}/${propertyManagerId}`,
+      query: ({ projectId }) => ({
+        url: `${PROJECT_APPLICATIONS_URL}/${projectId}`,
         method: "GET",
       }),
     }),

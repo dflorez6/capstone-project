@@ -60,7 +60,7 @@ const Project = () => {
     isLoading: projectApplicationsLoading,
     refetch: projectApplicationsRefetch,
   } = useGetProjectApplicationsQuery({
-    propertyManagerId: project?.propertyManager?._id.toString(),
+    projectId: project?._id.toString(),
   });
 
   // Redux Toolkit Mutations
@@ -231,18 +231,18 @@ const Project = () => {
                 <div className="project-cover" style={{backgroundImage: `url(${vendorStore?.coverImage.url})`}}> 
               */}
               <div className="project-image-wrapper">
-                {project.coverImage.url === "" ? (
+                {project?.coverImage.url === "" ? (
                   <>
                     <img
                       src={imgPlaceholder}
-                      alt={project._id}
+                      alt={project?._id}
                       className="project-cover"
                     />
                   </>
                 ) : (
                   <img
-                    src={project.coverImage.url}
-                    alt={project._id}
+                    src={project?.coverImage.url}
+                    alt={project?._id}
                     className="project-cover"
                   />
                 )}
@@ -344,7 +344,7 @@ const Project = () => {
                                 <tr>
                                   <th colSpan={1}></th>
                                   <th colSpan={1}></th>
-                                  <th>Company</th>
+                                  <th>Vendor</th>
                                   <th>Application Date</th>
                                   <th>Status</th>
                                   <th>Actions</th>
@@ -352,82 +352,107 @@ const Project = () => {
                               </thead>
 
                               <tbody>
-                                {projectApplications.map((application) => (
-                                  <tr key={application._id}>
-                                    <td>
-                                      {" "}
-                                      <Link
-                                        to={`/vendors/store/${application.vendor.storeSlug}`}
-                                        className="f-primary"
-                                      >
-                                        <i className="fa-solid fa-store"></i>
-                                        <span className="ms-1">View Store</span>
-                                      </Link>
-                                    </td>
-                                    <td>
-                                      {application.vendor.avatar.url === "" ? (
-                                        <>
-                                          <img
-                                            src={avatarPlaceholder}
-                                            alt={project._id}
-                                            className="rounded-circle avatar"
-                                          />
-                                        </>
-                                      ) : (
-                                        <>
-                                          <img
-                                            src={application.vendor.avatar.url}
-                                            alt={project._id}
-                                            className="rounded-circle avatar"
-                                          />
-                                        </>
-                                      )}
-                                    </td>
-                                    <td>{application.vendor.companyName}</td>
-                                    <td>
-                                      {formatDate(
-                                        convertUTCtoToronto(
-                                          application.applicationDate
-                                        )
-                                      )}
-                                    </td>
-                                    <td>{application.applicationStatus}</td>
-                                    <td>
-                                      {rejectProjectApplicationLoading ||
-                                      acceptProjectApplicationLoading ? (
-                                        <Loader />
-                                      ) : (
-                                        <>
-                                          <button
-                                            type="button"
-                                            className="btn-app btn-app-xs btn-app-red"
-                                            onClick={() =>
-                                              handleRejectProjectApplication(
-                                                application._id
-                                              )
-                                            }
+                                {projectApplications.length === 0 ? (
+                                  <>
+                                    <tr>
+                                      <td colSpan={6} className="text-center">
+                                        No applications received yet
+                                      </td>
+                                    </tr>
+                                  </>
+                                ) : (
+                                  <>
+                                    {projectApplications.map((application) => (
+                                      <tr key={application._id}>
+                                        <td>
+                                          {" "}
+                                          <Link
+                                            to={`/vendors/store/${application.vendor.storeSlug}`}
+                                            className="f-primary"
                                           >
-                                            <i className="fa-solid fa-xmark"></i>
-                                            <span className="ms-1">Reject</span>
-                                          </button>
+                                            <i className="fa-solid fa-store"></i>
+                                            <span className="ms-1">
+                                              View Store
+                                            </span>
+                                          </Link>
+                                        </td>
+                                        <td>
+                                          {application.vendor.avatar.url ===
+                                          "" ? (
+                                            <>
+                                              <img
+                                                src={avatarPlaceholder}
+                                                alt={project._id}
+                                                className="rounded-circle avatar"
+                                              />
+                                            </>
+                                          ) : (
+                                            <>
+                                              <img
+                                                src={
+                                                  application.vendor.avatar.url
+                                                }
+                                                alt={project._id}
+                                                className="rounded-circle avatar"
+                                              />
+                                            </>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {application.vendor.companyName}
+                                        </td>
+                                        <td>
+                                          {formatDate(
+                                            convertUTCtoToronto(
+                                              application.applicationDate
+                                            )
+                                          )}
+                                        </td>
+                                        <td>{application.applicationStatus}</td>
+                                        {/* Actions */}
+                                        <td>
+                                          {rejectProjectApplicationLoading ||
+                                          acceptProjectApplicationLoading ? (
+                                            <Loader />
+                                          ) : (
+                                            <>
+                                              <button
+                                                type="button"
+                                                className="btn-app btn-app-xs btn-app-red"
+                                                onClick={() =>
+                                                  handleRejectProjectApplication(
+                                                    application._id
+                                                  )
+                                                }
+                                              >
+                                                <i className="fa-solid fa-xmark"></i>
+                                                <span className="ms-1">
+                                                  Reject
+                                                </span>
+                                              </button>
 
-                                          <button
-                                            type="button"
-                                            className="btn-app btn-app-xs btn-app-green ms-3"
-                                            onClick={() =>
-                                              handleAcceptProjectApplication(
-                                                application._id
-                                              )
-                                            }
-                                          >
-                                            <i className="fa-solid fa-check"></i>
-                                            <span className="ms-1">Accept</span>
-                                          </button>
-                                        </>
-                                      )}
-                                    </td>
-                                  </tr>
-                                ))}
+                                              <button
+                                                type="button"
+                                                className="btn-app btn-app-xs btn-app-green ms-3"
+                                                onClick={() =>
+                                                  handleAcceptProjectApplication(
+                                                    application._id
+                                                  )
+                                                }
+                                              >
+                                                <i className="fa-solid fa-check"></i>
+                                                <span className="ms-1">
+                                                  Accept
+                                                </span>
+                                              </button>
+                                            </>
+                                          )}
+                                        </td>
+                                        {/* ./Actions */}
+                                      </tr>
+                                    ))}
+                                  </>
+                                )}
                               </tbody>
                             </table>
                           </>
