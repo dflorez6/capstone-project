@@ -63,6 +63,9 @@ import projectRoutes from "./routes/api/v1/projectRoutes.js";
 import projectApplicationRoutes from "./routes/api/v1/projectApplicationRoutes.js";
 app.use(`${baseURL}/projects`, projectRoutes);
 app.use(`${baseURL}/project-applications`, projectApplicationRoutes);
+// Notifications
+import notificationRoutes from "./routes/api/v1/notificationRoutes.js";
+app.use(`${baseURL}/notifications`, notificationRoutes);
 
 //====================
 // Production
