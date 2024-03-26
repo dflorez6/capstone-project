@@ -137,23 +137,6 @@ const logoutVendor = asyncHandler(async (req, res) => {
 // Route: GET /api/v1/vendors/profile
 // Access: Private
 const getVendorProfile = asyncHandler(async (req, res) => {
-  // TODO: Original Code. 
-  /*
-  // Get the vendor from the request object
-  const vendor = {
-    _id: req.vendor._id,
-    accountType: req.vendor.accountType,
-    companyName: req.vendor.companyName,
-    firstName: req.vendor.firstName,
-    lastName: req.vendor.lastName,
-    email: req.vendor.email,
-    avatar: req.vendor.avatar,
-    phone: req.vendor.phone,
-    address: req.vendor.address,
-    storeSlug: req.storeSlug,
-  };
-  */
-
   // Trying a different approach: fetch the record instead of using the request object
   const vendor = await Vendor.findById(req.vendor._id).select("-password");
 
@@ -193,8 +176,6 @@ const updateVendorProfile = asyncHandler(async (req, res) => {
       avatarData.url = req.file.path; // The file path will be the Cloudinary URL
       avatarData.publicId = req.file.filename; // The public ID provided by Cloudinary
     }
-
-    console.log("Profile Update req.body inside Try: ", req.body);
 
     // Update the Vendor
     vendor.firstName = req.body.firstName || vendor.firstName;
