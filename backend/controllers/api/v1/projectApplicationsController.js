@@ -56,9 +56,9 @@ const createProjectApplication = asyncHandler(async (req, res) => {
       vendor,
     });
 
-    //  const project = await Project.findById(project);
-
-    //    console.log("project: ", project);
+    // Fetch Project Name
+    const fetchedProject = await Project.findById(project).select("name");
+    const projectName = fetchedProject.name;
 
     // Check if Project Application was created
     if (projectApplication) {
@@ -74,15 +74,15 @@ const createProjectApplication = asyncHandler(async (req, res) => {
 
       // Build notification data object
       const notificationData = {
-        senderId: new mongoose.Types.ObjectId(projectApplication.vendor), // Casting to ObjectId in case it comes as a string
+        sender: new mongoose.Types.ObjectId(projectApplication.vendor), // Casting to ObjectId in case it comes as a string
         senderType: "Vendor",
-        recipientId: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
+        recipient: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
         recipientType: "PropertyManager",
         notificationType: NotificationTypes.PROJECT_APPLICATION_CREATED,
         message: NotificationMessages.PROJECT_APPLICATION_CREATED,
         data: {
-          projectApplicationId: projectApplication._id,
-          project: projectApplication.project,
+          projectId: projectApplication.project,
+          projectName: projectName,
           // TODO: We can get propertyManagerId & projectId from project to rebuild the url /projects/:propertyManagerId/:projectId
         },
       };

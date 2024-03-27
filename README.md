@@ -332,6 +332,13 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
     > npm install react-paginate --save
 
+### Moment-Timezone
+
+* Library to handle time zone conversions
+* Install the following packages
+
+    > npm install moment-timezone --save
+
 <hr>
 
 # DEPLOYMENT
