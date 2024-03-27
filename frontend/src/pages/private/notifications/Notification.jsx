@@ -333,7 +333,8 @@ function Notification() {
                                                 viewPropertyManagerNotificationHandler(
                                                   notification._id,
                                                   notification.recipient,
-                                                  notification.data.projectId
+                                                  notification.data.projectId,
+                                                  notification.notificationType
                                                 )
                                               }
                                             >
