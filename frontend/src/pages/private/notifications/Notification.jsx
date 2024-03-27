@@ -19,9 +19,7 @@ import Loader from "../../../components/Loader";
 import { toast } from "react-toastify";
 // Styles
 import "./Notification.scss";
-// Assets
-import imgPlaceholder from "../../../assets/img/placeholder-landscape.png";
-import avatarPlaceholder from "../../../assets/img/placeholder-square.jpg";
+import { NotificationTypes } from "../../../../../backend/constants/notificationTypes.js";
 
 // Component
 function Notification() {
@@ -69,6 +67,18 @@ function Notification() {
     },
   ] = useDeletePropertyManagerNotificationMutation();
 
+  const [
+    markReadVendorNotification,
+    { isError: markReadVendorNotificationError },
+  ] = useMarkReadVendorNotificationMutation();
+  const [
+    deleteVendorNotification,
+    {
+      isError: deleteVendorNotificationError,
+      isLoading: deleteVendorNotificationLoading,
+    },
+  ] = useDeleteVendorNotificationMutation();
+
   //----------
   // Effects
   //----------
@@ -96,9 +106,6 @@ function Notification() {
       propertyManagerNotificationsError
     );
   }
-  if (vendorNotificationsError) {
-    console.log("Vendor Notifications Error: ", vendorNotificationsError);
-  }
   if (markReadPropertyManagerNotificationError) {
     console.log(
       "Property Manager Mark Read Notification Error: ",
@@ -111,6 +118,21 @@ function Notification() {
       deletePropertyManagerNotificationError
     );
   }
+  if (vendorNotificationsError) {
+    console.log("Vendor Notifications Error: ", vendorNotificationsError);
+  }
+  if (markReadVendorNotificationError) {
+    console.log(
+      "Vendor Mark Read Notification Error: ",
+      markReadVendorNotificationError
+    );
+  }
+  if (deleteVendorNotificationError) {
+    console.log(
+      "Vendor Delete Notification Error: ",
+      deleteVendorNotificationError
+    );
+  }
 
   //----------
   // Handlers
@@ -119,7 +141,8 @@ function Notification() {
   const viewPropertyManagerNotificationHandler = async (
     notificationId,
     recipientId,
-    projectId
+    projectId,
+    notificationType
   ) => {
     try {
       // Mark Notification as Read
@@ -128,8 +151,17 @@ function Notification() {
         notificationId: notificationId,
       }).unwrap();
 
-      // Navigate to Project details page
-      navigate(`/projects/${recipientId}/${projectId}`);
+      // Based on the Notification Type, navigate to the appropriate page
+      switch (notificationType) {
+        case NotificationTypes.PROJECT_APPLICATION_CREATED:
+        case NotificationTypes.PROJECT_APPLICATION_ACCEPTED:
+        case NotificationTypes.PROJECT_APPLICATION_REJECTED:
+          // Navigate to Project details page
+          navigate(`/projects/${recipientId}/${projectId}`);
+          break;
+        // TODO: Add more cases as needed to navigate to the appropriate page
+      }
+
       // Refetch Notifications
       await propertyManagerNotificationsRefetch();
     } catch (error) {
@@ -149,6 +181,56 @@ function Notification() {
 
       // Refetch Notifications
       await propertyManagerNotificationsRefetch();
+    } catch (error) {
+      toast.error("Error deleting notification");
+      console.error("Error deleting notification:", error);
+    }
+  };
+
+  // View Vendor Notification and update application.read = true
+  const viewVendorNotificationHandler = async (
+    notificationId,
+    senderId,
+    projectId,
+    notificationType
+  ) => {
+    try {
+      // Mark Notification as Read
+      await markReadVendorNotification({
+        vendorId: vendorInfo?._id,
+        notificationId: notificationId,
+      }).unwrap();
+
+      // Based on the Notification Type, navigate to the appropriate page
+      switch (notificationType) {
+        case NotificationTypes.PROJECT_APPLICATION_CREATED:
+        case NotificationTypes.PROJECT_APPLICATION_ACCEPTED:
+        case NotificationTypes.PROJECT_APPLICATION_REJECTED:
+          // Navigate to Project details page
+          navigate(`/projects/${senderId}/${projectId}`);
+          break;
+        // TODO: Add more cases as needed to navigate to the appropriate page
+      }
+
+      // Refetch Notifications
+      await vendorNotificationsRefetch();
+    } catch (error) {
+      toast.error("Error deleting notification");
+      console.error("Error deleting notification:", error);
+    }
+  };
+
+  // Delete Vendor Notification
+  const deleteVendorNotificationHandler = async (notificationId) => {
+    try {
+      // Perform delete operation
+      await deleteVendorNotification({
+        vendorId: vendorInfo?._id,
+        notificationId: notificationId,
+      }).unwrap();
+
+      // Refetch Notifications
+      await vendorNotificationsRefetch();
     } catch (error) {
       toast.error("Error deleting notification");
       console.error("Error deleting notification:", error);
@@ -283,7 +365,101 @@ function Notification() {
             <Loader />
           ) : (
             <>
-              <p>Vendor Notifications</p>
+              <div className="row">
+                <div className="col-12">
+                  <div className="panel-wrapper notifications-content-wrapper">
+                    <div className="panel-title-wrapper">
+                      <h2>Notifications</h2>
+                    </div>
+
+                    <div className="panel-content-wrapper">
+                      <table className="table app-table">
+                        {/* TODO: In case we want to show the headings uncomment this block */}
+                        {/* 
+                        <thead>
+                          <tr>
+                            <th>Notification</th>
+                            <th>Date</th>
+                            <th colSpan={1}></th>
+                          </tr>
+                        </thead>
+                        */}
+
+                        <tbody>
+                          {vendorNotifications?.length === 0 ? (
+                            <>
+                              {" "}
+                              <tr className="unread">
+                                <td colSpan={6} className="text-center">
+                                  There are no notifications to display
+                                </td>
+                              </tr>
+                            </>
+                          ) : (
+                            <>
+                              {vendorNotifications?.map((notification) => (
+                                <>
+                                  <tr
+                                    key={notification._id}
+                                    className={
+                                      notification.read !== true ? "unread" : ""
+                                    }
+                                  >
+                                    <td>
+                                      <span className="bold">
+                                        {notification.sender.companyName}
+                                      </span>{" "}
+                                      <span>{notification.message}</span>{" "}
+                                      <span className="bold">
+                                        {notification.data.projectName}
+                                      </span>
+                                    </td>
+                                    <td>
+                                      {torontoDateTime(notification.createdAt)}
+                                    </td>
+                                    <td>
+                                      {deleteVendorNotificationLoading ? (
+                                        <Loader />
+                                      ) : (
+                                        <>
+                                          <button
+                                            className="btn-app btn-app-xs btn-app-red table-icon"
+                                            onClick={() =>
+                                              deleteVendorNotificationHandler(
+                                                notification._id
+                                              )
+                                            }
+                                          >
+                                            <i className="fa-solid fa-trash-can"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="btn-app btn-app-xs btn-app-green ms-3"
+                                            onClick={() =>
+                                              viewVendorNotificationHandler(
+                                                notification._id,
+                                                notification.sender._id,
+                                                notification.data.projectId,
+                                                notification.notificationType
+                                              )
+                                            }
+                                          >
+                                            view
+                                          </button>
+                                        </>
+                                      )}
+                                    </td>
+                                  </tr>
+                                </>
+                              ))}
+                            </>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
           {/* ./Vendor Notifications */}

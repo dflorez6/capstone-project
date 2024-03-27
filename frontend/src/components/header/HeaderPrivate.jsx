@@ -121,7 +121,7 @@ const Header = () => {
               <ul className="navbar-nav">
                 <li className="nav-item">
                   <Link className="nav-link" to="/notifications">
-                    <i className="fa-solid fa-bell"></i>                    
+                    <i className="fa-solid fa-bell"></i>
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -194,6 +194,17 @@ const Header = () => {
                   </ul>
                 </li>
                 {/* ./Dropdown */}
+
+                <button
+                  className="btn-sidebar-trigger"
+                  type="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasExample"
+                  aria-controls="offcanvasExample"
+                >
+                  <i className="fa-solid fa-bars"></i>
+                  <span className="ms-2">Menu</span>
+                </button>
               </ul>
             </div>
           </div>

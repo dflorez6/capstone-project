@@ -83,11 +83,11 @@ const createProjectApplication = asyncHandler(async (req, res) => {
         data: {
           projectId: projectApplication.project,
           projectName: projectName,
-          // TODO: We can get propertyManagerId & projectId from project to rebuild the url /projects/:propertyManagerId/:projectId
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
         },
       };
 
-      // Create Notification
+      // Call Notification Method
       createNotification(notificationData);
       // Trigger notification to Property Manager
       // TODO: Implement: Trigger notification to Property Manager
@@ -135,6 +135,31 @@ const acceptApplication = asyncHandler(async (req, res) => {
       projectApplication.applicationStatus = "accepted"; // Set to the enum value
       const updatedProjectApplication = await projectApplication.save();
 
+      // Fetch Project Name
+      const fetchedProject = await Project.findById(
+        projectApplication.project
+      ).select("name");
+      const projectName = fetchedProject.name;
+
+      // Build notification data object
+      const notificationData = {
+        sender: new mongoose.Types.ObjectId(
+          projectApplication.project.propertyManager
+        ), // Casting to ObjectId in case it comes as a string
+        senderType: "PropertyManager",
+        recipient: new mongoose.Types.ObjectId(projectApplication.vendor), // Casting to ObjectId in case it comes as a string
+        recipientType: "Vendor",
+        notificationType: NotificationTypes.PROJECT_APPLICATION_ACCEPTED,
+        message: NotificationMessages.PROJECT_APPLICATION_ACCEPTED,
+        data: {
+          projectId: projectApplication.project,
+          projectName: projectName,
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Call Notification Method
+      createNotification(notificationData);
       // TODO: Trigger notification to Vendor
 
       res.status(200).json(updatedProjectApplication);
@@ -179,6 +204,31 @@ const rejectApplication = asyncHandler(async (req, res) => {
       projectApplication.applicationStatus = "rejected"; // Set to the enum value
       const updatedProjectApplication = await projectApplication.save();
 
+      // Fetch Project Name
+      const fetchedProject = await Project.findById(
+        projectApplication.project
+      ).select("name");
+      const projectName = fetchedProject.name;
+
+      // Build notification data object
+      const notificationData = {
+        sender: new mongoose.Types.ObjectId(
+          projectApplication.project.propertyManager
+        ), // Casting to ObjectId in case it comes as a string
+        senderType: "PropertyManager",
+        recipient: new mongoose.Types.ObjectId(projectApplication.vendor), // Casting to ObjectId in case it comes as a string
+        recipientType: "Vendor",
+        notificationType: NotificationTypes.PROJECT_APPLICATION_REJECTED,
+        message: NotificationMessages.PROJECT_APPLICATION_REJECTED,
+        data: {
+          projectId: projectApplication.project,
+          projectName: projectName,
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Call Notification Method
+      createNotification(notificationData);
       // TODO: Trigger notification to Vendor
 
       res.status(200).json(updatedProjectApplication);
