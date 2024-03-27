@@ -99,6 +99,12 @@ function Sidebar() {
           <div className="sidebar-navigation-wrapper">
             <ul className="sidebar-navigation">
               <li className="sidebar-navigation-item">
+                <Link className="sidebar-navigation-link " to="/notifications">
+                  <i className="fa-solid fa-bell link-icon"></i>
+                  <span className="link-text">Notifications</span>
+                </Link>
+              </li>
+              <li className="sidebar-navigation-item">
                 <Link className="sidebar-navigation-link " to="/dashboard">
                   <i className="fa-solid fa-chart-simple link-icon"></i>
                   <span className="link-text">Dashboard</span>

@@ -120,8 +120,8 @@ const Header = () => {
             <div className="ms-auto">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/">
-                    <i className="fa-solid fa-bell"></i>
+                  <Link className="nav-link" to="/notifications">
+                    <i className="fa-solid fa-bell"></i>                    
                   </Link>
                 </li>
                 <li className="nav-item">

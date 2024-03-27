@@ -28,6 +28,7 @@ import PropertyManagerRegistration from "./pages/public/auth/PropertyManagerRegi
 // Private
 //==========
 import Dashboard from "./pages/private/dashboard/Dashboard.jsx";
+import Notification from "./pages/private/notifications/Notification.jsx";
 //----------
 // Vendors
 //----------
@@ -53,7 +54,6 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       {/* index={true} to let it know this is the root/index/home page/screen */}
       <Route index={true} path="/" element={<PublicHomePage />} />
-
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/vendors/register" element={<VendorRegistration />} />
@@ -65,15 +65,16 @@ const router = createBrowserRouter(
       {/* Private Routes */}
       <Route path="" element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/notifications" element={<Notification />} />
+
         {/* Vendors */}
         <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />
-        <Route path="/projects" element={<ProjectSearch />} />        
+        <Route path="/projects" element={<ProjectSearch />} />
         <Route path="/vendors/profile" element={<VendorsProfile />} />
         <Route
           path="/vendors/store/:storeSlug/edit"
           element={<VendorStoreEdit />}
         />
-
 
         {/* Property Managers */}
         <Route

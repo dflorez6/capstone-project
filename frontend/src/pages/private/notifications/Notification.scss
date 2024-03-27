@@ -1,0 +1,54 @@
+// Imports
+@import "../../../styles/core/variables.scss";
+
+//====================
+// Notifications
+//====================
+.notifications-wrapper {
+  .notifications-content-wrapper {
+    margin-top: 0;
+
+    // Table
+    .app-table {
+      thead {
+        tr {
+          th {
+            border-color: $c-text-primary;
+            text-transform: capitalize;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            border-color: $c-text-primary;
+            vertical-align: middle;
+
+            .bold {
+              font-weight: $f-medium;
+            }
+
+            .table-icon {
+              svg {
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+
+        // Unread
+        tr {
+          &.unread {
+            td {
+              background-color: rgba($c-text-secondary, 0.2);
+            }
+          }
+        }
+      }
+    }
+
+    .avatar {
+      width: 40px;
+    }
+  }
+}
