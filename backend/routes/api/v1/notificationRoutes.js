@@ -43,12 +43,12 @@ router
 // Update
 router
   .route("/propertyManager/:propertyManagerId/:notificationId")
-  .put(vendorProtect, markReadPropertyManagerNotification)
-  .patch(vendorProtect, markReadPropertyManagerNotification);
+  .put(propertyManagerProtect, markReadPropertyManagerNotification)
+  .patch(propertyManagerProtect, markReadPropertyManagerNotification);
 
 // Delete
 router
   .route("/propertyManager/:propertyManagerId/:notificationId")
-  .delete(vendorProtect, deletePropertyManagerNotification);
+  .delete(propertyManagerProtect, deletePropertyManagerNotification);
 
 export default router;

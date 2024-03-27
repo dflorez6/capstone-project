@@ -9,8 +9,9 @@ import mongoose, { Schema } from "mongoose";
 //--------------------
 const notificationSchema = mongoose.Schema(
   {
-    senderId: {
+    sender: {
       type: mongoose.Schema.Types.ObjectId,
+      refPath: 'senderType', // Dynamic reference based on senderType field
       required: true,
     },
     senderType: {
@@ -18,8 +19,9 @@ const notificationSchema = mongoose.Schema(
       enum: ["Vendor", "PropertyManager"],
       required: true,
     },
-    recipientId: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
+      refPath: 'recipientType', // Dynamic reference based on recipientType field
       required: true,
     },
     recipientType: {

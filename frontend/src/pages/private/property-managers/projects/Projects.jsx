@@ -8,6 +8,8 @@ import {
   useGetPropertyManagerProjectsQuery,
   useDeleteProjectMutation,
 } from "../../../../slices/projectsApiSlice";
+// Time
+import { torontoDate, torontoTime } from "../../../../utils/formatDates";
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -101,20 +103,6 @@ function Projects() {
     return project && project?.coverImage.url
       ? project?.coverImage.url
       : imgPlaceholder;
-  };
-
-  // Function to format datetime string to date
-  const formatDate = (projectDateTime) => {
-    const date = new Date(projectDateTime); // Parse datetime string
-    const options = { year: "numeric", month: "short", day: "2-digit" }; // Date formatting options
-    return date.toLocaleDateString("en-US", options);
-  };
-
-  // Function to format datetime string to time
-  const formatTime = (projectDateTime) => {
-    const dateObj = new Date(projectDateTime); // Parse datetime string
-    const options = { hour: "2-digit", minute: "2-digit" }; // Time formatting options
-    return dateObj.toLocaleTimeString("en-US", options);
   };
 
   //----------
@@ -217,11 +205,11 @@ function Projects() {
                             <i className="fa-solid fa-calendar-days icon"></i>
                           </div>
                           <p className="date-start">
-                            {formatDate(project.startDateTime)}
+                            {torontoDate(project.startDateTime)}
                           </p>
                           <p className="dash">-</p>
                           <p className="date-end">
-                            {formatDate(project.endDateTime)}
+                            {torontoDate(project.endDateTime)}
                           </p>
                         </div>
                         <div className="card-content-date">
@@ -229,11 +217,11 @@ function Projects() {
                             <i className="fa-solid fa-clock icon"></i>
                           </div>
                           <p className="date-start">
-                            {formatTime(project.startDateTime)}
+                            {torontoTime(project.startDateTime)}
                           </p>
                           <p className="dash">-</p>
                           <p className="date-end">
-                            {formatTime(project.endDateTime)}
+                            {torontoTime(project.endDateTime)}
                           </p>
                         </div>
                         <div className="card-actions">

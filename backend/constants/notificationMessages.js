@@ -2,9 +2,9 @@
 // Constants: Notification Types
 //====================
 export const NotificationMessages = {
-  PROJECT_APPLICATION_CREATED: "Project application created",
-  PROJECT_APPLICATION_ACCEPTED: "Project application accepted",
-  PROJECT_APPLICATION_REJECTED: "Project application rejected",
+  PROJECT_APPLICATION_CREATED: "applied to project",
+  PROJECT_APPLICATION_ACCEPTED: "project application accepted",
+  PROJECT_APPLICATION_REJECTED: "project application rejected",
   // TODO: Add more NotificationTypes as needed
   /*
     WORK_ORDER_CREATED: "work_order_created",

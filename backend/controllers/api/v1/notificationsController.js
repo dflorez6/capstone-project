@@ -29,10 +29,24 @@ const getAllPropertyManagerNotifications = asyncHandler(async (req, res) => {
   // Desctructure req.params
   const { propertyManagerId } = req.params;
 
-  
+  try {
+    // Check if propertyManagerId matches the logged in user's ID
+    if (propertyManagerId === req.propertyManager._id.toString()) {
+      // Fetch notifications where recipient ID matches property manager ID
+      const notifications = await Notification.find({
+        recipient: propertyManagerId,
+      })
+        .sort({ createdAt: -1 })
+        .populate("sender", "companyName");
 
-
-  res.status(200).json("Get all property manager notifications");
+      res.status(200).json(notifications);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized. Not the Property Manger.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 //--------------------
@@ -56,12 +70,33 @@ const markReadVendorNotification = asyncHandler(async (req, res) => {
 // Route: PUT /api/v1/notifications/propertyManager/:propertyManagerId/:notificationId
 // Access: Private
 const markReadPropertyManagerNotification = asyncHandler(async (req, res) => {
-  res.status(200).json("Update property manager notifications");
-  /*
-    // TODO:
-    * When user clicks on notification udapted DB field read to true
-    * Once read = true -> Front-end will not show new notifications AND/OR it wont highlight it (like ig/fb notifications)
-  */
+  // Destructure req.params
+  const { propertyManagerId, notificationId } = req.params;
+
+  try {
+    // Fetch notification
+    const notification = await Notification.findById(notificationId);
+
+    // Check if notification exists
+    if (!notification) {
+      res.status(404);
+      throw new Error("Notification not found");
+    }
+
+    // Check if propertyManagerId matches the logged in user's ID
+    if (propertyManagerId === req.propertyManager._id.toString()) {
+      // Update notification
+      notification.read = true;
+      await notification.save();
+
+      res.status(200).json(notification);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized. Not the Property Manger.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 //--------------------
@@ -80,7 +115,34 @@ const deleteVendorNotification = asyncHandler(async (req, res) => {
 // Route: DELETE /api/v1/notifications/propertyManager/:propertyManagerId/:notificationId
 // Access: Private
 const deletePropertyManagerNotification = asyncHandler(async (req, res) => {
-  res.status(200).json("Delete property manager notifications");
+  // Destructure req.params
+  const { propertyManagerId, notificationId } = req.params;
+
+  try {
+    // Fetch notification
+    const notification = await Notification.findById(notificationId);
+
+    // Check if notification exists
+    if (!notification) {
+      res.status(404);
+      throw new Error("Notification not found");
+    }
+
+    // Check if propertyManagerId matches the logged in user's ID
+    if (propertyManagerId === req.propertyManager._id.toString()) {
+      // Perform delete operation
+      await Notification.deleteOne({ _id: notification._id });
+
+      res.status(200).json({
+        message: "Property manager notification deleted successfully",
+      });
+    } else {
+      res.status(401);
+      throw new Error("Not authorized. Not the Property Manger.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 //====================
@@ -109,13 +171,13 @@ const createNotification = async (notificationData) => {
 // Project Application Created
 const projectApplicationCreated = async (notificationData) => {
   console.log("notificationsController: projectApplicationCreated ------>");
-  console.log("notificationData: ", notificationData);
+  // console.log("notificationData: ", notificationData);
 
   // Destructure notificationData
   const {
-    senderId,
+    sender,
     senderType,
-    recipientId,
+    recipient,
     recipientType,
     notificationType,
     message,
@@ -125,9 +187,9 @@ const projectApplicationCreated = async (notificationData) => {
   try {
     // Create notification
     const notification = await Notification.create({
-      senderId,
+      sender,
       senderType,
-      recipientId,
+      recipient,
       recipientType,
       notificationType,
       message,

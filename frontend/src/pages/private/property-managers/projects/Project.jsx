@@ -10,6 +10,8 @@ import {
   useAcceptProjectApplicationMutation,
   useRejectProjectApplicationMutation,
 } from "../../../../slices/projectApplicationApiSlice";
+// Time
+import { torontoDate } from "../../../../utils/formatDates";
 // Components
 import Loader from "../../../../components/Loader";
 // Toast
@@ -27,9 +29,6 @@ const Project = () => {
   //----------
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
-
-  // Form Fields
-  // TODO: Implement Form Fields
 
   // Parse URL to get query params
   const url = window.location.pathname;
@@ -198,22 +197,7 @@ const Project = () => {
   //----------
   // Functions
   //----------
-  // Helper function to convert UTC date to Toronto time with daylight savings
-  function convertUTCtoToronto(utcDate) {
-    const torontoOffset = -4 * 60; // Toronto is UTC-5 hours (Standard Time), but is adjusted for Daylight Saving Time
-    const torontoTimeWithOffset = new Date(utcDate);
-    torontoTimeWithOffset.setMinutes(
-      torontoTimeWithOffset.getMinutes() + torontoOffset
-    );
-
-    return torontoTimeWithOffset;
-  }
-
-  // Helper function to format date as "Month/Day/Year" (e.g., "03 Mar, 2024")
-  function formatDate(date) {
-    const options = { month: "short", day: "2-digit", year: "numeric" };
-    return date.toLocaleDateString("en-US", options);
-  }
+  // TODO: Implement Functions
 
   //----------
   // Output
@@ -251,10 +235,10 @@ const Project = () => {
 
               <div className="project-info-wrapper">
                 <div className="project-title-wrapper">
-                  <h1>{project.name}</h1>
+                  <h1>{project?.name}</h1>
                 </div>
                 <div className="project-category">
-                  <h2>{project.serviceCategory.name}</h2>
+                  <h2>{project?.serviceCategory.name}</h2>
                 </div>
                 <div className="project-counters-wrapper">
                   <div className="counters-wrapper">
@@ -347,7 +331,7 @@ const Project = () => {
                                   <th>Vendor</th>
                                   <th>Application Date</th>
                                   <th>Status</th>
-                                  <th>Actions</th>
+                                  <th colSpan={1}></th>
                                 </tr>
                               </thead>
 
@@ -365,7 +349,6 @@ const Project = () => {
                                     {projectApplications.map((application) => (
                                       <tr key={application._id}>
                                         <td>
-                                          {" "}
                                           <Link
                                             to={`/vendors/store/${application.vendor.storeSlug}`}
                                             className="f-primary"
@@ -402,10 +385,8 @@ const Project = () => {
                                           {application.vendor.companyName}
                                         </td>
                                         <td>
-                                          {formatDate(
-                                            convertUTCtoToronto(
-                                              application.applicationDate
-                                            )
+                                          {torontoDate(
+                                            application.applicationDate
                                           )}
                                         </td>
                                         <td>{application.applicationStatus}</td>
