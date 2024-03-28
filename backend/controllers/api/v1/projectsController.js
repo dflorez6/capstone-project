@@ -11,7 +11,7 @@ import cloudinary from "../../../services/cloudinary.config.js"; // Used when us
 // GET
 //--------------------
 // Action: Index
-// Description: List of Projects
+// Description: List of Projects (Used for SearchProject Page. Filter by companyName, city, province, serviceCategory)
 // Route: GET /api/v1/projects
 // Access: Public
 const getAllProjects = asyncHandler(async (req, res) => {
@@ -95,7 +95,7 @@ const getAllProjects = asyncHandler(async (req, res) => {
 });
 
 // Action: Index
-// Description: List of Projects
+// Description: List of Property Manager's Projects
 // Route: GET /api/v1/projects/:propertyManagerId
 // Access: Public
 const getPropertyManagerProjects = asyncHandler(async (req, res) => {
@@ -163,7 +163,7 @@ const showProject = asyncHandler(async (req, res) => {
 //--------------------
 // Action: Create
 // Description: Create Project
-// Route: GET /api/v1/projects/:propertyManagerId
+// Route: POST /api/v1/projects/:propertyManagerId
 // Access: Private
 const createProject = asyncHandler(async (req, res) => {
   // Destructure req.params

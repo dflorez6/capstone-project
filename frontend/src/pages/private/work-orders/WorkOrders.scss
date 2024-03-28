@@ -1,0 +1,143 @@
+// Imports
+@import "../../../styles/core/variables.scss";
+
+//====================
+// Work Orders
+//====================
+.work-orders-wrapper {
+  .work-orders-content-wrapper {
+    // Card
+    .work-order-card-wrapper {
+      background-color: $c-white;
+      border-radius: 10px;
+      box-shadow: var(--bs-box-shadow);
+      flex-direction: column;
+      display: flex;
+      margin: 0 0 2rem;
+      width: 100%;
+
+      // Header
+      .work-order-card-header {
+        // Card Color Status
+        .color-status-bar {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          height: 5px;
+          width: 100%;
+
+          // Color Status
+          // Status: ["pending", "accepted", "rejected", "inProgress", "closed"],
+          &.pending {
+            background-color: $c-yellow;
+          }
+          &.accepted {
+            background-color: $c-aqua;
+          }
+          &.rejected {
+            background-color: $c-red;
+          }
+          &.in-progress {
+            background-color: $c-purple-m;
+          }
+          &.closed {
+            background-color: $c-text-secondary;
+          }
+        }
+
+        // Header Actions
+        .header-actions {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 0.5rem 1.5rem;
+
+          .header-action {
+            font-size: 1.1rem;
+          }
+        }
+      }
+
+      // Body
+      .work-order-card-body {
+        padding: 0 1.5rem 1rem;
+        text-align: center;
+
+        p {
+          font-size: 1rem;
+          margin: 0;
+        }
+
+        .name {
+          font-size: $f-h4;
+          margin: 0 0 0.5rem;
+          text-align: center;
+        }
+
+        .project {
+          color: $c-text-secondary;
+        }
+        .date {
+          color: $c-text-secondary;
+        }
+        .user {
+          color: $c-text-secondary;
+        }
+
+        // Work Order Status
+        .work-order-status {
+          border-radius: 5px;
+          display: inline-block;
+          margin: 0 0 1rem;
+          padding: 0.25rem 1rem;
+
+          // Color Status
+          // Status: ["pending", "accepted", "rejected", "inProgress", "closed"],
+          &.pending {
+            background-color: $c-yellow;
+            color: $c-text-primary;
+          }
+          &.accepted {
+            background-color: $c-aqua;
+            color: $c-text-primary;
+          }
+          &.rejected {
+            background-color: $c-red;
+            color: $c-white;
+          }
+          &.in-progress {
+            background-color: $c-purple-m;
+            color: $c-white;
+          }
+          &.closed {
+            background-color: $c-text-secondary;
+            color: $c-white;
+          }
+
+          .status {
+            margin: 0;
+          }
+        }
+      }
+
+      // Footer
+      .work-order-card-footer {
+        padding: 0 1.5rem 1rem;
+
+        // Actions
+        .footer-actions {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        }
+      }
+    }
+
+    // Card: Hover
+    .work-order-card-wrapper:hover {
+      box-shadow: var(--bs-box-shadow-lg);
+      transition: all 0.3s ease;
+    }
+  }
+}
