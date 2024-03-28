@@ -12,11 +12,48 @@ import { populate } from "dotenv";
 //--------------------
 // Action: Index
 // Description: List of Project's Work Orders (Accessible by Property Manager)
-// Route: GET /api/v1/work-orders/property-manager/:projectId
+// Route: GET /api/v1/work-orders/property-manager/:propertyManagerId/project/:projectId
 // Access: Private
 const getPropertyManagerProjectWorkOrders = asyncHandler(async (req, res) => {
-  // TODO: Implement this method
-  res.status(200).json({ message: "Index of Project Work Orders - PM" });
+  // Destruction req.params
+  const { propertyManagerId, projectId } = req.params;
+
+  try {
+    // Find work orders related to the project ids
+    const workOrders = await WorkOrder.find({
+      project: projectId,
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "project",
+        populate: { path: "propertyManager", select: "-password" },
+      })
+      .populate("vendor", "-password");
+
+    // Check if work orders were found
+    if (!workOrders) {
+      res.status(404);
+      throw new Error("No Work Orders Found");
+    }
+
+    // Check if the property manager is authorized
+    if (propertyManagerId === req.propertyManager._id.toString()) {
+      res.status(200).json(workOrders);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Action: Index
+// Description: List of Project's Work Orders (Accessible by Property Manager)
+// Route: GET /api/v1/work-orders/vendor/:vendorId/project/:projectId
+// Access: Private
+const getVendorProjectWorkOrders = asyncHandler(async (req, res) => {
+  res.status(200).json({ message: "Show Work Order - PM" });
 });
 
 // Action: Index
@@ -72,7 +109,7 @@ const getAllVendorWorkOrders = asyncHandler(async (req, res) => {
   const { vendorId } = req.params;
 
   try {
-    // Find work orders related to the project ids
+    // Fetch work orders related to the vendor
     const workOrders = await WorkOrder.find({
       vendor: vendorId,
     })
@@ -191,6 +228,7 @@ const deleteWorkOrder = asyncHandler(async (req, res) => {
 
 export {
   getPropertyManagerProjectWorkOrders,
+  getVendorProjectWorkOrders,
   getAllPropertyManagerWorkOrders,
   getAllVendorWorkOrders,
   showPropertyManagerWorkOrder,

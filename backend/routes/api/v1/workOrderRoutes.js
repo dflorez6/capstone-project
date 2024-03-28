@@ -6,6 +6,7 @@ import express from "express";
 const router = express.Router();
 import {
   getPropertyManagerProjectWorkOrders,
+  getVendorProjectWorkOrders,
   getAllPropertyManagerWorkOrders,
   getAllVendorWorkOrders,
   showPropertyManagerWorkOrder,
@@ -28,6 +29,13 @@ import imgUploader from "../../../services/multer.js";
 // Index
 router.get("/vendor/:vendorId", vendorProtect, getAllVendorWorkOrders);
 
+router.get(
+  "/vendor/:vendorId/project/:projectId",
+  vendorProtect,
+  getVendorProjectWorkOrders
+);
+// getVendorProjectWorkOrders
+
 // Show
 router.get(
   "/vendor/:projectId/:workOrderId",
@@ -46,7 +54,7 @@ router.put(
 // Property Manager
 // Index
 router.get(
-  "/property-manager/:projectId",
+  "/property-manager/:propertyManagerId/project/:projectId",
   propertyManagerProtect,
   getPropertyManagerProjectWorkOrders
 );

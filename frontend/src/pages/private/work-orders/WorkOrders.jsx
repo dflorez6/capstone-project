@@ -121,7 +121,6 @@ function WorkOrders() {
   //----------
   // Pagination
   //----------
-  // TODO: REFACTOR PAGINATION TO WORK WITH BOTH USER TYPES
   // State for pagination
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 3; // TODO: Set for 3 at the moment to be able to show pagination

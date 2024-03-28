@@ -8,9 +8,18 @@ const WORK_ORDERS_URL = "/api/v1/work-orders";
 
 export const workOrderApiSlice = apiSlice.injectEndpoints({
   // Endpoints
-  endpoints: (builder) => ({
-    // Endpoints
-    // getPropertyManagerProjectWorkOrders: GET /api/v1/work-orders/property-manager/:projectId
+  endpoints: (builder) => ({    
+    // Index - Get Property Manger Project Work Orders
+    getPropertyManagerProjectWorkOrders: builder.query({
+      query: ({ propertyManagerId, projectId }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/${propertyManagerId}/project/${projectId}`,
+        method: "GET",
+      }),
+    }),
+
+    // TODO: ACA QUEDE
+    // TODO Implement the following endpoint
+    // getVendorProjectWorkOrders: GET /api/v1/work-orders/vendor/:vendorId/project/:projectId
 
     // Index - Get All Property Manger Work Orders
     getAllPropertyManagerWorkOrders: builder.query({
@@ -21,7 +30,6 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Index - Get All Vendor Work Orders
-    // Route: GET /api/v1/work-orders/vendor/:vendorId
     getAllVendorWorkOrders: builder.query({
       query: ({ vendorId }) => ({
         url: `${WORK_ORDERS_URL}/vendor/${vendorId}`,
@@ -86,6 +94,7 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetPropertyManagerProjectWorkOrdersQuery,
   useGetAllPropertyManagerWorkOrdersQuery,
   useGetAllVendorWorkOrdersQuery,
   useMarkReadPropertyManagerNotificationMutation,

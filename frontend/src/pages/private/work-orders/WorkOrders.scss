@@ -10,7 +10,7 @@
     .work-order-card-wrapper {
       background-color: $c-white;
       border-radius: 10px;
-      box-shadow: var(--bs-box-shadow-sm);
+      box-shadow: var(--bs-box-shadow);
       flex-direction: column;
       display: flex;
       margin: 0 0 2rem;
@@ -136,7 +136,7 @@
 
     // Card: Hover
     .work-order-card-wrapper:hover {
-      box-shadow: var(--bs-box-shadow);
+      box-shadow: var(--bs-box-shadow-lg);
       transition: all 0.3s ease;
     }
   }
