@@ -17,6 +17,15 @@ export const projectApplicationsApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    // getAccepetedVendorApplications: GET /api/v1/project-applications/accepted/:projectId
+    // Index - Get Project's Accepted Vendors (Property Manager)
+    getAccepetedVendorApplications: builder.query({
+      query: (projectId) => ({
+        url: `${PROJECT_APPLICATIONS_URL}/accepted/${projectId}`,
+        method: "GET",
+      }),
+    }),
+
     // Create Project Application
     createProjectApplication: builder.mutation({
       query: (data) => ({
@@ -53,6 +62,7 @@ export const projectApplicationsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetProjectApplicationsQuery,
+  useGetAccepetedVendorApplicationsQuery,
   useCreateProjectApplicationMutation,
   useAcceptProjectApplicationMutation,
   useRejectProjectApplicationMutation,

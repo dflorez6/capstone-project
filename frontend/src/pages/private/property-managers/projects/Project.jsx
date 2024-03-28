@@ -117,6 +117,7 @@ const Project = () => {
   //----------
   // Refetch vendor stores
   useEffect(() => {
+    // Work Order Refecth Functions
     projectApplicationsRefetch();
     if (propertyManagerInfo) {
       propManagerWorkOrdersRefetch();
@@ -124,6 +125,15 @@ const Project = () => {
     if (vendorInfo) {
       vendorWorkOrdersRefetch();
     }
+
+    // Scroll to the "#workOrders" element after the component mounts or updates
+    const scrollToWorkOrders = () => {
+      const workOrdersElement = document.getElementById("workOrders");
+      if (workOrdersElement) {
+        workOrdersElement.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    scrollToWorkOrders();
   }, [
     projectApplicationsRefetch,
     propertyManagerInfo,
@@ -361,7 +371,7 @@ const Project = () => {
                           edit
                         </Link>
                         <Link
-                          to=""
+                          to={`/work-orders/new/${project._id}`}
                           className="btn-app btn-app-sm btn-app-purple"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -413,6 +423,7 @@ const Project = () => {
               {propertyManagerInfo ? (
                 <>
                   {/* Applications */}
+                  <a id="applications"></a>
                   <div className="col-12">
                     <div className="panel-wrapper project-applications-wrapper">
                       <div className="panel-title-wrapper">
@@ -540,6 +551,7 @@ const Project = () => {
                           </>
                         )}
                       </div>
+                      <a id="workOrders"></a>
                     </div>
                   </div>
 
@@ -840,7 +852,7 @@ const Project = () => {
                                   )}
                                   {!hasItems && (
                                     <h4 className="text-center">
-                                      No work orders created yet
+                                      You have no work orders for this project
                                     </h4>
                                   )}
                                 </div>

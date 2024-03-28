@@ -6,6 +6,7 @@ import express from "express";
 const router = express.Router();
 import {
   getAllProjectApplications,
+  getAccepetedVendorApplications,
   createProjectApplication,
   acceptApplication,
   rejectApplication,
@@ -30,6 +31,9 @@ router
 router
   .route("/:projectId")
   .get(propertyManagerProtect, getAllProjectApplications);
+router
+  .route("/accepted/:projectId")
+  .get(propertyManagerProtect, getAccepetedVendorApplications);
 
 // Accept, Reject
 router

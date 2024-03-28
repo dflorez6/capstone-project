@@ -5,7 +5,6 @@
 import asyncHandler from "express-async-handler";
 import WorkOrder from "../../../models/workOrderModel.js";
 import Project from "../../../models/projectModel.js";
-import { populate } from "dotenv";
 
 //--------------------
 // GET
@@ -197,11 +196,12 @@ const createWorkOrder = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
 
   // Destructure req.body
-  const { startDateTime, endDateTime, vendor } = req.body;
+  const { name, startDateTime, endDateTime, vendor } = req.body;
 
   try {
     // Create a new Work Order
     const workOrder = await WorkOrder.create({
+      name,
       startDateTime,
       endDateTime,
       vendor,
@@ -219,6 +219,9 @@ const createWorkOrder = asyncHandler(async (req, res) => {
         vendor: workOrder.vendor,
         project: workOrder.project,
       });
+
+      // TODO: ACA QUEDE
+      // TODO: Implement Notification to Vendor
     } else {
       res.status(400);
       throw new Error("Invalid Work Order Data");
