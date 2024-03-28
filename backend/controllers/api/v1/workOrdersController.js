@@ -49,11 +49,42 @@ const getPropertyManagerProjectWorkOrders = asyncHandler(async (req, res) => {
 });
 
 // Action: Index
-// Description: List of Project's Work Orders (Accessible by Property Manager)
+// Description: List of Project's Work Orders (Accessible by Vendor)
 // Route: GET /api/v1/work-orders/vendor/:vendorId/project/:projectId
 // Access: Private
 const getVendorProjectWorkOrders = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Show Work Order - PM" });
+  // Destruction req.params
+  const { vendorId, projectId } = req.params;
+
+  try {
+    // Find work orders related to the project ids
+    const workOrders = await WorkOrder.find({
+      project: projectId,
+      vendor: vendorId,
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "project",
+        populate: { path: "propertyManager", select: "-password" },
+      })
+      .populate("vendor", "-password");
+
+    // Check if work orders were found
+    if (!workOrders) {
+      res.status(404);
+      throw new Error("No Work Orders Found");
+    }
+
+    // Check if the property manager is authorized
+    if (vendorId === req.vendor._id.toString()) {
+      res.status(200).json(workOrders);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Action: Index

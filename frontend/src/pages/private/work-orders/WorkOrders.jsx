@@ -337,14 +337,7 @@ function WorkOrders() {
                                 )}`}
                               ></div>
                               {/* Actions */}
-                              <div className="header-actions">
-                                <button type="button" className="header-action">
-                                  <i className="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <button type="button" className="header-action">
-                                  <i className="fa-solid fa-trash-can"></i>
-                                </button>
-                              </div>
+                              <div className="header-actions"></div>
                               {/* ./Actions */}
                             </div>
                             {/* ./Header */}

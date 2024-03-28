@@ -11,7 +11,10 @@ import {
   useAcceptProjectApplicationMutation,
   useRejectProjectApplicationMutation,
 } from "../../../../slices/projectApplicationApiSlice";
-import { useGetPropertyManagerProjectWorkOrdersQuery } from "../../../../slices/workOrderApiSlice";
+import {
+  useGetPropertyManagerProjectWorkOrdersQuery,
+  useGetVendorProjectWorkOrdersQuery,
+} from "../../../../slices/workOrderApiSlice";
 // Time
 import { torontoDate, torontoDateTime } from "../../../../utils/formatDates";
 // Components
@@ -74,6 +77,16 @@ const Project = () => {
     projectId: project?._id.toString(),
   });
 
+  const {
+    data: vendorWorkOrders,
+    isError: vendorWorkOrdersError,
+    isLoading: vendorWorkOrdersLoading,
+    refetch: vendorWorkOrdersRefetch,
+  } = useGetVendorProjectWorkOrdersQuery({
+    vendorId: vendorInfo?._id.toString(),
+    projectId: project?._id.toString(),
+  });
+
   // Redux Toolkit Mutations
   const [
     createProjectApplication,
@@ -105,8 +118,19 @@ const Project = () => {
   // Refetch vendor stores
   useEffect(() => {
     projectApplicationsRefetch();
-    propManagerWorkOrdersRefetch();
-  }, [projectApplicationsRefetch, propManagerWorkOrdersRefetch]);
+    if (propertyManagerInfo) {
+      propManagerWorkOrdersRefetch();
+    }
+    if (vendorInfo) {
+      vendorWorkOrdersRefetch();
+    }
+  }, [
+    projectApplicationsRefetch,
+    propertyManagerInfo,
+    propManagerWorkOrdersRefetch,
+    vendorInfo,
+    vendorWorkOrdersRefetch,
+  ]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -134,8 +158,14 @@ const Project = () => {
   }
   if (propManagerWorkOrdersError) {
     console.log(
-      "Project Work Orders Applications Error: ",
+      "Property Manager Project Work Orders Applications Error: ",
       propManagerWorkOrdersError
+    );
+  }
+  if (vendorWorkOrdersError) {
+    console.log(
+      "Vendor Project Work Orders Applications Error: ",
+      vendorWorkOrdersError
     );
   }
 
@@ -244,10 +274,18 @@ const Project = () => {
   // Calculate indexes of items to display on the current page
   const indexOfLastProject = (currentPage + 1) * itemsPerPage;
   const indexOfFirstProject = indexOfLastProject - itemsPerPage;
-  const currentWorkOrders = propManagerWorkOrders?.slice(
-    indexOfFirstProject,
-    indexOfLastProject
-  );
+  let currentWorkOrders;
+  if (propertyManagerInfo) {
+    currentWorkOrders = propManagerWorkOrders?.slice(
+      indexOfFirstProject,
+      indexOfLastProject
+    );
+  } else {
+    currentWorkOrders = vendorWorkOrders?.slice(
+      indexOfFirstProject,
+      indexOfLastProject
+    );
+  }
 
   // Pagination Handler
   const handlePageChange = ({ selected }) => {
@@ -255,7 +293,12 @@ const Project = () => {
   };
 
   // Check if there are any projects to display
-  const hasItems = propManagerWorkOrders && propManagerWorkOrders.length > 0;
+  let hasItems;
+  if (propertyManagerInfo) {
+    hasItems = propManagerWorkOrders && propManagerWorkOrders.length > 0;
+  } else {
+    hasItems = vendorWorkOrders && vendorWorkOrders.length > 0;
+  }
 
   //----------
   // Output
@@ -665,7 +708,150 @@ const Project = () => {
                 </>
               ) : (
                 <>
-                  <p>vendor</p>
+                  <div className="col-12">
+                    <div className="panel-wrapper bg-transparent project-work-orders-wrapper pt-0">
+                      <div className="panel-title-wrapper">
+                        <h2>Work Orders</h2>
+                      </div>
+
+                      <div className="panel-content-wrapper">
+                        {vendorWorkOrdersLoading ? (
+                          <Loader />
+                        ) : (
+                          <>
+                            <div className="work-orders-wrapper">
+                              <div className="work-orders-content-wrapper">
+                                <div className="row">
+                                  {hasItems &&
+                                    currentWorkOrders.map((order) => (
+                                      <>
+                                        <div
+                                          className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
+                                          key={order._id}
+                                        >
+                                          <div className="work-order-card-wrapper">
+                                            {/* Work Order Card */}
+
+                                            {/* Header */}
+                                            <div
+                                              className={`work-order-card-header`}
+                                            >
+                                              <div
+                                                className={`color-status-bar ${setColorStatus(
+                                                  order.workOrderStatus
+                                                )}`}
+                                              ></div>
+                                              {/* Actions */}
+                                              <div className="header-actions"></div>
+                                              {/* ./Actions */}
+                                            </div>
+                                            {/* ./Header */}
+
+                                            {/* Body */}
+                                            <div className="work-order-card-body">
+                                              <h2 className="name">
+                                                {order?.name}
+                                              </h2>
+
+                                              {/* Status Badge */}
+                                              <div
+                                                className={`work-order-status ${setColorStatus(
+                                                  order.workOrderStatus
+                                                )}`}
+                                              >
+                                                <p className="status">
+                                                  {order.workOrderStatus}
+                                                </p>
+                                              </div>
+                                              {/* ./Status Badge */}
+
+                                              <p className="project">
+                                                Project: {order?.project.name}
+                                              </p>
+                                              <p className="date">
+                                                Start:{" "}
+                                                {torontoDateTime(
+                                                  order.startDateTime
+                                                )}
+                                              </p>
+                                              <p className="date">
+                                                End:{" "}
+                                                {torontoDateTime(
+                                                  order.endDateTime
+                                                )}
+                                              </p>
+                                              <p className="user">
+                                                Vendor:{" "}
+                                                {`${order.vendor.companyName}`}
+                                              </p>
+                                            </div>
+                                            {/* ./Body */}
+
+                                            {/* Footer */}
+                                            <div className="work-order-card-footer">
+                                              {/* Actions */}
+                                              <div className="footer-actions">
+                                                <button
+                                                  type="button"
+                                                  className="btn-app btn-app-xs btn-app-dark-outline"
+                                                >
+                                                  View
+                                                </button>
+                                                {/*
+                                              <button
+                                                type="button"
+                                                className="btn-app btn-app-xs btn-app-dark"
+                                              >
+                                                Close Order
+                                              </button>
+                                               */}
+                                              </div>
+                                              {/* ./Actions */}
+                                            </div>
+                                            {/* ./Footer */}
+                                          </div>
+
+                                          {/* ./Work Order Card */}
+                                        </div>
+                                      </>
+                                    ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Pagination */}
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="app-pagination-wrapper">
+                                  {hasItems && (
+                                    <ReactPaginate
+                                      pageCount={Math.ceil(
+                                        vendorWorkOrders.length / itemsPerPage
+                                      )}
+                                      breakLabel="..."
+                                      nextLabel=">>"
+                                      previousLabel="<<"
+                                      pageRangeDisplayed={5}
+                                      marginPagesDisplayed={2}
+                                      onPageChange={handlePageChange}
+                                      containerClassName="pagination"
+                                      activeClassName="active"
+                                    />
+                                  )}
+                                  {!hasItems && (
+                                    <h4 className="text-center">
+                                      No work orders created yet
+                                    </h4>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            {/* ./Pagination */}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </>
               )}
             </div>

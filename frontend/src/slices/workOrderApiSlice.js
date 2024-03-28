@@ -17,9 +17,14 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // TODO: ACA QUEDE
-    // TODO Implement the following endpoint
-    // getVendorProjectWorkOrders: GET /api/v1/work-orders/vendor/:vendorId/project/:projectId
+
+    // Index - Get Vendor Project Work Orders
+    getVendorProjectWorkOrders: builder.query({
+      query: ({ vendorId, projectId }) => ({
+        url: `${WORK_ORDERS_URL}/vendor/${vendorId}/project/${projectId}`,
+        method: "GET",
+      }),
+    }),
 
     // Index - Get All Property Manger Work Orders
     getAllPropertyManagerWorkOrders: builder.query({
@@ -95,6 +100,7 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPropertyManagerProjectWorkOrdersQuery,
+  useGetVendorProjectWorkOrdersQuery,
   useGetAllPropertyManagerWorkOrdersQuery,
   useGetAllVendorWorkOrdersQuery,
   useMarkReadPropertyManagerNotificationMutation,

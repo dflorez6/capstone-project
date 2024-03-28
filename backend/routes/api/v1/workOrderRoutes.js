@@ -28,13 +28,11 @@ import imgUploader from "../../../services/multer.js";
 // Vendor
 // Index
 router.get("/vendor/:vendorId", vendorProtect, getAllVendorWorkOrders);
-
 router.get(
   "/vendor/:vendorId/project/:projectId",
   vendorProtect,
   getVendorProjectWorkOrders
 );
-// getVendorProjectWorkOrders
 
 // Show
 router.get(
@@ -58,7 +56,6 @@ router.get(
   propertyManagerProtect,
   getPropertyManagerProjectWorkOrders
 );
-
 router.get(
   "/property-manager/all/:propertyManagerId",
   propertyManagerProtect,
