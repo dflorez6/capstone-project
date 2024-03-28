@@ -45,6 +45,10 @@ import Projects from "./pages/private/property-managers/projects/Projects.jsx";
 import Project from "./pages/private/property-managers/projects/Project.jsx";
 import ProjectNew from "./pages/private/property-managers/projects/ProjectNew.jsx";
 import ProjectEdit from "./pages/private/property-managers/projects/ProjectEdit.jsx";
+//----------
+// Work Orders
+//----------
+import WorkOrders from "./pages/private/work-orders/WorkOrders.jsx";
 // Styles
 import "./style.scss";
 
@@ -66,6 +70,7 @@ const router = createBrowserRouter(
       <Route path="" element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/notifications" element={<Notification />} />
+        <Route path="/work-orders" element={<WorkOrders />} />
 
         {/* Vendors */}
         <Route path="/vendors/store/:storeSlug" element={<VendorStore />} />

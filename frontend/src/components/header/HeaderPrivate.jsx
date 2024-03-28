@@ -132,10 +132,10 @@ const Header = () => {
 
                 {authUser.accountType == "vendor" ? (
                   <>
-                    <Link className="nav-link" to={"/projects"}>
+                    <Link className="nav-link" to="/projects">
                       Projects
                     </Link>
-                    <Link className="nav-link" to={"/"}>
+                    <Link className="nav-link" to="/work-orders">
                       Work Orders
                     </Link>
                     <Link
@@ -155,7 +155,7 @@ const Header = () => {
                     <Link className="nav-link" to={`/projects/${authId}`}>
                       Projects
                     </Link>
-                    <Link className="nav-link" to="/">
+                    <Link className="nav-link" to="/work-orders">
                       Work Orders
                     </Link>
                   </>
