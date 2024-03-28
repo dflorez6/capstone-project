@@ -121,7 +121,10 @@ function Sidebar() {
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/`}>
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/work-orders`}
+                    >
                       <i className="fa-solid fa-calendar-days link-icon"></i>
                       <span className="link-text">Work Orders</span>
                     </Link>
@@ -187,7 +190,10 @@ function Sidebar() {
                     </Link>
                   </li>
                   <li className="sidebar-navigation-item">
-                    <Link className="sidebar-navigation-link" to={`/`}>
+                    <Link
+                      className="sidebar-navigation-link"
+                      to={`/work-orders`}
+                    >
                       <i className="fa-solid fa-calendar-days link-icon"></i>
                       <span className="link-text">Work Orders</span>
                     </Link>

@@ -234,7 +234,7 @@ const rejectApplication = asyncHandler(async (req, res) => {
       res.status(200).json(updatedProjectApplication);
     } else {
       res.status(401);
-      throw new Error("Not authorized. Not the Project owner.");
+      throw new Error("Not authorized.");
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
