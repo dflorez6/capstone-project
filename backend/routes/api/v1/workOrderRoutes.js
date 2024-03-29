@@ -13,6 +13,7 @@ import {
   showVendorWorkOrder,
   createWorkOrder,
   updateWorkOrder,
+  acceptWorkOrder,
   rescheduleWorkOrder,
   deleteWorkOrder,
 } from "../../../controllers/api/v1/workOrdersController.js";
@@ -36,14 +37,20 @@ router.get(
 
 // Show
 router.get(
-  "/vendor/:projectId/:workOrderId",
+  "/vendor/:workOrderId",
   vendorProtect,
   showVendorWorkOrder
 );
 
 // Update
 router.put(
-  "/vendor/:projectId/:workOrderId",
+  "/vendor/accept/:projectId/:workOrderId",
+  vendorProtect,
+  imgUploader.none(),
+  acceptWorkOrder
+);
+router.put(
+  "/vendor/reschedule/:projectId/:workOrderId",
   vendorProtect,
   imgUploader.none(),
   rescheduleWorkOrder
@@ -64,7 +71,7 @@ router.get(
 
 // Show
 router.get(
-  "/property-manager/:projectId/:workOrderId",
+  "/property-manager/:workOrderId",
   propertyManagerProtect,
   showPropertyManagerWorkOrder
 );
