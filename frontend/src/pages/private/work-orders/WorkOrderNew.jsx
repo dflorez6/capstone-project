@@ -21,7 +21,6 @@ function WorkOrderNew() {
   const dispatch = useDispatch(); // Initialize
 
   // Form Fields
-  // TODO: Update to use correct fields
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
   const [startDateTime, setStartDateTime] = useState("");
@@ -73,13 +72,17 @@ function WorkOrderNew() {
     e.preventDefault();
 
     try {
+      // Convert startDateTime and endDateTime to UTC format
+      const startDateTimeUTC = new Date(startDateTime).toISOString();
+      const endDateTimeUTC = new Date(endDateTime).toISOString();
+
       // Form Data
       const formData = new FormData();
 
       formData.append("name", name);
       formData.append("vendor", vendor);
-      formData.append("startDateTime", startDateTime);
-      formData.append("endDateTime", endDateTime);
+      formData.append("startDateTime", startDateTimeUTC);
+      formData.append("endDateTime", endDateTimeUTC);
       formData.append("project", urlProjectId);
 
       // Create Work Order
@@ -88,7 +91,9 @@ function WorkOrderNew() {
         data: formData,
       }).unwrap(); // Pass FormData to createProject function & make API call
       toast.success("Work Order created successfully");
-      navigate(`/projects/${propertyManagerInfo._id}/${urlProjectId}#workOrders`); // Redirect to the project details page
+      navigate(
+        `/projects/${propertyManagerInfo._id}/${urlProjectId}#workOrders`
+      ); // Redirect to the project details page
     } catch (error) {
       toast.error(error?.data?.message || error?.error); // Toastify implementation
       console.log("Create Work Order Error:");

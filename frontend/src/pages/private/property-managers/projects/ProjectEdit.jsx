@@ -105,9 +105,6 @@ function ProjectEdit() {
       const startDateTimeUTC = new Date(startDateTime).toISOString();
       const endDateTimeUTC = new Date(endDateTime).toISOString();
 
-      console.log("startDateTime: ", startDateTime);
-      console.log("startDateTimeUTC: ", startDateTimeUTC);
-
       // Form Data
       const formData = new FormData();
 

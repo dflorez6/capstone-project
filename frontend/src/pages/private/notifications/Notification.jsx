@@ -57,7 +57,10 @@ function Notification() {
   // Redux Toolkit Mutations
   const [
     markReadPropertyManagerNotification,
-    { isError: markReadPropertyManagerNotificationError },
+    {
+      isError: markReadPropertyManagerNotificationError,
+      isLoading: markReadPropertyManagerNotificationLoading,
+    },
   ] = useMarkReadPropertyManagerNotificationMutation();
   const [
     deletePropertyManagerNotification,
@@ -69,7 +72,10 @@ function Notification() {
 
   const [
     markReadVendorNotification,
-    { isError: markReadVendorNotificationError },
+    {
+      isError: markReadVendorNotificationError,
+      isLoading: markReadVendorNotificationLoading,
+    },
   ] = useMarkReadVendorNotificationMutation();
   const [
     deleteVendorNotification,
@@ -312,7 +318,8 @@ function Notification() {
                                         )}
                                       </td>
                                       <td>
-                                        {deletePropertyManagerNotificationLoading ? (
+                                        {deletePropertyManagerNotificationLoading ||
+                                        markReadPropertyManagerNotificationLoading ? (
                                           <Loader />
                                         ) : (
                                           <>
@@ -420,7 +427,8 @@ function Notification() {
                                       {torontoDateTime(notification.createdAt)}
                                     </td>
                                     <td>
-                                      {deleteVendorNotificationLoading ? (
+                                      {deleteVendorNotificationLoading ||
+                                      markReadVendorNotificationLoading ? (
                                         <Loader />
                                       ) : (
                                         <>
