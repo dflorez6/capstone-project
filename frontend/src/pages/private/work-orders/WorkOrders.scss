@@ -4,6 +4,9 @@
 //====================
 // Work Orders
 //====================
+//--------------------
+// Index (All Work Orders)
+//--------------------
 .work-orders-wrapper {
   .work-orders-content-wrapper {
     // Card
@@ -126,10 +129,7 @@
 
         // Actions
         .footer-actions {
-          align-items: center;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
+          background-color: transparent;
         }
       }
     }
@@ -141,3 +141,15 @@
     }
   }
 }
+
+//--------------------
+// Show
+//--------------------
+
+//--------------------
+// New / Update
+//--------------------
+.work-orders-form-wrapper {
+    background-color: transparent;
+  }
+  

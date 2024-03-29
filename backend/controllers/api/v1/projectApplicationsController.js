@@ -23,7 +23,7 @@ const getAllProjectApplications = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
 
   try {
-    // Find project applications where project ID and property manager ID match
+    // Find project applications where project ID
     const projectApplications = await ProjectApplication.find({
       project: projectId,
     })
@@ -31,6 +31,36 @@ const getAllProjectApplications = asyncHandler(async (req, res) => {
       .populate("project")
       .populate("vendor", "-password");
 
+    res.status(200).json(projectApplications);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+// Action: Index
+// Description: List of Project's Accepted Vendors. Accessed by Property Manager
+// Route: GET /api/v1/project-applications/accepted/:projectId
+// Access: Private
+const getAccepetedVendorApplications = asyncHandler(async (req, res) => {
+  // Destructure req.params
+  const { projectId } = req.params;
+
+  try {
+    // Find project applications where project ID
+    const projectApplications = await ProjectApplication.find({
+      project: projectId,
+      applicationStatus: "accepted",
+    })
+      .sort({ "project.vendor.companyName": -1 })
+      .populate("project", "name")
+      .populate("vendor", "companyName");
+    /*
+      .populate({
+        path: "vendor",
+        select: "companyName",
+        options: { sort: { companyName: 1 } },
+      })
+      */
     res.status(200).json(projectApplications);
   } catch (error) {
     res.status(500).json(error.message);
@@ -246,6 +276,7 @@ const rejectApplication = asyncHandler(async (req, res) => {
 
 export {
   getAllProjectApplications,
+  getAccepetedVendorApplications,
   createProjectApplication,
   acceptApplication,
   rejectApplication,

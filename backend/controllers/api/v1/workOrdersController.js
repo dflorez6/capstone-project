@@ -2,10 +2,14 @@
 // Controller: Work Orders
 //====================
 // Import Dependencies
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import WorkOrder from "../../../models/workOrderModel.js";
 import Project from "../../../models/projectModel.js";
-import { populate } from "dotenv";
+// Notifications
+import { createNotification } from "./notificationsController.js";
+import { NotificationTypes } from "../../../constants/notificationTypes.js";
+import { NotificationMessages } from "../../../constants/notificationMessages.js";
 
 //--------------------
 // GET
@@ -197,16 +201,24 @@ const createWorkOrder = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
 
   // Destructure req.body
-  const { startDateTime, endDateTime, vendor } = req.body;
+  const { name, startDateTime, endDateTime, vendor } = req.body;
 
   try {
     // Create a new Work Order
     const workOrder = await WorkOrder.create({
+      name,
       startDateTime,
       endDateTime,
       vendor,
       project: projectId,
     });
+
+    // Fetch Project Name
+    const fetchedProject = await Project.findById(projectId).select(
+      "name propertyManager"
+    );
+    const projectName = fetchedProject.name;
+    const propertyManager = fetchedProject.propertyManager;
 
     // Check if Work Order was created
     if (workOrder) {
@@ -219,6 +231,25 @@ const createWorkOrder = asyncHandler(async (req, res) => {
         vendor: workOrder.vendor,
         project: workOrder.project,
       });
+
+      // Build notification data object
+      const notificationData = {
+        sender: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
+        senderType: "PropertyManager",
+        recipient: new mongoose.Types.ObjectId(vendor), // Casting to ObjectId in case it comes as a string
+        recipientType: "Vendor",
+        notificationType: NotificationTypes.WORK_ORDER_CREATED,
+        message: NotificationMessages.WORK_ORDER_CREATED,
+        data: {
+          projectId: projectId,
+          projectName: projectName,
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Call Notification Method
+      createNotification(notificationData);
+      // TODO: Implement: Trigger notification to Vendor
     } else {
       res.status(400);
       throw new Error("Invalid Work Order Data");

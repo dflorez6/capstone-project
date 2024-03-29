@@ -90,6 +90,7 @@ function ProjectsNew() {
       formData.append("serviceCategory", serviceCategory);
       formData.append("propertyManager", propertyManagerInfo._id);
 
+      // Create Project
       const res = await createProject({
         propertyManagerId: propertyManagerInfo._id,
         data: formData,
@@ -98,7 +99,7 @@ function ProjectsNew() {
       navigate(`/projects/${propertyManagerInfo._id}/${res._id}`); // Redirect to the project details page
     } catch (error) {
       toast.error(error?.data?.message || error?.error); // Toastify implementation
-      console.log("Create Vendor Service Error:");
+      console.log("Create Project Error:");
       console.log(error?.data?.message || error?.error);
     }
   };
@@ -194,7 +195,7 @@ function ProjectsNew() {
                       {/* Input: Field */}
 
                       <div className="col-12 my-2">
-                        <label htmlFor="startDateTime">startDateTime</label>
+                        <label htmlFor="startDateTime">Start Date</label>
                         <input
                           type="datetime-local"
                           name="startDateTime"
@@ -205,10 +206,10 @@ function ProjectsNew() {
                           onChange={(e) => setStartDateTime(e.target.value)}
                         />
                       </div>
-                      {/* Input: Field */}
+                      {/* Input: DateTime Picker */}
 
                       <div className="col-12 my-2">
-                        <label htmlFor="endDateTime">endDateTime</label>
+                        <label htmlFor="endDateTime">End Date</label>
                         <input
                           type="datetime-local"
                           name="endDateTime"
@@ -219,7 +220,7 @@ function ProjectsNew() {
                           onChange={(e) => setEndDateTime(e.target.value)}
                         />
                       </div>
-                      {/* Input: Field */}
+                      {/* Input: DateTime Picker */}
                     </div>
                   </div>
                   {/* ./Left Col */}
@@ -242,7 +243,7 @@ function ProjectsNew() {
                       {/* Input: Field */}
 
                       <div className="col-12 my-2">
-                        <label htmlFor="description">description</label>
+                        <label htmlFor="description">Description</label>
                         <textarea
                           type="text"
                           name="description"

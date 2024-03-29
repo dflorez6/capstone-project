@@ -242,20 +242,45 @@ function WorkOrders() {
                             <div className="work-order-card-footer">
                               {/* Actions */}
                               <div className="footer-actions">
-                                <button
-                                  type="button"
-                                  className="btn-app btn-app-xs btn-app-dark-outline"
-                                >
-                                  View
-                                </button>
-                                {/*
-                                <button
-                                  type="button"
-                                  className="btn-app btn-app-xs btn-app-dark"
-                                >
-                                  Close Order
-                                </button>
-                                 */}
+                                {order.workOrderStatus === "in-progress" ? (
+                                  <>
+                                    {/* inProgress Status */}
+                                    <div className="row">
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-purple"
+                                        >
+                                          Close
+                                        </button>
+                                      </div>
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                        >
+                                          View
+                                        </button>
+                                      </div>
+                                    </div>
+                                    {/* ./inProgress Status */}
+                                  </>
+                                ) : (
+                                  <>
+                                    {/* Other Status */}
+                                    <div className="row">
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                        >
+                                          View
+                                        </button>
+                                      </div>
+                                    </div>
+                                    {/* ./Other Status */}
+                                  </>
+                                )}
                               </div>
                               {/* ./Actions */}
                             </div>
@@ -377,20 +402,45 @@ function WorkOrders() {
                             <div className="work-order-card-footer">
                               {/* Actions */}
                               <div className="footer-actions">
-                                <button
-                                  type="button"
-                                  className="btn-app btn-app-xs btn-app-dark-outline"
-                                >
-                                  View
-                                </button>
-                                {/*
-                              <button
-                                type="button"
-                                className="btn-app btn-app-xs btn-app-dark"
-                              >
-                                Close Order
-                              </button>
-                               */}
+                                {order.workOrderStatus === "pending" ? (
+                                  <>
+                                    {/* Pending Status */}
+                                    <div className="row">
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-red"
+                                        >
+                                          <i className="fa-solid fa-calendar-days"></i>
+                                        </button>
+                                      </div>
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-aqua"
+                                        >
+                                          <i className="fa-solid fa-check"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    {/* ./Pending Status */}
+                                  </>
+                                ) : (
+                                  <>
+                                    {/* Other Status */}
+                                    <div className="row">
+                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                        >
+                                          View
+                                        </button>
+                                      </div>
+                                    </div>
+                                    {/* ./Other Status */}
+                                  </>
+                                )}
                               </div>
                               {/* ./Actions */}
                             </div>

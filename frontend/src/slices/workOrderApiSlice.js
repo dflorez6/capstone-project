@@ -8,7 +8,7 @@ const WORK_ORDERS_URL = "/api/v1/work-orders";
 
 export const workOrderApiSlice = apiSlice.injectEndpoints({
   // Endpoints
-  endpoints: (builder) => ({    
+  endpoints: (builder) => ({
     // Index - Get Property Manger Project Work Orders
     getPropertyManagerProjectWorkOrders: builder.query({
       query: ({ propertyManagerId, projectId }) => ({
@@ -16,7 +16,6 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-
 
     // Index - Get Vendor Project Work Orders
     getVendorProjectWorkOrders: builder.query({
@@ -45,20 +44,22 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
     // Endpoints
     // showPropertyManagerWorkOrder: GET /api/v1/work-orders/property-manager/:projectId/:workOrderId
     // showVendorWorkOrder: GET /api/v1/work-orders/vendor/:projectId/:workOrderId
+
+    // Create Project Application
     // createWorkOrder: POST /api/v1/work-orders/property-manager/:projectId
+    createWorkOrder: builder.mutation({
+      query: ({ projectId, data }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/${projectId}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     // updateWorkOrder: PUT /api/v1/work-orders/property-manager/:projectId/:workOrderId
     // rescheduleWorkOrder: PUT /api/v1/work-orders/vendor/:projectId/:workOrderId
     // deleteWorkOrder: DELETE /api/v1/work-orders/property-manager/:projectId/:workOrderId
 
     /*
-    // Index - Get All Vendor Notifications
-    getVendorNotifications: builder.query({
-      query: ({ vendorId }) => ({
-        url: `${WORK_ORDERS_URL}/vendor/${vendorId}`,
-        method: "GET",
-      }),
-    }),
-
     // Update - Mark Read Property Manager Notification
     markReadPropertyManagerNotification: builder.mutation({
       query: ({ propertyManagerId, notificationId }) => ({
@@ -66,22 +67,6 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
         url: `${WORK_ORDERS_URL}/propertyManager/${propertyManagerId}/${notificationId}`,
         method: "PUT",
         // body: data,
-      }),
-    }),
-
-    // Update - Mark Read Vendor Notification
-    markReadVendorNotification: builder.mutation({
-      query: ({ vendorId, notificationId }) => ({
-        url: `${WORK_ORDERS_URL}/vendor/${vendorId}/${notificationId}`,
-        method: "PUT",
-      }),
-    }),
-
-    // Delete - Property Manager Notification
-    deletePropertyManagerNotification: builder.mutation({
-      query: ({ propertyManagerId, notificationId }) => ({
-        url: `${WORK_ORDERS_URL}/propertyManager/${propertyManagerId}/${notificationId}`,
-        method: "DELETE",
       }),
     }),
 
@@ -103,8 +88,5 @@ export const {
   useGetVendorProjectWorkOrdersQuery,
   useGetAllPropertyManagerWorkOrdersQuery,
   useGetAllVendorWorkOrdersQuery,
-  useMarkReadPropertyManagerNotificationMutation,
-  useMarkReadVendorNotificationMutation,
-  useDeletePropertyManagerNotificationMutation,
-  useDeleteVendorNotificationMutation,
+  useCreateWorkOrderMutation,
 } = workOrderApiSlice; // Export hooks for usage in components

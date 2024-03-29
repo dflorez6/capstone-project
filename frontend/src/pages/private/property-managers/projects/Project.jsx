@@ -117,6 +117,7 @@ const Project = () => {
   //----------
   // Refetch vendor stores
   useEffect(() => {
+    // Work Order Refecth Functions
     projectApplicationsRefetch();
     if (propertyManagerInfo) {
       propManagerWorkOrdersRefetch();
@@ -124,6 +125,18 @@ const Project = () => {
     if (vendorInfo) {
       vendorWorkOrdersRefetch();
     }
+
+    // TODO: Refactor to use a scrollIntoView function by checking first if the URL has #workOrders
+    /*
+    // Scroll to the "#workOrders" element after the component mounts or updates
+    const scrollToWorkOrders = () => {
+      const workOrdersElement = document.getElementById("workOrders");
+      if (workOrdersElement) {
+        workOrdersElement.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    scrollToWorkOrders();
+    */
   }, [
     projectApplicationsRefetch,
     propertyManagerInfo,
@@ -361,7 +374,7 @@ const Project = () => {
                           edit
                         </Link>
                         <Link
-                          to=""
+                          to={`/work-orders/new/${project._id}`}
                           className="btn-app btn-app-sm btn-app-purple"
                         >
                           <i className="fa-solid fa-plus"></i>
@@ -413,6 +426,7 @@ const Project = () => {
               {propertyManagerInfo ? (
                 <>
                   {/* Applications */}
+                  <a id="applications"></a>
                   <div className="col-12">
                     <div className="panel-wrapper project-applications-wrapper">
                       <div className="panel-title-wrapper">
@@ -540,6 +554,7 @@ const Project = () => {
                           </>
                         )}
                       </div>
+                      <a id="workOrders"></a>
                     </div>
                   </div>
 
@@ -642,20 +657,46 @@ const Project = () => {
                                             <div className="work-order-card-footer">
                                               {/* Actions */}
                                               <div className="footer-actions">
-                                                <button
-                                                  type="button"
-                                                  className="btn-app btn-app-xs btn-app-dark-outline"
-                                                >
-                                                  View
-                                                </button>
-                                                {/*
-                                              <button
-                                                type="button"
-                                                className="btn-app btn-app-xs btn-app-dark"
-                                              >
-                                                Close Order
-                                              </button>
-                                               */}
+                                                {order.workOrderStatus ===
+                                                "in-progress" ? (
+                                                  <>
+                                                    {/* inProgress Status */}
+                                                    <div className="row">
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-purple"
+                                                        >
+                                                          Close
+                                                        </button>
+                                                      </div>
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                                        >
+                                                          View
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                    {/* ./inProgress Status */}
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    {/* Other Status */}
+                                                    <div className="row">
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                                        >
+                                                          View
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                    {/* ./Other Status */}
+                                                  </>
+                                                )}
                                               </div>
                                               {/* ./Actions */}
                                             </div>
@@ -791,20 +832,46 @@ const Project = () => {
                                             <div className="work-order-card-footer">
                                               {/* Actions */}
                                               <div className="footer-actions">
-                                                <button
-                                                  type="button"
-                                                  className="btn-app btn-app-xs btn-app-dark-outline"
-                                                >
-                                                  View
-                                                </button>
-                                                {/*
-                                              <button
-                                                type="button"
-                                                className="btn-app btn-app-xs btn-app-dark"
-                                              >
-                                                Close Order
-                                              </button>
-                                               */}
+                                                {order.workOrderStatus ===
+                                                "pending" ? (
+                                                  <>
+                                                    {/* Pending Status */}
+                                                    <div className="row">
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-red"
+                                                        >
+                                                          <i className="fa-solid fa-calendar-days"></i>
+                                                        </button>
+                                                      </div>
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-aqua"
+                                                        >
+                                                          <i className="fa-solid fa-check"></i>
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                    {/* ./Pending Status */}
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    {/* Other Status */}
+                                                    <div className="row">
+                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                        <button
+                                                          type="button"
+                                                          className="btn-app btn-app-xs btn-app-dark-outline"
+                                                        >
+                                                          View
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                    {/* ./Other Status */}
+                                                  </>
+                                                )}
                                               </div>
                                               {/* ./Actions */}
                                             </div>
@@ -840,7 +907,7 @@ const Project = () => {
                                   )}
                                   {!hasItems && (
                                     <h4 className="text-center">
-                                      No work orders created yet
+                                      You have no work orders for this project
                                     </h4>
                                   )}
                                 </div>
