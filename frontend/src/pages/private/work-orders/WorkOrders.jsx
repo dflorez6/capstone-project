@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   useGetAllPropertyManagerWorkOrdersQuery,
   useGetAllVendorWorkOrdersQuery,
-} from "../../../slices/workOrderApiSlice";
+} from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -196,9 +196,12 @@ function WorkOrders() {
                               ></div>
                               {/* Actions */}
                               <div className="header-actions">
-                                <button type="button" className="header-action">
+                                <Link
+                                  to={`/work-orders/edit/${order.project._id}/${order._id}`}
+                                  className="header-action f-primary"
+                                >
                                   <i className="fa-solid fa-pen-to-square"></i>
-                                </button>
+                                </Link>
                                 <button type="button" className="header-action">
                                   <i className="fa-solid fa-trash-can"></i>
                                 </button>

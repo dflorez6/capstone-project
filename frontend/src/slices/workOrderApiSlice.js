@@ -41,12 +41,17 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Endpoints
-    // showPropertyManagerWorkOrder: GET /api/v1/work-orders/property-manager/:projectId/:workOrderId
-    // showVendorWorkOrder: GET /api/v1/work-orders/vendor/:projectId/:workOrderId
+    // showPropertyManagerWorkOrder: GET /api/v1/work-orders/property-manager/:workOrderId
+    getPropertyManagerWorkOrder: builder.query({
+      query: (workOrderId) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/${workOrderId}`,
+        method: "GET",
+      }),
+    }),
 
-    // Create Project Application
-    // createWorkOrder: POST /api/v1/work-orders/property-manager/:projectId
+    // showVendorWorkOrder: GET /api/v1/work-orders/vendor/:workOrderId
+
+    // Create - Work Order
     createWorkOrder: builder.mutation({
       query: ({ projectId, data }) => ({
         url: `${WORK_ORDERS_URL}/property-manager/${projectId}`,
@@ -55,8 +60,18 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // updateWorkOrder: PUT /api/v1/work-orders/property-manager/:projectId/:workOrderId
+    // Update - Mark Work Order as Accepted
+    updateWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId, data }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/${projectId}/${workOrderId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    // /property-manager/:projectId/:workOrderId
+
     // rescheduleWorkOrder: PUT /api/v1/work-orders/vendor/:projectId/:workOrderId
+
     // deleteWorkOrder: DELETE /api/v1/work-orders/property-manager/:projectId/:workOrderId
 
     /*
@@ -84,9 +99,16 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  // Index
   useGetPropertyManagerProjectWorkOrdersQuery,
   useGetVendorProjectWorkOrdersQuery,
   useGetAllPropertyManagerWorkOrdersQuery,
   useGetAllVendorWorkOrdersQuery,
+  // Show
+  useGetPropertyManagerWorkOrderQuery,
+  // Create
   useCreateWorkOrderMutation,
+  // Update
+  useUpdateWorkOrderMutation,
+  // Delete
 } = workOrderApiSlice; // Export hooks for usage in components
