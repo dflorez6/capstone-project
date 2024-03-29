@@ -159,20 +159,35 @@
     color: $c-white;
   }
 
-    // Green
-    &.btn-app-green {
-      background-color: $c-aqua;
-      border-color: $c-aqua;
-      color: $c-text-primary;
-    }
-  
-    &.btn-app-green:hover,
-    &.btn-app-green:active,
-    &.btn-app-green:focus {
-      background-color: $c-aqua;
-      border-color: $c-aqua;
-      color: $c-text-primary;
-    }
+  // Red
+  &.btn-app-red-outline {
+    background-color: transparent;
+    border-color: $c-red;
+    color: $c-red;
+  }
+
+  &.btn-app-red-outline:hover,
+  &.btn-app-red-outline:active,
+  &.btn-app-red-outline:focus {
+    background-color: $c-red;
+    border-color: $c-red;
+    color: $c-white;
+  }
+
+  // Green
+  &.btn-app-green {
+    background-color: $c-aqua;
+    border-color: $c-aqua;
+    color: $c-text-primary;
+  }
+
+  &.btn-app-green:hover,
+  &.btn-app-green:active,
+  &.btn-app-green:focus {
+    background-color: $c-aqua;
+    border-color: $c-aqua;
+    color: $c-text-primary;
+  }
 
   // Yellow
   &.btn-app-yellow {

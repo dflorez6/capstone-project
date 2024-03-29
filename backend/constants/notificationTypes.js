@@ -5,9 +5,9 @@ export const NotificationTypes = {
   PROJECT_APPLICATION_CREATED: "project_application_created",
   PROJECT_APPLICATION_ACCEPTED: "project_application_accepted",
   PROJECT_APPLICATION_REJECTED: "project_application_rejected",
+  WORK_ORDER_CREATED: "work_order_created",
   // TODO: Add more NotificationTypes as needed
   /*
-  WORK_ORDER_CREATED: "work_order_created",
   WORK_ORDER_ACCEPTED: "work_order_accepted",
   RESCHEDULE_PROPOSED: "reschedule_proposed",
   */
