@@ -206,6 +206,7 @@ function Notification() {
         case NotificationTypes.PROJECT_APPLICATION_CREATED:
         case NotificationTypes.PROJECT_APPLICATION_ACCEPTED:
         case NotificationTypes.PROJECT_APPLICATION_REJECTED:
+        case NotificationTypes.WORK_ORDER_CREATED:
           // Navigate to Project details page
           navigate(`/projects/${senderId}/${projectId}`);
           break;
