@@ -234,6 +234,9 @@ const createNotification = async (notificationData) => {
     case NotificationTypes.WORK_ORDER_CREATED:
       workOrderCreated(notificationData);
       break;
+    case NotificationTypes.WORK_ORDER_ACCEPTED:
+      workOrderAccepted(notificationData);
+      break;
     // TODO: Add cases for other notification types
   }
 };
@@ -352,6 +355,44 @@ const projectApplicationRejected = async (notificationData) => {
 
 // Notification: Work Order Created
 const workOrderCreated = async (notificationData) => {
+  // Destructure notificationData
+  const {
+    sender,
+    senderType,
+    recipient,
+    recipientType,
+    notificationType,
+    message,
+    data,
+  } = notificationData;
+
+  try {
+    // Create notification
+    const notification = await Notification.create({
+      sender,
+      senderType,
+      recipient,
+      recipientType,
+      notificationType,
+      message,
+      data,
+    });
+
+    // Check if Notification was created
+    if (notification) {
+      // Trigger notification to Vendor
+      // TODO: If theres time implement real-time notifications: Trigger notification to Vendor
+      //return notification;
+    } else {
+      throw new Error("Invalid Notification data");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Notification: Work Order Created
+const workOrderAccepted = async (notificationData) => {
   // Destructure notificationData
   const {
     sender,

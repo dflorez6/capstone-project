@@ -307,10 +307,6 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
   // Destruction req.params
   const { projectId, workOrderId } = req.params;
 
-  console.log("Update Work Order------>: " );
-  console.log("projectId: ", projectId);
-  console.log("workOrderId: ", workOrderId);
-
   // Fetch Project
   const workOrder = await WorkOrder.findOne({
     _id: workOrderId,
@@ -340,7 +336,7 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
       workOrder.project.propertyManager.toString() ===
       req.propertyManager._id.toString()
     ) {
-      // Update the Vendor Certificate
+      // Update the Work Order
       if (name) workOrder.name = name;
       if (vendor) workOrder.vendor = vendor;
       if (startDateTime) workOrder.startDateTime = startDateTime;
@@ -350,8 +346,6 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
       const updatedProject = await workOrder.save();
 
       res.status(200).json(updatedProject);
-
-      // TODO: Implement Notification: Vendor -> Property Manager
     } else {
       res.status(401);
       throw new Error("Not authorized.");
@@ -366,7 +360,73 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
 // Route: PUT /api/v1/work-orders/vendor/accept/:projectId/:workOrderId
 // Access: Private
 const acceptWorkOrder = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "acceptWorkOrder - V" });
+  // Destruction req.params
+  const { projectId, workOrderId } = req.params;
+
+  // Fetch Project
+  const workOrder = await WorkOrder.findOne({
+    _id: workOrderId,
+  }).populate([
+    {
+      path: "project",
+      select: "name propertyManager",
+    },
+    {
+      path: "vendor",
+      select: "companyName",
+    },
+  ]);
+
+  // Check if Project exists
+  if (!workOrder) {
+    res.status(400); // Bad Request
+    throw new Error("Work order doesn't exist");
+  }
+
+  // Fetch Project Name
+  const fetchedProject = await Project.findById(projectId).select(
+    "name propertyManager"
+  );
+  const projectName = fetchedProject.name;
+  const propertyManager = fetchedProject.propertyManager;
+
+  try {
+    // Check if logged in Vendor is the same as the Work Order Vendor
+    if (workOrder.vendor._id.toString() === req.vendor._id.toString()) {
+      // Update the Work Order Status
+      workOrder.workOrderStatus = "accepted";
+
+      // Save new data
+      const updatedProject = await workOrder.save();
+
+      res.status(200).json(updatedProject);
+
+      // Build notification data object
+      const notificationData = {
+        sender: new mongoose.Types.ObjectId(workOrder.vendor._id), // Casting to ObjectId in case it comes as a string
+        senderType: "Vendor",
+        recipient: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
+        recipientType: "PropertyManager",
+        notificationType: NotificationTypes.WORK_ORDER_ACCEPTED,
+        message: NotificationMessages.WORK_ORDER_ACCEPTED,
+        data: {
+          projectId: projectId,
+          projectName: projectName,
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Call Notification Method
+      createNotification(notificationData);
+
+      // TODO: Implement: Trigger notification to Vendor
+    } else {
+      res.status(401);
+      throw new Error("Not authorized.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Action: Update
