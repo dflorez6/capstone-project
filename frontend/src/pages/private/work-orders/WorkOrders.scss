@@ -36,7 +36,7 @@
           &.accepted {
             background-color: $c-aqua;
           }
-          &.rejected {
+          &.reschedule {
             background-color: $c-red;
           }
           &.in-progress {
@@ -104,7 +104,7 @@
             background-color: $c-aqua;
             color: $c-text-primary;
           }
-          &.rejected {
+          &.reschedule {
             background-color: $c-red;
             color: $c-white;
           }

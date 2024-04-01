@@ -3,13 +3,13 @@
 //====================
 export const NotificationMessages = {
   PROJECT_APPLICATION_CREATED: "applied to project",
-  PROJECT_APPLICATION_ACCEPTED: "accepted the application to project",
-  PROJECT_APPLICATION_REJECTED: "rejected the application to project",
+  PROJECT_APPLICATION_ACCEPTED: "accepted the application for project",
+  PROJECT_APPLICATION_REJECTED: "rejected the application for project",
   WORK_ORDER_CREATED: "created a work order for project",
+  WORK_ORDER_ACCEPTED: "accepted a work order for project",
   // TODO: Add more NotificationTypes as needed
   /*
     
-    WORK_ORDER_ACCEPTED: "work_order_accepted",
     RESCHEDULE_PROPOSED: "reschedule_proposed",
     */
 };

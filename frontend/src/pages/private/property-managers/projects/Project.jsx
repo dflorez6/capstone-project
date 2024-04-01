@@ -14,6 +14,7 @@ import {
 import {
   useGetPropertyManagerProjectWorkOrdersQuery,
   useGetVendorProjectWorkOrdersQuery,
+  useAcceptWorkOrderMutation,
 } from "../../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDate, torontoDateTime } from "../../../../utils/formatDates";
@@ -112,6 +113,11 @@ const Project = () => {
     },
   ] = useRejectProjectApplicationMutation();
 
+  const [
+    acceptWorkOrder,
+    { isError: acceptWorkOrderError, isLoading: acceptWorkOrderLoading },
+  ] = useAcceptWorkOrderMutation();
+
   //----------
   // Effects
   //----------
@@ -180,6 +186,9 @@ const Project = () => {
       "Vendor Project Work Orders Applications Error: ",
       vendorWorkOrdersError
     );
+  }
+  if (acceptWorkOrderError) {
+    console.log("Accept Work Order Applications Error: ", acceptWorkOrderError);
   }
 
   //----------
@@ -250,10 +259,34 @@ const Project = () => {
       toast.success("Project application rejected successfully");
     } catch (error) {
       toast.error(
-        "Application status has already been update for this project"
+        "Application status has already been updated for this project"
       );
       console.log("Project Application Error: ", error);
     }
+  };
+
+  // Accept Work Order
+  const acceptWorkOrderHandler = async (workOrderId) => {
+    try {
+      await acceptWorkOrder({
+        projectId: project?._id,
+        workOrderId: workOrderId,
+      }).unwrap();
+      vendorWorkOrdersRefetch();
+      toast.success("Work order accepted successfully");
+    } catch (error) {
+      toast.error("Work order has already been updated for this project");
+      console.log("Project Application Error: ", error);
+    }
+
+    // acceptWorkOrder: PUT /api/v1/work-orders/vendor/accept/:projectId/:workOrderId
+  };
+
+  // Reschedule Work Order
+  const rescheduleWorkOrderHandler = async (workOrderId) => {
+    console.log("Reschedule Work Order");
+    console.log("workOrderId: ", workOrderId);
+    //
   };
 
   //----------
@@ -266,8 +299,8 @@ const Project = () => {
         return "pending";
       case "accepted":
         return "accepted";
-      case "rejected":
-        return "rejected";
+      case "reschedule":
+        return "reschedule";
       case "inProgress":
         return "in-progress";
       case "closed":
@@ -421,9 +454,9 @@ const Project = () => {
 
             {/* TODO: Maybe use tabs or pills to display the content in the same panel */}
 
-            {/* Applications & Work Orders */}
+            {/* Applications */}
             <div className="row">
-              {propertyManagerInfo ? (
+              {propertyManagerInfo && (
                 <>
                   {/* Applications */}
                   <a id="applications"></a>
@@ -557,372 +590,395 @@ const Project = () => {
                       <a id="workOrders"></a>
                     </div>
                   </div>
-
                   {/* ./Applications */}
-
-                  {/* Work Orders */}
-                  <div className="col-12">
-                    <div className="panel-wrapper bg-transparent project-work-orders-wrapper mt-0 pt-0">
-                      <div className="panel-title-wrapper">
-                        <h2>Work Orders</h2>
-                      </div>
-
-                      <div className="panel-content-wrapper">
-                        {propManagerWorkOrdersLoading ? (
-                          <Loader />
-                        ) : (
-                          <>
-                            <div className="work-orders-wrapper">
-                              <div className="work-orders-content-wrapper">
-                                <div className="row">
-                                  {hasItems &&
-                                    currentWorkOrders.map((order) => (
-                                      <>
-                                        <div
-                                          className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
-                                          key={order._id}
-                                        >
-                                          <div className="work-order-card-wrapper">
-                                            {/* Work Order Card */}
-
-                                            {/* Header */}
-                                            <div
-                                              className={`work-order-card-header`}
-                                            >
-                                              <div
-                                                className={`color-status-bar ${setColorStatus(
-                                                  order.workOrderStatus
-                                                )}`}
-                                              ></div>
-                                              {/* Actions */}
-                                              <div className="header-actions">
-                                                <Link                                                
-                                                  to={`/work-orders/edit/${project._id}/${order._id}`}
-                                                  className="header-action f-primary"
-                                                >
-                                                  <i className="fa-solid fa-pen-to-square"></i>
-                                                </Link>
-                                                <button
-                                                  type="button"
-                                                  className="header-action"
-                                                >
-                                                  <i className="fa-solid fa-trash-can"></i>
-                                                </button>
-                                              </div>
-                                              {/* ./Actions */}
-                                            </div>
-                                            {/* ./Header */}
-
-                                            {/* Body */}
-                                            <div className="work-order-card-body">
-                                              <h2 className="name">
-                                                {order?.name}
-                                              </h2>
-
-                                              {/* Status Badge */}
-                                              <div
-                                                className={`work-order-status ${setColorStatus(
-                                                  order.workOrderStatus
-                                                )}`}
-                                              >
-                                                <p className="status">
-                                                  {order.workOrderStatus}
-                                                </p>
-                                              </div>
-                                              {/* ./Status Badge */}
-
-                                              <p className="project">
-                                                Project: {order?.project.name}
-                                              </p>
-                                              <p className="date">
-                                                Start:{" "}
-                                                {torontoDateTime(
-                                                  order.startDateTime
-                                                )}
-                                              </p>
-                                              <p className="date">
-                                                End:{" "}
-                                                {torontoDateTime(
-                                                  order.endDateTime
-                                                )}
-                                              </p>
-                                              <p className="user">
-                                                Vendor:{" "}
-                                                {`${order.vendor.companyName}`}
-                                              </p>
-                                            </div>
-                                            {/* ./Body */}
-
-                                            {/* Footer */}
-                                            <div className="work-order-card-footer">
-                                              {/* Actions */}
-                                              <div className="footer-actions">
-                                                {order.workOrderStatus ===
-                                                "in-progress" ? (
-                                                  <>
-                                                    {/* inProgress Status */}
-                                                    <div className="row">
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-purple"
-                                                        >
-                                                          Close
-                                                        </button>
-                                                      </div>
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                                        >
-                                                          View
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    {/* ./inProgress Status */}
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    {/* Other Status */}
-                                                    <div className="row">
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                                        >
-                                                          View
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    {/* ./Other Status */}
-                                                  </>
-                                                )}
-                                              </div>
-                                              {/* ./Actions */}
-                                            </div>
-                                            {/* ./Footer */}
-                                          </div>
-
-                                          {/* ./Work Order Card */}
-                                        </div>
-                                      </>
-                                    ))}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Pagination */}
-                            <div className="row">
-                              <div className="col-12">
-                                <div className="app-pagination-wrapper">
-                                  {hasItems && (
-                                    <ReactPaginate
-                                      pageCount={Math.ceil(
-                                        propManagerWorkOrders.length /
-                                          itemsPerPage
-                                      )}
-                                      breakLabel="..."
-                                      nextLabel=">>"
-                                      previousLabel="<<"
-                                      pageRangeDisplayed={5}
-                                      marginPagesDisplayed={2}
-                                      onPageChange={handlePageChange}
-                                      containerClassName="pagination"
-                                      activeClassName="active"
-                                    />
-                                  )}
-                                  {!hasItems && (
-                                    <h4 className="text-center">
-                                      No work orders created yet
-                                    </h4>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            {/* ./Pagination */}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  {/* ./Work Orders */}
-                </>
-              ) : (
-                <>
-                  <div className="col-12">
-                    <div className="panel-wrapper bg-transparent project-work-orders-wrapper pt-0">
-                      <div className="panel-title-wrapper">
-                        <h2>Work Orders</h2>
-                      </div>
-
-                      <div className="panel-content-wrapper">
-                        {vendorWorkOrdersLoading ? (
-                          <Loader />
-                        ) : (
-                          <>
-                            <div className="work-orders-wrapper">
-                              <div className="work-orders-content-wrapper">
-                                <div className="row">
-                                  {hasItems &&
-                                    currentWorkOrders.map((order) => (
-                                      <>
-                                        <div
-                                          className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
-                                          key={order._id}
-                                        >
-                                          <div className="work-order-card-wrapper">
-                                            {/* Work Order Card */}
-
-                                            {/* Header */}
-                                            <div
-                                              className={`work-order-card-header`}
-                                            >
-                                              <div
-                                                className={`color-status-bar ${setColorStatus(
-                                                  order.workOrderStatus
-                                                )}`}
-                                              ></div>
-                                              {/* Actions */}
-                                              <div className="header-actions"></div>
-                                              {/* ./Actions */}
-                                            </div>
-                                            {/* ./Header */}
-
-                                            {/* Body */}
-                                            <div className="work-order-card-body">
-                                              <h2 className="name">
-                                                {order?.name}
-                                              </h2>
-
-                                              {/* Status Badge */}
-                                              <div
-                                                className={`work-order-status ${setColorStatus(
-                                                  order.workOrderStatus
-                                                )}`}
-                                              >
-                                                <p className="status">
-                                                  {order.workOrderStatus}
-                                                </p>
-                                              </div>
-                                              {/* ./Status Badge */}
-
-                                              <p className="project">
-                                                Project: {order?.project.name}
-                                              </p>
-                                              <p className="date">
-                                                Start:{" "}
-                                                {torontoDateTime(
-                                                  order.startDateTime
-                                                )}
-                                              </p>
-                                              <p className="date">
-                                                End:{" "}
-                                                {torontoDateTime(
-                                                  order.endDateTime
-                                                )}
-                                              </p>
-                                              <p className="user">
-                                                Vendor:{" "}
-                                                {`${order.vendor.companyName}`}
-                                              </p>
-                                            </div>
-                                            {/* ./Body */}
-
-                                            {/* Footer */}
-                                            <div className="work-order-card-footer">
-                                              {/* Actions */}
-                                              <div className="footer-actions">
-                                                {order.workOrderStatus ===
-                                                "pending" ? (
-                                                  <>
-                                                    {/* Pending Status */}
-                                                    <div className="row">
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-red"
-                                                        >
-                                                          <i className="fa-solid fa-calendar-days"></i>
-                                                        </button>
-                                                      </div>
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-aqua"
-                                                        >
-                                                          <i className="fa-solid fa-check"></i>
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    {/* ./Pending Status */}
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    {/* Other Status */}
-                                                    <div className="row">
-                                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                                        >
-                                                          View
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    {/* ./Other Status */}
-                                                  </>
-                                                )}
-                                              </div>
-                                              {/* ./Actions */}
-                                            </div>
-                                            {/* ./Footer */}
-                                          </div>
-
-                                          {/* ./Work Order Card */}
-                                        </div>
-                                      </>
-                                    ))}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Pagination */}
-                            <div className="row">
-                              <div className="col-12">
-                                <div className="app-pagination-wrapper">
-                                  {hasItems && (
-                                    <ReactPaginate
-                                      pageCount={Math.ceil(
-                                        vendorWorkOrders.length / itemsPerPage
-                                      )}
-                                      breakLabel="..."
-                                      nextLabel=">>"
-                                      previousLabel="<<"
-                                      pageRangeDisplayed={5}
-                                      marginPagesDisplayed={2}
-                                      onPageChange={handlePageChange}
-                                      containerClassName="pagination"
-                                      activeClassName="active"
-                                    />
-                                  )}
-                                  {!hasItems && (
-                                    <h4 className="text-center">
-                                      You have no work orders for this project
-                                    </h4>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            {/* ./Pagination */}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
                 </>
               )}
             </div>
-            {/* ./Applications & Work Orders */}
+            {/* ./Applications */}
+
+            {/* Vendor Work Orders */}
+            {vendorInfo && (
+              <>
+                {vendorWorkOrdersLoading ? (
+                  <Loader />
+                ) : (
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="panel-wrapper bg-transparent project-work-orders-wrapper pt-0">
+                        <div className="panel-title-wrapper">
+                          <h2>Work Orders</h2>
+                        </div>
+
+                        <div className="panel-content-wrapper">
+                          <div className="work-orders-wrapper">
+                            <div className="work-orders-content-wrapper">
+                              <div className="row">
+                                {hasItems &&
+                                  vendorWorkOrders.map((order) => (
+                                    <div
+                                      className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
+                                      key={`order_${order._id}`}
+                                    >
+                                      {/* Work Order Card */}
+                                      <div className="work-order-card-wrapper">
+                                        {/* Header */}
+                                        <div
+                                          className={`work-order-card-header`}
+                                        >
+                                          <div
+                                            className={`color-status-bar ${setColorStatus(
+                                              order.workOrderStatus
+                                            )}`}
+                                          ></div>
+                                          {/* Actions */}
+                                          <div className="header-actions"></div>
+                                          {/* ./Actions */}
+                                        </div>
+                                        {/* ./Header */}
+
+                                        {/* Body */}
+                                        <div className="work-order-card-body">
+                                          <h2 className="name">
+                                            {order?.name}
+                                          </h2>
+
+                                          {/* Status Badge */}
+                                          <div
+                                            className={`work-order-status ${setColorStatus(
+                                              order.workOrderStatus
+                                            )}`}
+                                          >
+                                            <p className="status">
+                                              {order.workOrderStatus}
+                                            </p>
+                                          </div>
+                                          {/* ./Status Badge */}
+
+                                          <p className="project">
+                                            Project: {order?.project.name}
+                                          </p>
+                                          <p className="date">
+                                            Start:{" "}
+                                            {torontoDateTime(
+                                              order.startDateTime
+                                            )}
+                                          </p>
+                                          <p className="date">
+                                            End:{" "}
+                                            {torontoDateTime(order.endDateTime)}
+                                          </p>
+                                          <p className="user">
+                                            Vendor:{" "}
+                                            {`${order.vendor.companyName}`}
+                                          </p>
+                                        </div>
+                                        {/* ./Body */}
+
+                                        {/* Footer */}
+                                        <div className="work-order-card-footer">
+                                          {/* Actions */}
+                                          <div className="footer-actions">
+                                            {order.workOrderStatus ===
+                                            "pending" ? (
+                                              <>
+                                                {/* Pending Status */}
+                                                <div className="row">
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-red"
+                                                      onClick={() =>
+                                                        rescheduleWorkOrderHandler(
+                                                          order._id
+                                                        )
+                                                      }
+                                                      key={`orderReschedule_${order._id}`}
+                                                    >
+                                                      <i className="fa-solid fa-calendar-days"></i>
+                                                    </button>
+                                                  </div>
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-aqua"
+                                                      onClick={() =>
+                                                        acceptWorkOrderHandler(
+                                                          order._id
+                                                        )
+                                                      }
+                                                      key={`orderAccept_${order._id}`}
+                                                    >
+                                                      <i
+                                                        className="fa-solid fa-check"
+                                                        key={`orderAcceptIcon_${order._id}`}
+                                                      ></i>
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                                {/* ./Pending Status */}
+                                              </>
+                                            ) : (
+                                              <>
+                                                {/* Other Status */}
+                                                <div className="row">
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-dark-outline"
+                                                      key={`orderView_${order._id}`}
+                                                    >
+                                                      View
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                                {/* ./Other Status */}
+                                              </>
+                                            )}
+                                          </div>
+                                          {/* ./Actions */}
+                                        </div>
+                                        {/* ./Footer */}
+                                      </div>
+                                      {/* ./Work Order Card */}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Pagination */}
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="app-pagination-wrapper">
+                                {hasItems && (
+                                  <ReactPaginate
+                                    pageCount={Math.ceil(
+                                      vendorWorkOrders.length / itemsPerPage
+                                    )}
+                                    breakLabel="..."
+                                    nextLabel=">>"
+                                    previousLabel="<<"
+                                    pageRangeDisplayed={5}
+                                    marginPagesDisplayed={2}
+                                    onPageChange={handlePageChange}
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    key={`vendorPagination`}
+                                  />
+                                )}
+                                {!hasItems && (
+                                  <h4 className="text-center">
+                                    You have no work orders for this project
+                                  </h4>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          {/* ./Pagination */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+            {/* ./Vendor Work Orders */}
+
+            {/* Property Manager Work Orders */}
+            {propertyManagerInfo && (
+              <>
+                {propManagerWorkOrdersLoading ? (
+                  <Loader />
+                ) : (
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="panel-wrapper bg-transparent project-work-orders-wrapper mt-0 pt-0">
+                        <div className="panel-title-wrapper">
+                          <h2>Work Orders</h2>
+                        </div>
+
+                        <div className="panel-content-wrapper">
+                          <div className="work-orders-wrapper">
+                            <div className="work-orders-content-wrapper">
+                              <div className="row">
+                                {hasItems &&
+                                  currentWorkOrders.map((order) => (
+                                    <>
+                                      <div
+                                        className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
+                                        key={order._id}
+                                      >
+                                        <div className="work-order-card-wrapper">
+                                          {/* Work Order Card */}
+
+                                          {/* Header */}
+                                          <div
+                                            className={`work-order-card-header`}
+                                          >
+                                            <div
+                                              className={`color-status-bar ${setColorStatus(
+                                                order.workOrderStatus
+                                              )}`}
+                                            ></div>
+                                            {/* Actions */}
+                                            <div className="header-actions">
+                                              <Link
+                                                to={`/work-orders/edit/${project._id}/${order._id}`}
+                                                className="header-action f-primary"
+                                              >
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                              </Link>
+                                              <button
+                                                type="button"
+                                                className="header-action"
+                                                key={order._id}
+                                              >
+                                                <i className="fa-solid fa-trash-can"></i>
+                                              </button>
+                                            </div>
+                                            {/* ./Actions */}
+                                          </div>
+                                          {/* ./Header */}
+
+                                          {/* Body */}
+                                          <div className="work-order-card-body">
+                                            <h2 className="name">
+                                              {order?.name}
+                                            </h2>
+
+                                            {/* Status Badge */}
+                                            <div
+                                              className={`work-order-status ${setColorStatus(
+                                                order.workOrderStatus
+                                              )}`}
+                                            >
+                                              <p className="status">
+                                                {order.workOrderStatus}
+                                              </p>
+                                            </div>
+                                            {/* ./Status Badge */}
+
+                                            <p className="project">
+                                              Project: {order?.project.name}
+                                            </p>
+                                            <p className="date">
+                                              Start:{" "}
+                                              {torontoDateTime(
+                                                order.startDateTime
+                                              )}
+                                            </p>
+                                            <p className="date">
+                                              End:{" "}
+                                              {torontoDateTime(
+                                                order.endDateTime
+                                              )}
+                                            </p>
+                                            <p className="user">
+                                              Vendor:{" "}
+                                              {`${order.vendor.companyName}`}
+                                            </p>
+                                          </div>
+                                          {/* ./Body */}
+
+                                          {/* Footer */}
+                                          <div className="work-order-card-footer">
+                                            {/* Actions */}
+                                            <div className="footer-actions">
+                                              {order.workOrderStatus ===
+                                              "in-progress" ? (
+                                                <>
+                                                  {/* inProgress Status */}
+                                                  <div className="row">
+                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-app btn-app-xs btn-app-purple"
+                                                        key={order._id}
+                                                      >
+                                                        Close
+                                                      </button>
+                                                    </div>
+                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-app btn-app-xs btn-app-dark-outline"
+                                                        key={order._id}
+                                                      >
+                                                        View
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                  {/* ./inProgress Status */}
+                                                </>
+                                              ) : (
+                                                <>
+                                                  {/* Other Status */}
+                                                  <div className="row">
+                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-app btn-app-xs btn-app-dark-outline"
+                                                        key={order._id}
+                                                      >
+                                                        View
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                  {/* ./Other Status */}
+                                                </>
+                                              )}
+                                            </div>
+                                            {/* ./Actions */}
+                                          </div>
+                                          {/* ./Footer */}
+                                        </div>
+
+                                        {/* ./Work Order Card */}
+                                      </div>
+                                    </>
+                                  ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Pagination */}
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="app-pagination-wrapper">
+                                {hasItems && (
+                                  <ReactPaginate
+                                    pageCount={Math.ceil(
+                                      propManagerWorkOrders.length /
+                                        itemsPerPage
+                                    )}
+                                    breakLabel="..."
+                                    nextLabel=">>"
+                                    previousLabel="<<"
+                                    pageRangeDisplayed={5}
+                                    marginPagesDisplayed={2}
+                                    onPageChange={handlePageChange}
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    key={`propertyManagerPagination`}
+                                  />
+                                )}
+                                {!hasItems && (
+                                  <h4 className="text-center">
+                                    No work orders created yet
+                                  </h4>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          {/* ./Pagination */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+            {/* ./Property Manager Work Orders */}
           </div>
         </>
       )}
