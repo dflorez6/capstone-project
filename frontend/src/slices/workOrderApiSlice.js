@@ -60,7 +60,7 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Update - Mark Work Order as Accepted
+    // Update - Update Work Order by Property Manager
     updateWorkOrder: builder.mutation({
       query: ({ projectId, workOrderId, data }) => ({
         url: `${WORK_ORDERS_URL}/property-manager/${projectId}/${workOrderId}`,
@@ -68,7 +68,14 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // /property-manager/:projectId/:workOrderId
+
+    // Update - Mark Work Order as Accepted
+    acceptWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId }) => ({
+        url: `${WORK_ORDERS_URL}/vendor/accept/${projectId}/${workOrderId}`,
+        method: "PUT",
+      }),
+    }),
 
     // rescheduleWorkOrder: PUT /api/v1/work-orders/vendor/:projectId/:workOrderId
 
@@ -110,5 +117,7 @@ export const {
   useCreateWorkOrderMutation,
   // Update
   useUpdateWorkOrderMutation,
+  useAcceptWorkOrderMutation,
+  
   // Delete
 } = workOrderApiSlice; // Export hooks for usage in components

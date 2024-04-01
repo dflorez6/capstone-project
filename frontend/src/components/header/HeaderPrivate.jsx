@@ -135,7 +135,10 @@ const Header = () => {
                     <Link className="nav-link" to="/projects">
                       Projects
                     </Link>
-                    <Link className="nav-link" to="/work-orders">
+                    <Link
+                      className="nav-link"
+                      to={`/work-orders/vendor/${authId}`}
+                    >
                       Work Orders
                     </Link>
                     <Link
@@ -155,7 +158,10 @@ const Header = () => {
                     <Link className="nav-link" to={`/projects/${authId}`}>
                       Projects
                     </Link>
-                    <Link className="nav-link" to="/work-orders">
+                    <Link
+                      className="nav-link"
+                      to={`/work-orders/property-manager/${authId}`}
+                    >
                       Work Orders
                     </Link>
                   </>

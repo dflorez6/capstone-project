@@ -25,7 +25,7 @@ const workOrderSchema = mongoose.Schema(
     workOrderStatus: {
       type: String,
       required: true,
-      enum: ["pending", "accepted", "rejected", "inProgress", "closed"],
+      enum: ["pending", "accepted", "reschedule", "inProgress", "closed"],
       default: "pending",
     },
     vendor: {

@@ -48,7 +48,8 @@ import ProjectEdit from "./pages/private/property-managers/projects/ProjectEdit.
 //----------
 // Work Orders
 //----------
-import WorkOrders from "./pages/private/work-orders/WorkOrders.jsx";
+import WorkOrdersVendor from "./pages/private/work-orders/WorkOrdersVendor.jsx";
+import WorkOrdersPropManager from "./pages/private/work-orders/WorkOrdersPropManager.jsx";
 import WorkOrderNew from "./pages/private/work-orders/WorkOrderNew.jsx";
 import WorkOrderEdit from "./pages/private/work-orders/WorkOrderEdit.jsx";
 // Styles
@@ -100,7 +101,8 @@ const router = createBrowserRouter(
         />
 
         {/* Work Orders */}
-        <Route path="/work-orders" element={<WorkOrders />} />
+        <Route path="/work-orders/vendor/:vendorId" element={<WorkOrdersVendor />} />
+        <Route path="/work-orders/property-manager/:propertyManagerId" element={<WorkOrdersPropManager />} />        
         <Route path="/work-orders/new/:projectId" element={<WorkOrderNew />} />
         <Route
           path="/work-orders/edit/:projectId/:workOrderId"

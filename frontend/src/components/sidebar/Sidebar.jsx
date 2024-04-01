@@ -123,7 +123,7 @@ function Sidebar() {
                   <li className="sidebar-navigation-item">
                     <Link
                       className="sidebar-navigation-link"
-                      to={`/work-orders`}
+                      to={`/work-orders/vendor/${authId}`}
                     >
                       <i className="fa-solid fa-calendar-days link-icon"></i>
                       <span className="link-text">Work Orders</span>
@@ -191,8 +191,8 @@ function Sidebar() {
                   </li>
                   <li className="sidebar-navigation-item">
                     <Link
-                      className="sidebar-navigation-link"
-                      to={`/work-orders`}
+                      className="sidebar-navigation-link"                      
+                      to={`/work-orders/property-manager/${authId}`}
                     >
                       <i className="fa-solid fa-calendar-days link-icon"></i>
                       <span className="link-text">Work Orders</span>

@@ -4,10 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useGetAllPropertyManagerWorkOrdersQuery,
-  useGetAllVendorWorkOrdersQuery,
-} from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
+import { useGetAllPropertyManagerWorkOrdersQuery } from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -18,7 +15,7 @@ import { toast } from "react-toastify";
 import "./WorkOrders.scss";
 
 // Component
-function WorkOrders() {
+function WorkOrdersPropManager() {
   //----------
   // State
   //----------
@@ -41,15 +38,6 @@ function WorkOrders() {
     propertyManagerId: propertyManagerInfo?._id,
   });
 
-  const {
-    data: vendorWorkOrders,
-    isError: vendorWorkOrdersError,
-    isLoading: vendorWorkOrdersLoading,
-    refetch: vendorWorkOrdersRefetch,
-  } = useGetAllVendorWorkOrdersQuery({
-    vendorId: vendorInfo?._id,
-  });
-
   // Redux Toolkit Mutations
   /*
     const [
@@ -69,15 +57,7 @@ function WorkOrders() {
     if (propertyManagerInfo) {
       propManagerWorkOrdersRefetch();
     }
-    if (vendorInfo) {
-      vendorWorkOrdersRefetch();
-    }
-  }, [
-    propertyManagerInfo,
-    propManagerWorkOrdersRefetch,
-    vendorInfo,
-    vendorWorkOrdersRefetch,
-  ]);
+  }, [propertyManagerInfo, propManagerWorkOrdersRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -88,14 +68,24 @@ function WorkOrders() {
       propManagerWorkOrdersError
     );
   }
-  if (vendorWorkOrdersError) {
-    console.log("Vendor All Work Orders Error: ", vendorWorkOrdersError);
-  }
 
   //----------
   // Handlers
   //----------
-  // TODO: Add Handlers
+  // Accept Work Order
+  const acceptWorkOrderHandler = async (projectId, workOrderId) => {
+    console.log("Reschedule Work Order");
+    console.log("workOrderId: ", workOrderId);
+
+    // acceptWorkOrder: PUT /api/v1/work-orders/vendor/accept/:projectId/:workOrderId
+  };
+
+  // Reschedule Work Order
+  const rescheduleWorkOrderHandler = async (workOrderId) => {
+    console.log("Reschedule Work Order");
+    console.log("workOrderId: ", workOrderId);
+    //
+  };
 
   //----------
   // Functions
@@ -107,8 +97,8 @@ function WorkOrders() {
         return "pending";
       case "accepted":
         return "accepted";
-      case "rejected":
-        return "rejected";
+      case "reschedule":
+        return "reschedule";
       case "inProgress":
         return "in-progress";
       case "closed":
@@ -128,18 +118,10 @@ function WorkOrders() {
   // Calculate indexes of items to display on the current page
   const indexOfLastProject = (currentPage + 1) * itemsPerPage;
   const indexOfFirstProject = indexOfLastProject - itemsPerPage;
-  let currentWorkOrders;
-  if (propertyManagerInfo) {
-    currentWorkOrders = propManagerWorkOrders?.slice(
-      indexOfFirstProject,
-      indexOfLastProject
-    );
-  } else {
-    currentWorkOrders = vendorWorkOrders?.slice(
-      indexOfFirstProject,
-      indexOfLastProject
-    );
-  }
+  const currentWorkOrders = propManagerWorkOrders?.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  );
 
   // Pagination Handler
   const handlePageChange = ({ selected }) => {
@@ -147,21 +129,16 @@ function WorkOrders() {
   };
 
   // Check if there are any projects to display
-  let hasItems;
-  if (propertyManagerInfo) {
-    hasItems = propManagerWorkOrders && propManagerWorkOrders.length > 0;
-  } else {
-    hasItems = vendorWorkOrders && vendorWorkOrders.length > 0;
-  }
+  const hasItems = propManagerWorkOrders && propManagerWorkOrders?.length > 0;
 
   //----------
   // Output
   //----------
   return (
     <section className="private-page-wrapper work-orders-wrapper">
-      {propManagerWorkOrders ? (
+      {/* Property Manager Work Orders */}
+      {propertyManagerInfo && (
         <>
-          {/* Property Manager Work Orders */}
           {propManagerWorkOrdersLoading ? (
             <Loader />
           ) : (
@@ -253,6 +230,7 @@ function WorkOrders() {
                                         <button
                                           type="button"
                                           className="btn-app btn-app-xs btn-app-purple"
+                                          key={order._id}
                                         >
                                           Close
                                         </button>
@@ -261,6 +239,7 @@ function WorkOrders() {
                                         <button
                                           type="button"
                                           className="btn-app btn-app-xs btn-app-dark-outline"
+                                          key={order._id}
                                         >
                                           View
                                         </button>
@@ -276,6 +255,7 @@ function WorkOrders() {
                                         <button
                                           type="button"
                                           className="btn-app btn-app-xs btn-app-dark-outline"
+                                          key={order._id}
                                         >
                                           View
                                         </button>
@@ -326,171 +306,11 @@ function WorkOrders() {
               {/* ./Pagination */}
             </>
           )}
-
-          {/* ./Property Manager Work Orders */}
-        </>
-      ) : (
-        <>
-          {/* Vendor Orders */}
-          {vendorWorkOrdersLoading ? (
-            <Loader />
-          ) : (
-            <>
-              {/* Title */}
-              <div className="panel-wrapper bg-transparent mt-0 p-0">
-                <div className="panel-title-wrapper">
-                  <h1 className="m-0">Work Orders</h1>
-                </div>
-              </div>
-              {/* Title */}
-
-              {/* Work Orders */}
-              <div className="work-orders-content-wrapper">
-                <div className="row">
-                  {hasItems &&
-                    currentWorkOrders.map((order) => (
-                      <>
-                        <div
-                          className="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-items-stretch"
-                          key={order._id}
-                        >
-                          <div className="work-order-card-wrapper">
-                            {/* Work Order Card */}
-
-                            {/* Header */}
-                            <div className={`work-order-card-header`}>
-                              <div
-                                className={`color-status-bar ${setColorStatus(
-                                  order.workOrderStatus
-                                )}`}
-                              ></div>
-                              {/* Actions */}
-                              <div className="header-actions"></div>
-                              {/* ./Actions */}
-                            </div>
-                            {/* ./Header */}
-
-                            {/* Body */}
-                            <div className="work-order-card-body">
-                              <h2 className="name">{order?.name}</h2>
-
-                              {/* Status Badge */}
-                              <div
-                                className={`work-order-status ${setColorStatus(
-                                  order.workOrderStatus
-                                )}`}
-                              >
-                                <p className="status">
-                                  {order.workOrderStatus}
-                                </p>
-                              </div>
-                              {/* ./Status Badge */}
-
-                              <p className="project">
-                                Project: {order?.project.name}
-                              </p>
-                              <p className="date">
-                                Start: {torontoDateTime(order.startDateTime)}
-                              </p>
-                              <p className="date">
-                                End: {torontoDateTime(order.endDateTime)}
-                              </p>
-                              <p className="user">
-                                Vendor: {`${order.vendor.companyName}`}
-                              </p>
-                            </div>
-                            {/* ./Body */}
-
-                            {/* Footer */}
-                            <div className="work-order-card-footer">
-                              {/* Actions */}
-                              <div className="footer-actions">
-                                {order.workOrderStatus === "pending" ? (
-                                  <>
-                                    {/* Pending Status */}
-                                    <div className="row">
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-red"
-                                        >
-                                          <i className="fa-solid fa-calendar-days"></i>
-                                        </button>
-                                      </div>
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-aqua"
-                                        >
-                                          <i className="fa-solid fa-check"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                    {/* ./Pending Status */}
-                                  </>
-                                ) : (
-                                  <>
-                                    {/* Other Status */}
-                                    <div className="row">
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                        >
-                                          View
-                                        </button>
-                                      </div>
-                                    </div>
-                                    {/* ./Other Status */}
-                                  </>
-                                )}
-                              </div>
-                              {/* ./Actions */}
-                            </div>
-                            {/* ./Footer */}
-                          </div>
-
-                          {/* ./Work Order Card */}
-                        </div>
-                      </>
-                    ))}
-                </div>
-              </div>
-              {/* ./Work Orders */}
-
-              {/* Pagination */}
-              <div className="row">
-                <div className="col-12">
-                  <div className="app-pagination-wrapper">
-                    {hasItems && (
-                      <ReactPaginate
-                        pageCount={Math.ceil(
-                          vendorWorkOrders.length / itemsPerPage
-                        )}
-                        breakLabel="..."
-                        nextLabel=">>"
-                        previousLabel="<<"
-                        pageRangeDisplayed={5}
-                        marginPagesDisplayed={2}
-                        onPageChange={handlePageChange}
-                        containerClassName="pagination"
-                        activeClassName="active"
-                      />
-                    )}
-                    {!hasItems && (
-                      <h4 className="text-center">No projects created yet</h4>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {/* ./Pagination */}
-            </>
-          )}
-          {/* ./Vendor Orders */}
         </>
       )}
+      {/* ./Property Manager Work Orders */}
     </section>
   );
 }
 
-export default WorkOrders;
+export default WorkOrdersPropManager;
