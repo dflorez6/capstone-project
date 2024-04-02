@@ -38,7 +38,7 @@ router.get(
 );
 
 // Show
-router.get("/vendor/:workOrderId", vendorProtect, showVendorWorkOrder);
+router.get("/vendor/order/:workOrderId", vendorProtect, showVendorWorkOrder);
 
 // Update
 router.put(
@@ -69,7 +69,7 @@ router.get(
 
 // Show
 router.get(
-  "/property-manager/:workOrderId",
+  "/property-manager/order/:workOrderId",
   propertyManagerProtect,
   showPropertyManagerWorkOrder
 );

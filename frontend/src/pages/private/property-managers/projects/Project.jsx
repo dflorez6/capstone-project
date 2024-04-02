@@ -408,7 +408,7 @@ const Project = () => {
   //----------
   // Functions
   //----------
-  // Set Color Status
+  // Set Status Color
   const setStatusColor = (status) => {
     switch (status) {
       case "pending":
@@ -427,7 +427,7 @@ const Project = () => {
     }
   };
 
-  // Set Color Status
+  // Set Status Text
   const setStatusText = (status) => {
     switch (status) {
       case "pending":
@@ -438,7 +438,7 @@ const Project = () => {
       case "rescheduleByPropertyManager":
         return "reschedule";
       case "inProgress":
-        return "in-progress";
+        return "in progress";
       case "closed":
         return "closed";
       default:
@@ -523,6 +523,7 @@ const Project = () => {
                 <div className="project-category">
                   <h2>{project?.serviceCategory.name}</h2>
                 </div>
+                {/* Counter + Actions */}
                 <div className="project-counters-wrapper">
                   <div className="counters-wrapper">
                     <div className="work-orders-counter">
@@ -531,6 +532,7 @@ const Project = () => {
                     </div>
                   </div>
 
+                  {/* Actions */}
                   <div className="project-actions">
                     {/* Only propertyManager can edit the Store */}
                     {propertyManagerInfo &&
@@ -1069,17 +1071,34 @@ const Project = () => {
                                               "accepted" && (
                                               <div className="row">
                                                 <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                  <button
-                                                    type="button"
+                                                  <Link
+                                                    to={`/work-orders/vendor/order/${order._id}`}
                                                     className="btn-app btn-app-xs btn-app-dark-outline"
                                                     key={order._id}
                                                   >
                                                     View
-                                                  </button>
+                                                  </Link>
                                                 </div>
                                               </div>
                                             )}
                                             {/* ./accepted status */}
+
+                                            {/* inProgress status */}
+                                            {order.workOrderStatus ===
+                                              "inProgress" && (
+                                              <div className="row">
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                  <Link
+                                                    to={`/work-orders/vendor/order/${order._id}`}
+                                                    className="btn-app btn-app-xs btn-app-dark-outline"
+                                                    key={order._id}
+                                                  >
+                                                    View
+                                                  </Link>
+                                                </div>
+                                              </div>
+                                            )}
+                                            {/* ./inProgress status */}
 
                                             {/* closed status */}
                                             {order.workOrderStatus ===
@@ -1375,13 +1394,13 @@ const Project = () => {
                                                     </button>
                                                   </div>
                                                   <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                                    <button
-                                                      type="button"
+                                                    <Link
+                                                      to={`/work-orders/property-manager/order/${order._id}`}
                                                       className="btn-app btn-app-xs btn-app-dark-outline"
                                                       key={order._id}
                                                     >
                                                       View
-                                                    </button>
+                                                    </Link>
                                                   </div>
                                                 </div>
                                               )}
@@ -1398,13 +1417,13 @@ const Project = () => {
                                                 "accepted" && (
                                                 <div className="row">
                                                   <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                    <button
-                                                      type="button"
+                                                    <Link
+                                                      to={`/work-orders/property-manager/order/${order._id}`}
                                                       className="btn-app btn-app-xs btn-app-dark-outline"
                                                       key={order._id}
                                                     >
                                                       View
-                                                    </button>
+                                                    </Link>
                                                   </div>
                                                 </div>
                                               )}

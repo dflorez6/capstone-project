@@ -8,7 +8,7 @@ import {
   useGetAllPropertyManagerWorkOrdersQuery,
   usePropertyManagerAcceptWorkOrderMutation,
   usePropertyManagerRescheduleWorkOrderMutation,
-} from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
+} from "../../../slices/workOrderApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -80,14 +80,12 @@ function WorkOrdersPropManager() {
   if (acceptWorkOrderError) {
     console.log("Accept Work Order Applications Error: ", acceptWorkOrderError);
   }
-  /*
   if (rescheduleWorkOrderError) {
     console.log(
       "Reschedule Work Order Applications Error: ",
       rescheduleWorkOrderError
     );
   }
-  */
 
   //----------
   // Handlers
@@ -177,7 +175,7 @@ function WorkOrdersPropManager() {
       case "rescheduleByPropertyManager":
         return "reschedule";
       case "inProgress":
-        return "in-progress";
+        return "in progress";
       case "closed":
         return "closed";
       default:
@@ -430,13 +428,13 @@ function WorkOrdersPropManager() {
                                       </button>
                                     </div>
                                     <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                      <button
-                                        type="button"
+                                      <Link
+                                        to={`/work-orders/property-manager/order/${order._id}`}
                                         className="btn-app btn-app-xs btn-app-dark-outline"
                                         key={order._id}
                                       >
                                         View
-                                      </button>
+                                      </Link>
                                     </div>
                                   </div>
                                 )}
@@ -452,13 +450,13 @@ function WorkOrdersPropManager() {
                                 {order.workOrderStatus === "accepted" && (
                                   <div className="row">
                                     <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                      <button
-                                        type="button"
+                                      <Link
+                                        to={`/work-orders/property-manager/order/${order._id}`}
                                         className="btn-app btn-app-xs btn-app-dark-outline"
                                         key={order._id}
                                       >
                                         View
-                                      </button>
+                                      </Link>
                                     </div>
                                   </div>
                                 )}

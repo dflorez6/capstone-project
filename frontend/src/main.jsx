@@ -52,6 +52,8 @@ import WorkOrdersVendor from "./pages/private/work-orders/WorkOrdersVendor.jsx";
 import WorkOrdersPropManager from "./pages/private/work-orders/WorkOrdersPropManager.jsx";
 import WorkOrderNew from "./pages/private/work-orders/WorkOrderNew.jsx";
 import WorkOrderEdit from "./pages/private/work-orders/WorkOrderEdit.jsx";
+import WorkOrderVendor from "./pages/private/work-orders/WorkOrderVendor.jsx";
+import WorkOrderPropManager from "./pages/private/work-orders/WorkOrderPropManager.jsx";
 // Styles
 import "./style.scss";
 
@@ -101,12 +103,26 @@ const router = createBrowserRouter(
         />
 
         {/* Work Orders */}
-        <Route path="/work-orders/vendor/:vendorId" element={<WorkOrdersVendor />} />
-        <Route path="/work-orders/property-manager/:propertyManagerId" element={<WorkOrdersPropManager />} />        
+        <Route
+          path="/work-orders/vendor/:vendorId"
+          element={<WorkOrdersVendor />}
+        />
+        <Route
+          path="/work-orders/property-manager/:propertyManagerId"
+          element={<WorkOrdersPropManager />}
+        />
         <Route path="/work-orders/new/:projectId" element={<WorkOrderNew />} />
         <Route
           path="/work-orders/edit/:projectId/:workOrderId"
           element={<WorkOrderEdit />}
+        />
+        <Route
+          path="/work-orders/vendor/order/:workOrderId"
+          element={<WorkOrderVendor />}
+        />
+        <Route
+          path="/work-orders/property-manager/order/:workOrderId"
+          element={<WorkOrderPropManager />}
         />
         {/* Route: */}
       </Route>

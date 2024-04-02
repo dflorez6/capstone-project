@@ -176,7 +176,7 @@ const getAllVendorWorkOrders = asyncHandler(async (req, res) => {
 
 // Action: Show
 // Description: Project's Work Order Details (Accessible by Property Manager)
-// Route: GET /api/v1/work-orders/property-manager/:workOrderId
+// Route: GET /api/v1/work-orders/property-manager/order/:workOrderId
 // Access: Private
 const showPropertyManagerWorkOrder = asyncHandler(async (req, res) => {
   // Destruction req.params
@@ -188,7 +188,6 @@ const showPropertyManagerWorkOrder = asyncHandler(async (req, res) => {
   }).populate([
     {
       path: "project",
-      select: "name propertyManager",
     },
     {
       path: "vendor",
@@ -220,10 +219,42 @@ const showPropertyManagerWorkOrder = asyncHandler(async (req, res) => {
 
 // Action: Show
 // Description: Project's Work Order Details (Accessible by Vendor)
-// Route: GET /api/v1/work-orders/vendor/:projectId/:workOrderId
+// Route: GET /api/v1/work-orders/vendor/order/:workOrderId
 // Access: Private
 const showVendorWorkOrder = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Show Work Order - V" });
+  // Destruction req.params
+  const { workOrderId } = req.params;
+
+  // Fetch Project
+  const workOrder = await WorkOrder.findOne({
+    _id: workOrderId,
+  }).populate([
+    {
+      path: "project",
+    },
+    {
+      path: "vendor",
+      select: "companyName",
+    },
+  ]);
+
+  // Check if Project exists
+  if (!workOrder) {
+    res.status(400); // Bad Request
+    throw new Error("Work order doesn't exist");
+  }
+
+  try {
+    // Check if Property Manager is the owner of the Project
+    if (workOrder.vendor._id.toString() === req.vendor._id.toString()) {
+      res.status(200).json(workOrder);
+    } else {
+      res.status(401);
+      throw new Error("Not authorized.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 //--------------------
@@ -422,7 +453,7 @@ const vendorAcceptWorkOrder = asyncHandler(async (req, res) => {
     // Check if logged in Vendor is the same as the Work Order Vendor
     if (workOrder.vendor._id.toString() === req.vendor._id.toString()) {
       // Update the Work Order Status
-      workOrder.workOrderStatus = "accepted";
+      workOrder.workOrderStatus = "inProgress";
 
       // Save new data
       const updatedProject = await workOrder.save();
@@ -499,7 +530,7 @@ const propertyManagerAcceptWorkOrder = asyncHandler(async (req, res) => {
       req.propertyManager._id.toString()
     ) {
       // Update the Work Order Status
-      workOrder.workOrderStatus = "accepted";
+      workOrder.workOrderStatus = "inProgress";
 
       // Save new data
       const updatedProject = await workOrder.save();
