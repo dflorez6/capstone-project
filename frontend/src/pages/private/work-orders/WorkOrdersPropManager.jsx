@@ -4,7 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useGetAllPropertyManagerWorkOrdersQuery } from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
+import {
+  useGetAllPropertyManagerWorkOrdersQuery,
+  usePropertyManagerAcceptWorkOrderMutation,
+  usePropertyManagerRescheduleWorkOrderMutation,
+} from "../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -22,11 +26,14 @@ function WorkOrdersPropManager() {
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
 
+  // Form Fields
+  const [startDateTime, setStartDateTime] = useState("");
+  const [endDateTime, setEndDateTime] = useState("");
+
   // Redux Store
   const { propertyManagerInfo } = useSelector(
     (state) => state.propertyManagerAuth
   ); // Gets Vendor Info through the useSelector Hook
-  const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
@@ -39,15 +46,17 @@ function WorkOrdersPropManager() {
   });
 
   // Redux Toolkit Mutations
-  /*
-    const [
-        createProjectApplication,
-        {
-          isError: createProjectApplicationError,
-          isLoading: createProjectApplicationLoading,
-        },
-      ] = useCreateProjectApplicationMutation();
-      */
+  const [
+    acceptWorkOrder,
+    { isError: acceptWorkOrderError, isLoading: acceptWorkOrderLoading },
+  ] = usePropertyManagerAcceptWorkOrderMutation();
+  const [
+    rescheduleWorkOrder,
+    {
+      isError: rescheduleWorkOrderError,
+      isLoading: rescheduleWorkOrderLoading,
+    },
+  ] = usePropertyManagerRescheduleWorkOrderMutation();
 
   //----------
   // Effects
@@ -68,36 +77,104 @@ function WorkOrdersPropManager() {
       propManagerWorkOrdersError
     );
   }
+  if (acceptWorkOrderError) {
+    console.log("Accept Work Order Applications Error: ", acceptWorkOrderError);
+  }
+  /*
+  if (rescheduleWorkOrderError) {
+    console.log(
+      "Reschedule Work Order Applications Error: ",
+      rescheduleWorkOrderError
+    );
+  }
+  */
 
   //----------
   // Handlers
   //----------
   // Accept Work Order
   const acceptWorkOrderHandler = async (projectId, workOrderId) => {
-    console.log("Reschedule Work Order");
-    console.log("workOrderId: ", workOrderId);
-
-    // acceptWorkOrder: PUT /api/v1/work-orders/vendor/accept/:projectId/:workOrderId
+    try {
+      await acceptWorkOrder({
+        projectId: projectId,
+        workOrderId: workOrderId,
+      }).unwrap();
+      toast.success("Work order accepted successfully");
+      propManagerWorkOrdersRefetch();
+    } catch (error) {
+      toast.error("There was an error rescheduling this work order");
+      console.log("Accept Work Order Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   // Reschedule Work Order
-  const rescheduleWorkOrderHandler = async (workOrderId) => {
-    console.log("Reschedule Work Order");
-    console.log("workOrderId: ", workOrderId);
-    //
+  const rescheduleWorkOrderHandler = async (
+    e,
+    vendor,
+    projectId,
+    workOrderId
+  ) => {
+    e.preventDefault();
+
+    try {
+      // Convert startDateTime and endDateTime to UTC format
+      const startDateTimeUTC = new Date(startDateTime).toISOString();
+      const endDateTimeUTC = new Date(endDateTime).toISOString();
+
+      // Form Data
+      const formData = new FormData();
+
+      formData.append("vendor", vendor);
+      formData.append("startDateTime", startDateTimeUTC);
+      formData.append("endDateTime", endDateTimeUTC);
+
+      // Reschedule Work Order
+      const res = await rescheduleWorkOrder({
+        projectId: projectId,
+        workOrderId: workOrderId,
+        data: formData,
+      }).unwrap();
+      propManagerWorkOrdersRefetch();
+      toast.success("Work order rescheduled successfully");
+    } catch (error) {
+      toast.error("There was an error rescheduling this work order");
+      console.log("Create Work Order Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   //----------
   // Functions
   //----------
   // Set Color Status
-  const setColorStatus = (status) => {
+  const setStatusColor = (status) => {
     switch (status) {
       case "pending":
         return "pending";
       case "accepted":
         return "accepted";
-      case "reschedule":
+      case "rescheduleByVendor":
+      case "rescheduleByPropertyManager":
+        return "reschedule";
+      case "inProgress":
+        return "in-progress";
+      case "closed":
+        return "closed";
+      default:
+        return "bg-pending";
+    }
+  };
+
+  // Set Color Status
+  const setStatusText = (status) => {
+    switch (status) {
+      case "pending":
+        return "pending";
+      case "accepted":
+        return "accepted";
+      case "rescheduleByVendor":
+      case "rescheduleByPropertyManager":
         return "reschedule";
       case "inProgress":
         return "in-progress";
@@ -167,7 +244,7 @@ function WorkOrdersPropManager() {
                             {/* Header */}
                             <div className={`work-order-card-header`}>
                               <div
-                                className={`color-status-bar ${setColorStatus(
+                                className={`color-status-bar ${setStatusColor(
                                   order.workOrderStatus
                                 )}`}
                               ></div>
@@ -193,12 +270,12 @@ function WorkOrdersPropManager() {
 
                               {/* Status Badge */}
                               <div
-                                className={`work-order-status ${setColorStatus(
+                                className={`work-order-status ${setStatusColor(
                                   order.workOrderStatus
                                 )}`}
                               >
                                 <p className="status">
-                                  {order.workOrderStatus}
+                                  {setStatusText(order.workOrderStatus)}
                                 </p>
                               </div>
                               {/* ./Status Badge */}
@@ -222,48 +299,176 @@ function WorkOrdersPropManager() {
                             <div className="work-order-card-footer">
                               {/* Actions */}
                               <div className="footer-actions">
-                                {order.workOrderStatus === "in-progress" ? (
-                                  <>
-                                    {/* inProgress Status */}
-                                    <div className="row">
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-purple"
-                                          key={order._id}
+                                {/* reschedule status */}
+                                {order.workOrderStatus ===
+                                  "rescheduleByVendor" && (
+                                  <div className="row">
+                                    {/* Reschedule */}
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                      <button
+                                        type="button"
+                                        className="btn-app btn-app-xs btn-app-red"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#vendorRescheduleForm"
+                                        aria-expanded="false"
+                                        aria-controls="vendorRescheduleForm"
+                                        key={`orderReschedule_${order._id}`}
+                                      >
+                                        <i className="fa-solid fa-calendar-days"></i>
+                                      </button>
+                                    </div>
+                                    {/* ./Reschedule */}
+
+                                    {/* Accept */}
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                      <button
+                                        type="button"
+                                        className="btn-app btn-app-xs btn-app-aqua"
+                                        onClick={() =>
+                                          acceptWorkOrderHandler(
+                                            order.project._id,
+                                            order._id
+                                          )
+                                        }
+                                        key={`orderAccept_${order._id}`}
+                                      >
+                                        <i
+                                          className="fa-solid fa-check"
+                                          key={`orderAcceptIcon_${order._id}`}
+                                        ></i>
+                                      </button>
+                                    </div>
+                                    {/* ./Accept */}
+
+                                    {/*  Reschedule Form */}
+                                    <div className="col-12">
+                                      <div
+                                        className="collapse reschedule-form-wrapper"
+                                        id="vendorRescheduleForm"
+                                      >
+                                        <form
+                                          className="form"
+                                          onSubmit={(e) =>
+                                            rescheduleWorkOrderHandler(
+                                              e,
+                                              order.vendor._id,
+                                              order.project._id,
+                                              order._id
+                                            )
+                                          }
                                         >
-                                          Close
-                                        </button>
-                                      </div>
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                          key={order._id}
-                                        >
-                                          View
-                                        </button>
+                                          <div className="row">
+                                            <div className="col-12">
+                                              <label htmlFor="startDateTime">
+                                                Start Date
+                                              </label>
+                                              <input
+                                                type="datetime-local"
+                                                name="startDateTime"
+                                                id="startDateTime"
+                                                className="form-control"
+                                                placeholder="startDateTime"
+                                                value={startDateTime}
+                                                onChange={(e) =>
+                                                  setStartDateTime(
+                                                    e.target.value
+                                                  )
+                                                }
+                                              />
+                                            </div>
+                                            {/* Input: DateTime Picker */}
+
+                                            <div className="col-12">
+                                              <label htmlFor="endDateTime">
+                                                End Date
+                                              </label>
+                                              <input
+                                                type="datetime-local"
+                                                name="endDateTime"
+                                                id="endDateTime"
+                                                className="form-control"
+                                                placeholder="endDateTime"
+                                                value={endDateTime}
+                                                onChange={(e) =>
+                                                  setEndDateTime(e.target.value)
+                                                }
+                                              />
+                                            </div>
+                                            {/* Input: DateTime Picker */}
+
+                                            {/* Submit */}
+                                            <div className="col-12">
+                                              <div className="submit-wrapper">
+                                                <button
+                                                  type="submit"
+                                                  className="btn-app btn-app-xs btn-app-red"
+                                                >
+                                                  Reschedule
+                                                </button>
+                                              </div>
+                                            </div>
+                                            {/* ./Submit */}
+                                          </div>
+                                        </form>
                                       </div>
                                     </div>
-                                    {/* ./inProgress Status */}
-                                  </>
-                                ) : (
-                                  <>
-                                    {/* Other Status */}
-                                    <div className="row">
-                                      <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                        <button
-                                          type="button"
-                                          className="btn-app btn-app-xs btn-app-dark-outline"
-                                          key={order._id}
-                                        >
-                                          View
-                                        </button>
-                                      </div>
-                                    </div>
-                                    {/* ./Other Status */}
-                                  </>
+                                    {/*  ./Reschedule Form */}
+                                  </div>
                                 )}
+                                {/* ./reschedule status */}
+
+                                {/* inProgress status */}
+                                {order.workOrderStatus === "inProgress" && (
+                                  <div className="row">
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                      <button
+                                        type="button"
+                                        className="btn-app btn-app-xs btn-app-purple"
+                                        key={order._id}
+                                      >
+                                        Close
+                                      </button>
+                                    </div>
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                      <button
+                                        type="button"
+                                        className="btn-app btn-app-xs btn-app-dark-outline"
+                                        key={order._id}
+                                      >
+                                        View
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                                {/* ./inProgress status */}
+
+                                {/* pending status 
+                                {order.workOrderStatus === "pending" && (
+                                  <p>pending</p>
+                                )}
+                                 ./pending status */}
+
+                                {/* accepted status */}
+                                {order.workOrderStatus === "accepted" && (
+                                  <div className="row">
+                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                      <button
+                                        type="button"
+                                        className="btn-app btn-app-xs btn-app-dark-outline"
+                                        key={order._id}
+                                      >
+                                        View
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                                {/* ./accepted status */}
+
+                                {/* closed status */}
+                                {order.workOrderStatus === "closed" && (
+                                  <p>closed</p>
+                                )}
+                                {/* ./closed status */}
                               </div>
                               {/* ./Actions */}
                             </div>

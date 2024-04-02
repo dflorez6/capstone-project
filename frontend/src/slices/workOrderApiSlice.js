@@ -69,15 +69,39 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Update - Mark Work Order as Accepted
-    acceptWorkOrder: builder.mutation({
+    // Update - Mark Work Order as Accepted by Vendor
+    vendorAcceptWorkOrder: builder.mutation({
       query: ({ projectId, workOrderId }) => ({
         url: `${WORK_ORDERS_URL}/vendor/accept/${projectId}/${workOrderId}`,
         method: "PUT",
       }),
     }),
 
-    // rescheduleWorkOrder: PUT /api/v1/work-orders/vendor/:projectId/:workOrderId
+    // Update - Mark Work Order as Accepted by Property Manager
+    propertyManagerAcceptWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/accept/${projectId}/${workOrderId}`,
+        method: "PUT",
+      }),
+    }),
+
+    // Update - Vendor Reschedule Work Order
+    vendorRescheduleWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId, data }) => ({
+        url: `${WORK_ORDERS_URL}/vendor/reschedule/${projectId}/${workOrderId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+
+    // Update - Property Manager Reschedule Work Order
+    propertyManagerRescheduleWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId, data }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/reschedule/${projectId}/${workOrderId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
 
     // deleteWorkOrder: DELETE /api/v1/work-orders/property-manager/:projectId/:workOrderId
 
@@ -117,7 +141,9 @@ export const {
   useCreateWorkOrderMutation,
   // Update
   useUpdateWorkOrderMutation,
-  useAcceptWorkOrderMutation,
-  
+  useVendorAcceptWorkOrderMutation,
+  usePropertyManagerAcceptWorkOrderMutation,
+  useVendorRescheduleWorkOrderMutation,
+  usePropertyManagerRescheduleWorkOrderMutation,
   // Delete
 } = workOrderApiSlice; // Export hooks for usage in components

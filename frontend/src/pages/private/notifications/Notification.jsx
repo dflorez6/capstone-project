@@ -162,7 +162,8 @@ function Notification() {
         case NotificationTypes.PROJECT_APPLICATION_CREATED:
         case NotificationTypes.PROJECT_APPLICATION_ACCEPTED:
         case NotificationTypes.PROJECT_APPLICATION_REJECTED:
-        case NotificationTypes.WORK_ORDER_ACCEPTED:
+        case NotificationTypes.WORK_ORDER_ACCEPTED_VENDOR:
+        case NotificationTypes.WORK_ORDER_RESCHEDULE_VENDOR:
           // Navigate to Project details page
           navigate(`/projects/${recipientId}/${projectId}`);
           break;
@@ -214,6 +215,8 @@ function Notification() {
         case NotificationTypes.PROJECT_APPLICATION_ACCEPTED:
         case NotificationTypes.PROJECT_APPLICATION_REJECTED:
         case NotificationTypes.WORK_ORDER_CREATED:
+        case NotificationTypes.WORK_ORDER_RESCHEDULE_PROP_MANAGER:
+        case NotificationTypes.WORK_ORDER_ACCEPTED_PROP_MANAGER:
           // Navigate to Project details page
           navigate(`/projects/${senderId}/${projectId}`);
           break;

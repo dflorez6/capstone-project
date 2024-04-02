@@ -130,6 +130,17 @@
         // Actions
         .footer-actions {
           background-color: transparent;
+
+          // Reschedule Form
+          .reschedule-form-wrapper {
+            .form {
+              margin: 0.5rem 0 0;
+
+              p {
+                margin: 0;
+              }
+            }
+          }
         }
       }
     }
@@ -150,6 +161,5 @@
 // New / Update
 //--------------------
 .work-orders-form-wrapper {
-    background-color: transparent;
-  }
-  
+  background-color: transparent;
+}

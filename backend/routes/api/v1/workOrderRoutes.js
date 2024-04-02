@@ -13,8 +13,10 @@ import {
   showVendorWorkOrder,
   createWorkOrder,
   updateWorkOrder,
-  acceptWorkOrder,
-  rescheduleWorkOrder,
+  vendorAcceptWorkOrder,
+  propertyManagerAcceptWorkOrder,
+  vendorRescheduleWorkOrder,
+  propertyManagerRescheduleWorkOrder,
   deleteWorkOrder,
 } from "../../../controllers/api/v1/workOrdersController.js";
 import { propertyManagerProtect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Mnager has access
@@ -36,24 +38,20 @@ router.get(
 );
 
 // Show
-router.get(
-  "/vendor/:workOrderId",
-  vendorProtect,
-  showVendorWorkOrder
-);
+router.get("/vendor/:workOrderId", vendorProtect, showVendorWorkOrder);
 
 // Update
 router.put(
   "/vendor/accept/:projectId/:workOrderId",
   vendorProtect,
   imgUploader.none(),
-  acceptWorkOrder
+  vendorAcceptWorkOrder
 );
 router.put(
   "/vendor/reschedule/:projectId/:workOrderId",
   vendorProtect,
   imgUploader.none(),
-  rescheduleWorkOrder
+  vendorRescheduleWorkOrder
 );
 
 // Property Manager
@@ -90,6 +88,18 @@ router.put(
   propertyManagerProtect,
   imgUploader.none(),
   updateWorkOrder
+);
+router.put(
+  "/property-manager/accept/:projectId/:workOrderId",
+  propertyManagerProtect,
+  imgUploader.none(),
+  propertyManagerAcceptWorkOrder
+);
+router.put(
+  "/property-manager/reschedule/:projectId/:workOrderId",
+  propertyManagerProtect,
+  imgUploader.none(),
+  propertyManagerRescheduleWorkOrder
 );
 
 // Delete

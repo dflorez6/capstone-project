@@ -14,7 +14,10 @@ import {
 import {
   useGetPropertyManagerProjectWorkOrdersQuery,
   useGetVendorProjectWorkOrdersQuery,
-  useAcceptWorkOrderMutation,
+  useVendorAcceptWorkOrderMutation,
+  useVendorRescheduleWorkOrderMutation,
+  usePropertyManagerAcceptWorkOrderMutation,
+  usePropertyManagerRescheduleWorkOrderMutation,
 } from "../../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDate, torontoDateTime } from "../../../../utils/formatDates";
@@ -35,6 +38,12 @@ const Project = () => {
   //----------
   const navigate = useNavigate(); // Initialize
   const dispatch = useDispatch(); // Initialize
+
+  // Form Fields
+  const [vendorStartDateTime, setVendorStartDateTime] = useState("");
+  const [vendorEndDateTime, setVendorEndDateTime] = useState("");
+  const [propManagerStartDateTime, setPropManagerStartDateTime] = useState("");
+  const [propManagerEndDateTime, setPropManagerEndDateTime] = useState("");
 
   // Parse URL to get query params
   const url = window.location.pathname;
@@ -96,7 +105,6 @@ const Project = () => {
       isLoading: createProjectApplicationLoading,
     },
   ] = useCreateProjectApplicationMutation();
-
   const [
     acceptProjectApplication,
     {
@@ -104,7 +112,6 @@ const Project = () => {
       isLoading: acceptProjectApplicationLoading,
     },
   ] = useAcceptProjectApplicationMutation();
-
   const [
     rejectProjectApplication,
     {
@@ -114,9 +121,33 @@ const Project = () => {
   ] = useRejectProjectApplicationMutation();
 
   const [
-    acceptWorkOrder,
-    { isError: acceptWorkOrderError, isLoading: acceptWorkOrderLoading },
-  ] = useAcceptWorkOrderMutation();
+    vendorAcceptWorkOrder,
+    {
+      isError: vendorAcceptWorkOrderError,
+      isLoading: vendoracceptWorkOrderLoading,
+    },
+  ] = useVendorAcceptWorkOrderMutation();
+  const [
+    vendorRescheduleWorkOrder,
+    {
+      isError: vendorRescheduleWorkOrderError,
+      isLoading: vendorRescheduleWorkOrderLoading,
+    },
+  ] = useVendorRescheduleWorkOrderMutation();
+  const [
+    propManagerAcceptWorkOrder,
+    {
+      isError: propManagerAcceptWorkOrderError,
+      isLoading: propManagerAcceptWorkOrderLoading,
+    },
+  ] = usePropertyManagerAcceptWorkOrderMutation();
+  const [
+    propManagerRescheduleWorkOrder,
+    {
+      isError: propManagerRescheduleWorkOrderError,
+      isLoading: propManagerRescheduleWorkOrderLoading,
+    },
+  ] = usePropertyManagerRescheduleWorkOrderMutation();
 
   //----------
   // Effects
@@ -131,18 +162,6 @@ const Project = () => {
     if (vendorInfo) {
       vendorWorkOrdersRefetch();
     }
-
-    // TODO: Refactor to use a scrollIntoView function by checking first if the URL has #workOrders
-    /*
-    // Scroll to the "#workOrders" element after the component mounts or updates
-    const scrollToWorkOrders = () => {
-      const workOrdersElement = document.getElementById("workOrders");
-      if (workOrdersElement) {
-        workOrdersElement.scrollIntoView({ behavior: "smooth" });
-      }
-    };
-    scrollToWorkOrders();
-    */
   }, [
     projectApplicationsRefetch,
     propertyManagerInfo,
@@ -187,8 +206,26 @@ const Project = () => {
       vendorWorkOrdersError
     );
   }
-  if (acceptWorkOrderError) {
-    console.log("Accept Work Order Applications Error: ", acceptWorkOrderError);
+  if (vendorAcceptWorkOrderError) {
+    console.log("Vendor Accept Work Order Error: ", vendorAcceptWorkOrderError);
+  }
+  if (vendorRescheduleWorkOrderError) {
+    console.log(
+      "Vendor Reschedule Work Order Error: ",
+      vendorRescheduleWorkOrderError
+    );
+  }
+  if (propManagerAcceptWorkOrderError) {
+    console.log(
+      "Property Manager Project Work Order Error: ",
+      propManagerAcceptWorkOrderError
+    );
+  }
+  if (propManagerRescheduleWorkOrderError) {
+    console.log(
+      "Property Manager Reschedule Work Order Error: ",
+      propManagerRescheduleWorkOrderError
+    );
   }
 
   //----------
@@ -265,11 +302,11 @@ const Project = () => {
     }
   };
 
-  // Accept Work Order
-  const acceptWorkOrderHandler = async (workOrderId) => {
+  // Vendor Accepts Work Order
+  const vendorAcceptWorkOrderHandler = async (projectId, workOrderId) => {
     try {
-      await acceptWorkOrder({
-        projectId: project?._id,
+      await vendorAcceptWorkOrder({
+        projectId: projectId,
         workOrderId: workOrderId,
       }).unwrap();
       vendorWorkOrdersRefetch();
@@ -278,28 +315,127 @@ const Project = () => {
       toast.error("Work order has already been updated for this project");
       console.log("Project Application Error: ", error);
     }
-
-    // acceptWorkOrder: PUT /api/v1/work-orders/vendor/accept/:projectId/:workOrderId
   };
 
-  // Reschedule Work Order
-  const rescheduleWorkOrderHandler = async (workOrderId) => {
-    console.log("Reschedule Work Order");
-    console.log("workOrderId: ", workOrderId);
-    //
+  // Vendor Reschedules Work Order
+  const vendorRescheduleWorkOrderHandler = async (
+    e,
+    vendor,
+    projectId,
+    workOrderId
+  ) => {
+    e.preventDefault();
+
+    try {
+      // Convert startDateTime and endDateTime to UTC format
+      const startDateTimeUTC = new Date(vendorStartDateTime).toISOString();
+      const endDateTimeUTC = new Date(vendorEndDateTime).toISOString();
+
+      // Form Data
+      const formData = new FormData();
+
+      formData.append("vendor", vendor);
+      formData.append("startDateTime", startDateTimeUTC);
+      formData.append("endDateTime", endDateTimeUTC);
+
+      // Reschedule Work Order
+      const res = await vendorRescheduleWorkOrder({
+        projectId: projectId,
+        workOrderId: workOrderId,
+        data: formData,
+      }).unwrap();
+      vendorWorkOrdersRefetch();
+      toast.success("Work order rescheduled successfully");
+    } catch (error) {
+      toast.error("There was an error rescheduling this work order");
+      console.log("Create Work Order Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Property Manager Accepts Work Order
+  const propManagerAcceptWorkOrderHandler = async (projectId, workOrderId) => {
+    try {
+      await propManagerAcceptWorkOrder({
+        projectId: projectId,
+        workOrderId: workOrderId,
+      }).unwrap();
+      toast.success("Work order accepted successfully");
+      propManagerWorkOrdersRefetch();
+    } catch (error) {
+      toast.error("There was an error rescheduling this work order");
+      console.log("Accept Work Order Error:");
+      console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Property Manager Reschedules Work Order
+  const propManagerRescheduleWorkOrderHandler = async (
+    e,
+    vendor,
+    projectId,
+    workOrderId
+  ) => {
+    e.preventDefault();
+
+    try {
+      // Convert startDateTime and endDateTime to UTC format
+      const startDateTimeUTC = new Date(propManagerStartDateTime).toISOString();
+      const endDateTimeUTC = new Date(propManagerEndDateTime).toISOString();
+
+      // Form Data
+      const formData = new FormData();
+
+      formData.append("vendor", vendor);
+      formData.append("startDateTime", startDateTimeUTC);
+      formData.append("endDateTime", endDateTimeUTC);
+
+      // Reschedule Work Order
+      const res = await propManagerRescheduleWorkOrder({
+        projectId: projectId,
+        workOrderId: workOrderId,
+        data: formData,
+      }).unwrap();
+      propManagerWorkOrdersRefetch();
+      toast.success("Work order rescheduled successfully");
+    } catch (error) {
+      toast.error("There was an error rescheduling this work order");
+      console.log("Create Work Order Error:");
+      console.log(error?.data?.message || error?.error);
+    }
   };
 
   //----------
   // Functions
   //----------
   // Set Color Status
-  const setColorStatus = (status) => {
+  const setStatusColor = (status) => {
     switch (status) {
       case "pending":
         return "pending";
       case "accepted":
         return "accepted";
-      case "reschedule":
+      case "rescheduleByVendor":
+      case "rescheduleByPropertyManager":
+        return "reschedule";
+      case "inProgress":
+        return "in-progress";
+      case "closed":
+        return "closed";
+      default:
+        return "bg-pending";
+    }
+  };
+
+  // Set Color Status
+  const setStatusText = (status) => {
+    switch (status) {
+      case "pending":
+        return "pending";
+      case "accepted":
+        return "accepted";
+      case "rescheduleByVendor":
+      case "rescheduleByPropertyManager":
         return "reschedule";
       case "inProgress":
         return "in-progress";
@@ -626,7 +762,7 @@ const Project = () => {
                                           className={`work-order-card-header`}
                                         >
                                           <div
-                                            className={`color-status-bar ${setColorStatus(
+                                            className={`color-status-bar ${setStatusColor(
                                               order.workOrderStatus
                                             )}`}
                                           ></div>
@@ -644,12 +780,14 @@ const Project = () => {
 
                                           {/* Status Badge */}
                                           <div
-                                            className={`work-order-status ${setColorStatus(
+                                            className={`work-order-status ${setStatusColor(
                                               order.workOrderStatus
                                             )}`}
                                           >
                                             <p className="status">
-                                              {order.workOrderStatus}
+                                              {setStatusText(
+                                                order.workOrderStatus
+                                              )}
                                             </p>
                                           </div>
                                           {/* ./Status Badge */}
@@ -678,62 +816,275 @@ const Project = () => {
                                         <div className="work-order-card-footer">
                                           {/* Actions */}
                                           <div className="footer-actions">
+                                            {/* pending status */}
                                             {order.workOrderStatus ===
-                                            "pending" ? (
-                                              <>
-                                                {/* Pending Status */}
-                                                <div className="row">
-                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-app btn-app-xs btn-app-red"
-                                                      onClick={() =>
-                                                        rescheduleWorkOrderHandler(
+                                              "pending" && (
+                                              <div className="row">
+                                                {/* Reschedule */}
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                  <button
+                                                    type="button"
+                                                    className="btn-app btn-app-xs btn-app-red"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#vendorRescheduleForm"
+                                                    aria-expanded="false"
+                                                    aria-controls="vendorRescheduleForm"
+                                                    key={`orderReschedule_${order._id}`}
+                                                  >
+                                                    <i className="fa-solid fa-calendar-days"></i>
+                                                  </button>
+                                                </div>
+                                                {/* ./Reschedule */}
+
+                                                {/* Accept */}
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                  <button
+                                                    type="button"
+                                                    className="btn-app btn-app-xs btn-app-aqua"
+                                                    onClick={() =>
+                                                      vendorAcceptWorkOrderHandler(
+                                                        order.project._id,
+                                                        order._id
+                                                      )
+                                                    }
+                                                    key={`orderAccept_${order._id}`}
+                                                  >
+                                                    <i
+                                                      className="fa-solid fa-check"
+                                                      key={`orderAcceptIcon_${order._id}`}
+                                                    ></i>
+                                                  </button>
+                                                </div>
+                                                {/* ./Accept */}
+
+                                                {/*  Reschedule Form */}
+                                                <div className="col-12">
+                                                  <div
+                                                    className="collapse reschedule-form-wrapper"
+                                                    id="vendorRescheduleForm"
+                                                  >
+                                                    <form
+                                                      className="form"
+                                                      onSubmit={(e) =>
+                                                        vendorRescheduleWorkOrderHandler(
+                                                          e,
+                                                          order.vendor._id,
+                                                          order.project._id,
                                                           order._id
                                                         )
                                                       }
-                                                      key={`orderReschedule_${order._id}`}
                                                     >
-                                                      <i className="fa-solid fa-calendar-days"></i>
-                                                    </button>
-                                                  </div>
-                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-app btn-app-xs btn-app-aqua"
-                                                      onClick={() =>
-                                                        acceptWorkOrderHandler(
-                                                          order._id
-                                                        )
-                                                      }
-                                                      key={`orderAccept_${order._id}`}
-                                                    >
-                                                      <i
-                                                        className="fa-solid fa-check"
-                                                        key={`orderAcceptIcon_${order._id}`}
-                                                      ></i>
-                                                    </button>
+                                                      <div className="row">
+                                                        <div className="col-12">
+                                                          <label htmlFor="startDateTime">
+                                                            Start Date
+                                                          </label>
+                                                          <input
+                                                            type="datetime-local"
+                                                            name="startDateTime"
+                                                            id="startDateTime"
+                                                            className="form-control"
+                                                            placeholder="startDateTime"
+                                                            value={
+                                                              vendorStartDateTime
+                                                            }
+                                                            onChange={(e) =>
+                                                              setVendorStartDateTime(
+                                                                e.target.value
+                                                              )
+                                                            }
+                                                          />
+                                                        </div>
+                                                        {/* Input: DateTime Picker */}
+
+                                                        <div className="col-12">
+                                                          <label htmlFor="endDateTime">
+                                                            End Date
+                                                          </label>
+                                                          <input
+                                                            type="datetime-local"
+                                                            name="endDateTime"
+                                                            id="endDateTime"
+                                                            className="form-control"
+                                                            placeholder="endDateTime"
+                                                            value={
+                                                              vendorEndDateTime
+                                                            }
+                                                            onChange={(e) =>
+                                                              setVendorEndDateTime(
+                                                                e.target.value
+                                                              )
+                                                            }
+                                                          />
+                                                        </div>
+                                                        {/* Input: DateTime Picker */}
+
+                                                        {/* Submit */}
+                                                        <div className="col-12">
+                                                          <div className="submit-wrapper">
+                                                            <button
+                                                              type="submit"
+                                                              className="btn-app btn-app-xs btn-app-red"
+                                                            >
+                                                              Reschedule
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                        {/* ./Submit */}
+                                                      </div>
+                                                    </form>
                                                   </div>
                                                 </div>
-                                                {/* ./Pending Status */}
-                                              </>
-                                            ) : (
-                                              <>
-                                                {/* Other Status */}
-                                                <div className="row">
-                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-app btn-app-xs btn-app-dark-outline"
-                                                      key={`orderView_${order._id}`}
-                                                    >
-                                                      View
-                                                    </button>
-                                                  </div>
-                                                </div>
-                                                {/* ./Other Status */}
-                                              </>
+                                                {/*  ./Reschedule Form */}
+                                              </div>
                                             )}
+                                            {/* ./pending status */}
+
+                                            {/* reschedule status */}
+                                            {order.workOrderStatus ===
+                                              "rescheduleByPropertyManager" && (
+                                              <div className="row">
+                                                {/* Reschedule */}
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                  <button
+                                                    type="button"
+                                                    className="btn-app btn-app-xs btn-app-red"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#vendorRescheduleForm"
+                                                    aria-expanded="false"
+                                                    aria-controls="vendorRescheduleForm"
+                                                    key={`orderReschedule_${order._id}`}
+                                                  >
+                                                    <i className="fa-solid fa-calendar-days"></i>
+                                                  </button>
+                                                </div>
+                                                {/* ./Reschedule */}
+
+                                                {/* Accept */}
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                  <button
+                                                    type="button"
+                                                    className="btn-app btn-app-xs btn-app-aqua"
+                                                    onClick={() =>
+                                                      vendorAcceptWorkOrderHandler(
+                                                        order.project._id,
+                                                        order._id
+                                                      )
+                                                    }
+                                                    key={`orderAccept_${order._id}`}
+                                                  >
+                                                    <i
+                                                      className="fa-solid fa-check"
+                                                      key={`orderAcceptIcon_${order._id}`}
+                                                    ></i>
+                                                  </button>
+                                                </div>
+                                                {/* ./Accept */}
+
+                                                {/*  Reschedule Form */}
+                                                <div className="col-12">
+                                                  <div
+                                                    className="collapse reschedule-form-wrapper"
+                                                    id="vendorRescheduleForm"
+                                                  >
+                                                    <form
+                                                      className="form"
+                                                      onSubmit={(e) =>
+                                                        vendorRescheduleWorkOrderHandler(
+                                                          e,
+                                                          order.vendor._id,
+                                                          order.project._id,
+                                                          order._id
+                                                        )
+                                                      }
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-12">
+                                                          <label htmlFor="startDateTime">
+                                                            Start Date
+                                                          </label>
+                                                          <input
+                                                            type="datetime-local"
+                                                            name="startDateTime"
+                                                            id="startDateTime"
+                                                            className="form-control"
+                                                            placeholder="startDateTime"
+                                                            value={
+                                                              vendorStartDateTime
+                                                            }
+                                                            onChange={(e) =>
+                                                              setVendorStartDateTime(
+                                                                e.target.value
+                                                              )
+                                                            }
+                                                          />
+                                                        </div>
+                                                        {/* Input: DateTime Picker */}
+
+                                                        <div className="col-12">
+                                                          <label htmlFor="endDateTime">
+                                                            End Date
+                                                          </label>
+                                                          <input
+                                                            type="datetime-local"
+                                                            name="endDateTime"
+                                                            id="endDateTime"
+                                                            className="form-control"
+                                                            placeholder="endDateTime"
+                                                            value={
+                                                              vendorEndDateTime
+                                                            }
+                                                            onChange={(e) =>
+                                                              setVendorEndDateTime(
+                                                                e.target.value
+                                                              )
+                                                            }
+                                                          />
+                                                        </div>
+                                                        {/* Input: DateTime Picker */}
+
+                                                        {/* Submit */}
+                                                        <div className="col-12">
+                                                          <div className="submit-wrapper">
+                                                            <button
+                                                              type="submit"
+                                                              className="btn-app btn-app-xs btn-app-red"
+                                                            >
+                                                              Reschedule
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                        {/* ./Submit */}
+                                                      </div>
+                                                    </form>
+                                                  </div>
+                                                </div>
+                                                {/*  ./Reschedule Form */}
+                                              </div>
+                                            )}
+                                            {/* ./reschedule status */}
+
+                                            {/* accepted status */}
+                                            {order.workOrderStatus ===
+                                              "accepted" && (
+                                              <div className="row">
+                                                <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                  <button
+                                                    type="button"
+                                                    className="btn-app btn-app-xs btn-app-dark-outline"
+                                                    key={order._id}
+                                                  >
+                                                    View
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            )}
+                                            {/* ./accepted status */}
+
+                                            {/* closed status */}
+                                            {order.workOrderStatus ===
+                                              "closed" && <p>closed</p>}
+                                            {/* ./closed status */}
                                           </div>
                                           {/* ./Actions */}
                                         </div>
@@ -816,7 +1167,7 @@ const Project = () => {
                                             className={`work-order-card-header`}
                                           >
                                             <div
-                                              className={`color-status-bar ${setColorStatus(
+                                              className={`color-status-bar ${setStatusColor(
                                                 order.workOrderStatus
                                               )}`}
                                             ></div>
@@ -848,12 +1199,14 @@ const Project = () => {
 
                                             {/* Status Badge */}
                                             <div
-                                              className={`work-order-status ${setColorStatus(
+                                              className={`work-order-status ${setStatusColor(
                                                 order.workOrderStatus
                                               )}`}
                                             >
                                               <p className="status">
-                                                {order.workOrderStatus}
+                                                {setStatusText(
+                                                  order.workOrderStatus
+                                                )}
                                               </p>
                                             </div>
                                             {/* ./Status Badge */}
@@ -884,49 +1237,183 @@ const Project = () => {
                                           <div className="work-order-card-footer">
                                             {/* Actions */}
                                             <div className="footer-actions">
+                                              {/* reschedule status */}
                                               {order.workOrderStatus ===
-                                              "in-progress" ? (
-                                                <>
-                                                  {/* inProgress Status */}
-                                                  <div className="row">
-                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                      <button
-                                                        type="button"
-                                                        className="btn-app btn-app-xs btn-app-purple"
-                                                        key={order._id}
+                                                "rescheduleByVendor" && (
+                                                <div className="row">
+                                                  {/* Reschedule */}
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-red"
+                                                      data-bs-toggle="collapse"
+                                                      data-bs-target="#vendorRescheduleForm"
+                                                      aria-expanded="false"
+                                                      aria-controls="vendorRescheduleForm"
+                                                      key={`orderReschedule_${order._id}`}
+                                                    >
+                                                      <i className="fa-solid fa-calendar-days"></i>
+                                                    </button>
+                                                  </div>
+                                                  {/* ./Reschedule */}
+
+                                                  {/* Accept */}
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-aqua"
+                                                      onClick={() =>
+                                                        propManagerAcceptWorkOrderHandler(
+                                                          order.project._id,
+                                                          order._id
+                                                        )
+                                                      }
+                                                      key={`orderAccept_${order._id}`}
+                                                    >
+                                                      <i
+                                                        className="fa-solid fa-check"
+                                                        key={`orderAcceptIcon_${order._id}`}
+                                                      ></i>
+                                                    </button>
+                                                  </div>
+                                                  {/* ./Accept */}
+
+                                                  {/*  Reschedule Form */}
+                                                  <div className="col-12">
+                                                    <div
+                                                      className="collapse reschedule-form-wrapper"
+                                                      id="vendorRescheduleForm"
+                                                    >
+                                                      <form
+                                                        className="form"
+                                                        onSubmit={(e) =>
+                                                          propManagerRescheduleWorkOrderHandler(
+                                                            e,
+                                                            order.vendor._id,
+                                                            order.project._id,
+                                                            order._id
+                                                          )
+                                                        }
                                                       >
-                                                        Close
-                                                      </button>
-                                                    </div>
-                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
-                                                      <button
-                                                        type="button"
-                                                        className="btn-app btn-app-xs btn-app-dark-outline"
-                                                        key={order._id}
-                                                      >
-                                                        View
-                                                      </button>
+                                                        <div className="row">
+                                                          <div className="col-12">
+                                                            <label htmlFor="startDateTime">
+                                                              Start Date
+                                                            </label>
+                                                            <input
+                                                              type="datetime-local"
+                                                              name="startDateTime"
+                                                              id="startDateTime"
+                                                              className="form-control"
+                                                              placeholder="startDateTime"
+                                                              value={
+                                                                propManagerStartDateTime
+                                                              }
+                                                              onChange={(e) =>
+                                                                setPropManagerStartDateTime(
+                                                                  e.target.value
+                                                                )
+                                                              }
+                                                            />
+                                                          </div>
+                                                          {/* Input: DateTime Picker */}
+
+                                                          <div className="col-12">
+                                                            <label htmlFor="endDateTime">
+                                                              End Date
+                                                            </label>
+                                                            <input
+                                                              type="datetime-local"
+                                                              name="endDateTime"
+                                                              id="endDateTime"
+                                                              className="form-control"
+                                                              placeholder="endDateTime"
+                                                              value={
+                                                                propManagerEndDateTime
+                                                              }
+                                                              onChange={(e) =>
+                                                                setPropManagerEndDateTime(
+                                                                  e.target.value
+                                                                )
+                                                              }
+                                                            />
+                                                          </div>
+                                                          {/* Input: DateTime Picker */}
+
+                                                          {/* Submit */}
+                                                          <div className="col-12">
+                                                            <div className="submit-wrapper">
+                                                              <button
+                                                                type="submit"
+                                                                className="btn-app btn-app-xs btn-app-red"
+                                                              >
+                                                                Reschedule
+                                                              </button>
+                                                            </div>
+                                                          </div>
+                                                          {/* ./Submit */}
+                                                        </div>
+                                                      </form>
                                                     </div>
                                                   </div>
-                                                  {/* ./inProgress Status */}
-                                                </>
-                                              ) : (
-                                                <>
-                                                  {/* Other Status */}
-                                                  <div className="row">
-                                                    <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
-                                                      <button
-                                                        type="button"
-                                                        className="btn-app btn-app-xs btn-app-dark-outline"
-                                                        key={order._id}
-                                                      >
-                                                        View
-                                                      </button>
-                                                    </div>
-                                                  </div>
-                                                  {/* ./Other Status */}
-                                                </>
+                                                  {/*  ./Reschedule Form */}
+                                                </div>
                                               )}
+                                              {/* ./reschedule status */}
+
+                                              {/* inProgress status */}
+                                              {order.workOrderStatus ===
+                                                "inProgress" && (
+                                                <div className="row">
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-purple"
+                                                      key={order._id}
+                                                    >
+                                                      Close
+                                                    </button>
+                                                  </div>
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-dark-outline"
+                                                      key={order._id}
+                                                    >
+                                                      View
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                              )}
+                                              {/* ./inProgress status */}
+
+                                              {/* pending status 
+                                              {order.workOrderStatus === "pending" && (
+                                                <p>pending</p>
+                                              )}
+                                              ./pending status */}
+
+                                              {/* accepted status */}
+                                              {order.workOrderStatus ===
+                                                "accepted" && (
+                                                <div className="row">
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                    <button
+                                                      type="button"
+                                                      className="btn-app btn-app-xs btn-app-dark-outline"
+                                                      key={order._id}
+                                                    >
+                                                      View
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                              )}
+                                              {/* ./accepted status */}
+
+                                              {/* closed status */}
+                                              {order.workOrderStatus ===
+                                                "closed" && <p>closed</p>}
+                                              {/* ./closed status */}
                                             </div>
                                             {/* ./Actions */}
                                           </div>
