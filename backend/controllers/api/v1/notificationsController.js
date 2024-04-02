@@ -234,8 +234,17 @@ const createNotification = async (notificationData) => {
     case NotificationTypes.WORK_ORDER_CREATED:
       workOrderCreated(notificationData);
       break;
-    case NotificationTypes.WORK_ORDER_ACCEPTED:
-      workOrderAccepted(notificationData);
+    case NotificationTypes.WORK_ORDER_ACCEPTED_VENDOR:
+      workOrderAcceptedByVendor(notificationData);
+      break;
+    case NotificationTypes.WORK_ORDER_ACCEPTED_PROP_MANAGER:
+      workOrderAcceptedByPropManager(notificationData);
+      break;
+    case NotificationTypes.WORK_ORDER_RESCHEDULE_VENDOR:
+      workOrderRescheduledByVendor(notificationData);
+      break;
+    case NotificationTypes.WORK_ORDER_RESCHEDULE_PROP_MANAGER:
+      workOrderRescheduledByPropManager(notificationData);
       break;
     // TODO: Add cases for other notification types
   }
@@ -391,8 +400,122 @@ const workOrderCreated = async (notificationData) => {
   }
 };
 
-// Notification: Work Order Created
-const workOrderAccepted = async (notificationData) => {
+// Notification: Work Order Accepted by Vendor
+const workOrderAcceptedByVendor = async (notificationData) => {
+  // Destructure notificationData
+  const {
+    sender,
+    senderType,
+    recipient,
+    recipientType,
+    notificationType,
+    message,
+    data,
+  } = notificationData;
+
+  try {
+    // Create notification
+    const notification = await Notification.create({
+      sender,
+      senderType,
+      recipient,
+      recipientType,
+      notificationType,
+      message,
+      data,
+    });
+
+    // Check if Notification was created
+    if (notification) {
+      // Trigger notification to Vendor
+      // TODO: If theres time implement real-time notifications: Trigger notification to Vendor
+      //return notification;
+    } else {
+      throw new Error("Invalid Notification data");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Notification: Work Order Accepted by Property Manager
+const workOrderAcceptedByPropManager = async (notificationData) => {
+  // Destructure notificationData
+  const {
+    sender,
+    senderType,
+    recipient,
+    recipientType,
+    notificationType,
+    message,
+    data,
+  } = notificationData;
+
+  try {
+    // Create notification
+    const notification = await Notification.create({
+      sender,
+      senderType,
+      recipient,
+      recipientType,
+      notificationType,
+      message,
+      data,
+    });
+
+    // Check if Notification was created
+    if (notification) {
+      // Trigger notification to Vendor
+      // TODO: If theres time implement real-time notifications: Trigger notification to Vendor
+      //return notification;
+    } else {
+      throw new Error("Invalid Notification data");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Notification: Work Order Rescheduled by Vendor
+const workOrderRescheduledByVendor = async (notificationData) => {
+  // Destructure notificationData
+  const {
+    sender,
+    senderType,
+    recipient,
+    recipientType,
+    notificationType,
+    message,
+    data,
+  } = notificationData;
+
+  try {
+    // Create notification
+    const notification = await Notification.create({
+      sender,
+      senderType,
+      recipient,
+      recipientType,
+      notificationType,
+      message,
+      data,
+    });
+
+    // Check if Notification was created
+    if (notification) {
+      // Trigger notification to Vendor
+      // TODO: If theres time implement real-time notifications: Trigger notification to Vendor
+      //return notification;
+    } else {
+      throw new Error("Invalid Notification data");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Notification: Work Order Rescheduled by Property Manager
+const workOrderRescheduledByPropManager = async (notificationData) => {
   // Destructure notificationData
   const {
     sender,
