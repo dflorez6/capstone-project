@@ -100,7 +100,7 @@ function WorkOrderEdit() {
       const formData = new FormData();
 
       formData.append("name", name);
-      formData.append("vendor", vendor._id);
+      formData.append("vendor", workOrder.vendor._id);
       formData.append("startDateTime", startDateTimeUTC);
       formData.append("endDateTime", endDateTimeUTC);
       formData.append("project", urlProjectId);

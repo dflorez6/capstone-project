@@ -6,11 +6,11 @@ export const NotificationTypes = {
   PROJECT_APPLICATION_ACCEPTED: "project_application_accepted",
   PROJECT_APPLICATION_REJECTED: "project_application_rejected",
   WORK_ORDER_CREATED: "work_order_created",
-  WORK_ORDER_ACCEPTED: "work_order_accepted",
+  WORK_ORDER_ACCEPTED_VENDOR: "work_order_accepted_by_vendor",
+  WORK_ORDER_ACCEPTED_PROP_MANAGER: "work_order_accepted_by_property_manager",
+  WORK_ORDER_RESCHEDULE_VENDOR: "work_order_rescheduled_by_vendor",
+  WORK_ORDER_RESCHEDULE_PROP_MANAGER: "work_order_rescheduled_by_property_manager",
   // TODO: Add more NotificationTypes as needed
-  /*
-  RESCHEDULE_PROPOSED: "reschedule_proposed",
-  */
 };
 
 /*

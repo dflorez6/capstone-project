@@ -130,6 +130,17 @@
         // Actions
         .footer-actions {
           background-color: transparent;
+
+          // Reschedule Form
+          .reschedule-form-wrapper {
+            .form {
+              margin: 0.5rem 0 0;
+
+              p {
+                margin: 0;
+              }
+            }
+          }
         }
       }
     }
@@ -145,11 +156,126 @@
 //--------------------
 // Show
 //--------------------
+.work-order-wrapper {
+  .work-order-content {
+    // Image + Info
+    .work-order-image-info-wrapper {
+      border-radius: 10px;
+      flex-direction: row;
+      display: flex;
+
+      // Image
+      .work-order-image-wrapper {
+        // flex: 1;
+        display: flex;
+        justify-content: center;
+        width: 35%;
+
+        .work-order-cover {
+          border-bottom-left-radius: 10px;
+          border-top-left-radius: 10px;
+          // height: auto;
+          min-height: 200px;
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: cover;
+          // height: 250px;
+          width: 100%;
+        }
+      }
+
+      // Info
+      .work-order-info-wrapper {
+        background: $c-white;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        flex: 1;
+        min-height: 200px;
+        padding: 1rem 1.5rem;
+
+        // Title
+        .work-order-title-wrapper {
+          display: flex;
+          justify-content: space-between;
+
+          h1 {
+            font-size: $f-h2;
+            font-weight: $f-medium;
+            line-height: 1;
+            margin: 0;
+          }
+
+          .btn-app-sm {
+            height: 2rem;
+            line-height: 1.75rem;
+            min-width: 22%;
+          }
+        }
+
+        // Status
+        .work-order-status {
+          h2 {
+            display: inline-block;
+            font-size: $f-h6;
+            font-weight: $f-regular;
+            margin: 0.25rem 0 0;
+            opacity: 0.5;
+          }
+        }
+
+        // Work Order Counters & Actions
+        .work-order-counters-wrapper {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+
+          // Counters
+          .counters-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+
+            .work-orders-counter {
+              p {
+                margin: 0;
+              }
+
+              h2 {
+                display: inline-block;
+                font-size: $f-h6;
+                font-weight: $f-regular;
+                margin: 0;
+                opacity: 0.5;
+              }
+            }
+          }
+
+          // Actions
+          .work-order-actions {
+            .btn-app-sm {
+              height: 2rem;
+              line-height: 1.75rem;
+            }
+          }
+        }
+
+        // Description
+        .work-order-description {
+          p {
+            font-weight: $f-light;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    //
+  }
+}
 
 //--------------------
 // New / Update
 //--------------------
 .work-orders-form-wrapper {
-    background-color: transparent;
-  }
-  
+  background-color: transparent;
+}
