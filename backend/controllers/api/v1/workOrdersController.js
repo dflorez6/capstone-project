@@ -10,7 +10,6 @@ import Project from "../../../models/projectModel.js";
 import { createNotification } from "./notificationsController.js";
 import { NotificationTypes } from "../../../constants/notificationTypes.js";
 import { NotificationMessages } from "../../../constants/notificationMessages.js";
-import { populate } from "dotenv";
 
 //--------------------
 // GET

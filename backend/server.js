@@ -68,7 +68,9 @@ app.use(`${baseURL}/projects`, projectRoutes);
 app.use(`${baseURL}/project-applications`, projectApplicationRoutes);
 // Work Orders
 import workOrderRoutes from "./routes/api/v1/workOrderRoutes.js";
+import workOrderLogRoutes from "./routes/api/v1/workOrderLogRoutes.js";
 app.use(`${baseURL}/work-orders`, workOrderRoutes);
+app.use(`${baseURL}/work-orders`, workOrderLogRoutes);
 
 //====================
 // Production

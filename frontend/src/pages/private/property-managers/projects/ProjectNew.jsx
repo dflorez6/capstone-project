@@ -88,15 +88,15 @@ function ProjectsNew() {
       formData.append("startDateTime", startDateTime);
       formData.append("endDateTime", endDateTime);
       formData.append("serviceCategory", serviceCategory);
-      formData.append("propertyManager", propertyManagerInfo._id);
+      formData.append("propertyManager", propertyManagerInfo?._id);
 
       // Create Project
       const res = await createProject({
-        propertyManagerId: propertyManagerInfo._id,
+        propertyManagerId: propertyManagerInfo?._id,
         data: formData,
       }).unwrap(); // Pass FormData to createProject function & make API call
       toast.success("Project created successfully");
-      navigate(`/projects/${propertyManagerInfo._id}/${res._id}`); // Redirect to the project details page
+      navigate(`/projects/${propertyManagerInfo?._id}/${res._id}`); // Redirect to the project details page
     } catch (error) {
       toast.error(error?.data?.message || error?.error); // Toastify implementation
       console.log("Create Project Error:");

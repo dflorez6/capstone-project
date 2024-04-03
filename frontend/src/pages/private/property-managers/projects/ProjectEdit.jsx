@@ -77,7 +77,7 @@ function ProjectEdit() {
     setManagerPhone(project?.managerPhone || "");
     setStartDateTime(formatDateTimeForInput(project?.startDateTime) || "");
     setEndDateTime(formatDateTimeForInput(project?.endDateTime) || "");
-    setServiceCategory(project?.serviceCategory._id || "");
+    setServiceCategory(project?.serviceCategory?._id || "");
   }, [project, urlPropertyManagerId, urlProjectId]);
 
   //----------
