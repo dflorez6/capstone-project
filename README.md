@@ -372,6 +372,22 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
 <hr>
 
+## TESTING: JEST & SUPERTEST
+
+1. Setup Jest and Testing Environment:
+
+* Install the following packages
+
+    > yarn add --save-dev jest supertest
+
+* Create a jest.config.js file in the root of your project to configure Jest
+
+        module.exports = {
+            testEnvironment: 'node',
+        };
+
+<hr>
+
 # UI References
 
 https://brittanychiang.com/#experience

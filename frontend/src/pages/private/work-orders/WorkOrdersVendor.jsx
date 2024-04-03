@@ -544,7 +544,17 @@ function WorkOrdersVendor() {
 
                             {/* closed status */}
                             {order.workOrderStatus === "closed" && (
-                              <p>closed</p>
+                              <div className="row">
+                                <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                  <Link
+                                    to={`/work-orders/vendor/order/${order._id}`}
+                                    className="btn-app btn-app-xs btn-app-dark-outline"
+                                    key={order._id}
+                                  >
+                                    View
+                                  </Link>
+                                </div>
+                              </div>
                             )}
                             {/* ./closed status */}
                           </div>
