@@ -28,7 +28,7 @@ router.get("/vendor/logs/:workOrderId", vendorProtect, getVendorWorkOrderLogs);
 router.post(
   "/vendor/logs",
   vendorProtect,
-  imgUploader.array("logImages", 3),
+  imgUploader.array("logImages", 4),
   createVendorWorkOrderLogs
 );
 
