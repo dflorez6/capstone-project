@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
-import { useGetPropertyManagerWorkOrderQuery } from "../../../slices/workOrderApiSlice";
+import {
+  useGetPropertyManagerWorkOrderQuery,
+  usePropertyManagerCloseWorkOrderMutation,
+} from "../../../slices/workOrderApiSlice";
 import { useGetPropertyManagerWorkOrderLogsQuery } from "../../../slices/workOrderLogApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
@@ -54,7 +57,10 @@ function WorkOrderPropManager() {
   } = useGetPropertyManagerWorkOrderLogsQuery(urlWorkOrderId);
 
   // Redux Toolkit Mutations
-  // TODO: Add Redux Toolkit Mutations here
+  const [
+    closeWorkOrder,
+    { isError: closeWorkOrderError, isLoading: closeWorkOrderLoading },
+  ] = usePropertyManagerCloseWorkOrderMutation();
 
   //----------
   // Effects
@@ -74,13 +80,30 @@ function WorkOrderPropManager() {
   if (workOrderLogsError) {
     console.log("Property Manager Work Order Logs Error: ", workOrderLogsError);
   }
+  if (closeWorkOrderError) {
+    console.log(
+      "Property Manager Close Work Order Error: ",
+      closeWorkOrderError
+    );
+  }
 
   //----------
   // Handlers
   //----------
-  //
+  // Close Work Order Handler
   const closeOrderHandler = async (e) => {
-    // TODO: Implement Close Order Handler
+    try {
+      await closeWorkOrder({
+        projectId: workOrder?.project?._id,
+        workOrderId: workOrder?._id,
+      }).unwrap();
+      workOrderRefetch();
+      workOrderLogsRefetch();
+      toast.success("Work order closed successfully");
+    } catch (error) {
+      toast.error("Work order has already been updated for this project");
+      console.log("Project Application Error: ", error);
+    }
   };
 
   //----------
@@ -214,19 +237,25 @@ function WorkOrderPropManager() {
                   </div>
 
                   <div className="work-order-actions">
-                    <Link
-                      to={`mailto:${workOrder?.project.managerEmail}`}
-                      className="btn-app btn-app-xs btn-app-dark-outline me-3"
-                    >
-                      <i className="fa-solid fa-envelope"></i>
-                    </Link>
-                    <button
-                      type="button"
-                      className="btn-app btn-app-xs btn-app-purple"
-                      onClick={closeOrderHandler}
-                    >
-                      Close Order
-                    </button>
+                    {closeWorkOrderLoading ? (
+                      <Loader />
+                    ) : (
+                      <>
+                        <Link
+                          to={`mailto:${workOrder?.project.managerEmail}`}
+                          className="btn-app btn-app-xs btn-app-dark-outline me-3"
+                        >
+                          <i className="fa-solid fa-envelope"></i>
+                        </Link>
+                        <button
+                          type="button"
+                          className="btn-app btn-app-xs btn-app-purple"
+                          onClick={closeOrderHandler}
+                        >
+                          Close Order
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
                 {/* ./Counter + Actions */}
@@ -234,7 +263,14 @@ function WorkOrderPropManager() {
                 <hr />
 
                 <div className="work-order-description">
-                  <p>{workOrder?.project?.description}</p>
+                  {workOrder?.workOrderStatus === "closed" ? (
+                    <div>
+                      {/* TODO: Implement Forms */}
+                      <p>Rate & Review Form</p>
+                    </div>
+                  ) : (
+                    <p>{workOrder?.project?.description}</p>
+                  )}
                 </div>
               </div>
               {/* ./Info */}

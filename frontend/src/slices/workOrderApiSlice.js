@@ -109,6 +109,15 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    // Update - Property Manager Close Work Order
+    propertyManagerCloseWorkOrder: builder.mutation({
+      query: ({ projectId, workOrderId, data }) => ({
+        url: `${WORK_ORDERS_URL}/property-manager/close/${projectId}/${workOrderId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+
     // deleteWorkOrder: DELETE /api/v1/work-orders/property-manager/:projectId/:workOrderId
 
     /*
@@ -142,5 +151,6 @@ export const {
   usePropertyManagerAcceptWorkOrderMutation,
   useVendorRescheduleWorkOrderMutation,
   usePropertyManagerRescheduleWorkOrderMutation,
+  usePropertyManagerCloseWorkOrderMutation,
   // Delete
 } = workOrderApiSlice; // Export hooks for usage in components
