@@ -18,6 +18,7 @@ import {
   useVendorRescheduleWorkOrderMutation,
   usePropertyManagerAcceptWorkOrderMutation,
   usePropertyManagerRescheduleWorkOrderMutation,
+  usePropertyManagerCloseWorkOrderMutation,
 } from "../../../../slices/workOrderApiSlice"; // TODO: Use acceptWorkOrder & rescheduleWorkOrder
 // Time
 import { torontoDate, torontoDateTime } from "../../../../utils/formatDates";
@@ -148,6 +149,10 @@ const Project = () => {
       isLoading: propManagerRescheduleWorkOrderLoading,
     },
   ] = usePropertyManagerRescheduleWorkOrderMutation();
+  const [
+    closeWorkOrder,
+    { isError: closeWorkOrderError, isLoading: closeWorkOrderLoading },
+  ] = usePropertyManagerCloseWorkOrderMutation();
 
   //----------
   // Effects
@@ -405,6 +410,21 @@ const Project = () => {
     }
   };
 
+  // Close Work Order Handler
+  const closeOrderHandler = async (projectId, workOrderId) => {
+    try {
+      await closeWorkOrder({
+        projectId,
+        workOrderId,
+      }).unwrap();
+      propManagerWorkOrdersRefetch();
+      toast.success("Work order closed successfully");
+    } catch (error) {
+      toast.error("Work order has already been updated for this project");
+      console.log("Project Application Error: ", error);
+    }
+  };
+
   //----------
   // Functions
   //----------
@@ -589,8 +609,6 @@ const Project = () => {
               {/* ./Info */}
             </div>
             {/* ./Image & Info */}
-
-            {/* TODO: Maybe use tabs or pills to display the content in the same panel */}
 
             {/* Applications */}
             <div className="row">
@@ -1385,13 +1403,23 @@ const Project = () => {
                                                 "inProgress" && (
                                                 <div className="row">
                                                   <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-app btn-app-xs btn-app-purple"
-                                                      key={order._id}
-                                                    >
-                                                      Close
-                                                    </button>
+                                                    {closeWorkOrderLoading ? (
+                                                      <Loader />
+                                                    ) : (
+                                                      <button
+                                                        type="button"
+                                                        className="btn-app btn-app-xs btn-app-purple"
+                                                        onClick={() =>
+                                                          closeOrderHandler(
+                                                            order.project._id,
+                                                            order._id
+                                                          )
+                                                        }
+                                                        key={order._id}
+                                                      >
+                                                        Close
+                                                      </button>
+                                                    )}
                                                   </div>
                                                   <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
                                                     <Link
@@ -1431,7 +1459,19 @@ const Project = () => {
 
                                               {/* closed status */}
                                               {order.workOrderStatus ===
-                                                "closed" && <p>closed</p>}
+                                                "closed" && (
+                                                <div className="row">
+                                                  <div className="col-12 col-sm-12 col-md-6 col-lg-6 offset-md-3 offset-lg-3 text-center">
+                                                    <Link
+                                                      to={`/work-orders/property-manager/order/${order._id}`}
+                                                      className="btn-app btn-app-xs btn-app-dark-outline"
+                                                      key={order._id}
+                                                    >
+                                                      View
+                                                    </Link>
+                                                  </div>
+                                                </div>
+                                              )}
                                               {/* ./closed status */}
                                             </div>
                                             {/* ./Actions */}

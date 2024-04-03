@@ -8,6 +8,7 @@ import {
   useGetAllPropertyManagerWorkOrdersQuery,
   usePropertyManagerAcceptWorkOrderMutation,
   usePropertyManagerRescheduleWorkOrderMutation,
+  usePropertyManagerCloseWorkOrderMutation,
 } from "../../../slices/workOrderApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
@@ -57,6 +58,10 @@ function WorkOrdersPropManager() {
       isLoading: rescheduleWorkOrderLoading,
     },
   ] = usePropertyManagerRescheduleWorkOrderMutation();
+  const [
+    closeWorkOrder,
+    { isError: closeWorkOrderError, isLoading: closeWorkOrderLoading },
+  ] = usePropertyManagerCloseWorkOrderMutation();
 
   //----------
   // Effects
@@ -85,6 +90,9 @@ function WorkOrdersPropManager() {
       "Reschedule Work Order Applications Error: ",
       rescheduleWorkOrderError
     );
+  }
+  if (closeWorkOrderError) {
+    console.log("Close Work Order Applications Error: ", closeWorkOrderError);
   }
 
   //----------
@@ -139,6 +147,21 @@ function WorkOrdersPropManager() {
       toast.error("There was an error rescheduling this work order");
       console.log("Create Work Order Error:");
       console.log(error?.data?.message || error?.error);
+    }
+  };
+
+  // Close Work Order Handler
+  const closeOrderHandler = async (projectId, workOrderId) => {
+    try {
+      await closeWorkOrder({
+        projectId,
+        workOrderId,
+      }).unwrap();
+      propManagerWorkOrdersRefetch();
+      toast.success("Work order closed successfully");
+    } catch (error) {
+      toast.error("Work order has already been updated for this project");
+      console.log("Project Application Error: ", error);
     }
   };
 
@@ -419,13 +442,23 @@ function WorkOrdersPropManager() {
                                 {order.workOrderStatus === "inProgress" && (
                                   <div className="row">
                                     <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                                      <button
-                                        type="button"
-                                        className="btn-app btn-app-xs btn-app-purple"
-                                        key={order._id}
-                                      >
-                                        Close
-                                      </button>
+                                      {closeWorkOrderLoading ? (
+                                        <Loader />
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          className="btn-app btn-app-xs btn-app-purple"
+                                          onClick={() =>
+                                            closeOrderHandler(
+                                              order.project._id,
+                                              order._id
+                                            )
+                                          }
+                                          key={order._id}
+                                        >
+                                          Close
+                                        </button>
+                                      )}
                                     </div>
                                     <div className="col-12 col-sm-12 col-md-6 col-lg-6 text-end">
                                       <Link
@@ -439,12 +472,6 @@ function WorkOrdersPropManager() {
                                   </div>
                                 )}
                                 {/* ./inProgress status */}
-
-                                {/* pending status 
-                                {order.workOrderStatus === "pending" && (
-                                  <p>pending</p>
-                                )}
-                                 ./pending status */}
 
                                 {/* accepted status */}
                                 {order.workOrderStatus === "accepted" && (

@@ -523,7 +523,7 @@ const propertyManagerAcceptWorkOrder = asyncHandler(async (req, res) => {
   const propertyManager = fetchedProject.propertyManager;
 
   try {
-    // Check if logged in Vendor is the same as the Work Order Vendor
+    // Check if logged in Vendor is authorized
     if (
       workOrder.project.propertyManager.toString() ===
       req.propertyManager._id.toString()
@@ -726,6 +726,83 @@ const propertyManagerRescheduleWorkOrder = asyncHandler(async (req, res) => {
   }
 });
 
+// Action: Update
+// Description: Close Project's Work Order (Accessible by Property Manager)
+// Route: PUT /api/v1/work-orders/property-manager/close/:projectId/:workOrderId
+// Access: Private
+const propertyManagerCloseWorkOrder = asyncHandler(async (req, res) => {
+  // Destruction req.params
+  const { projectId, workOrderId } = req.params;
+
+  // Fetch Project
+  const workOrder = await WorkOrder.findOne({
+    _id: workOrderId,
+  }).populate([
+    {
+      path: "project",
+      select: "name propertyManager",
+    },
+    {
+      path: "vendor",
+      select: "companyName",
+    },
+  ]);
+
+  // Check if Project exists
+  if (!workOrder) {
+    res.status(400); // Bad Request
+    throw new Error("Work order doesn't exist");
+  }
+
+  // Fetch Project Name
+  const fetchedProject = await Project.findById(projectId).select(
+    "name propertyManager"
+  );
+  const projectName = fetchedProject.name;
+  const propertyManager = fetchedProject.propertyManager;
+
+  try {
+    // Check if logged in Vendor is authorized
+    if (
+      workOrder.project.propertyManager.toString() ===
+      req.propertyManager._id.toString()
+    ) {
+      // Update the Work Order Status
+      workOrder.workOrderStatus = "closed";
+
+      // Save new data
+      const updatedProject = await workOrder.save();
+
+      res.status(200).json(updatedProject);
+
+      // Build notification data object
+      const notificationData = {
+        sender: new mongoose.Types.ObjectId(propertyManager), // Casting to ObjectId in case it comes as a string
+        senderType: "PropertyManager",
+        recipient: new mongoose.Types.ObjectId(workOrder.vendor._id), // Casting to ObjectId in case it comes as a string
+        recipientType: "Vendor",
+        notificationType: NotificationTypes.WORK_ORDER_CLOSED_PROP_MANAGER,
+        message: NotificationMessages.WORK_ORDER_CLOSED_PROP_MANAGER,
+        data: {
+          projectId: projectId,
+          projectName: projectName,
+          // Used to rebuild the url to/projects/:propertyManagerId/:projectId
+        },
+      };
+
+      // Call Notification Method
+      createNotification(notificationData);
+
+      // TODO: Implement: Trigger notification to Vendor
+    } else {
+      res.status(401);
+      throw new Error("Not authorized.");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //--------------------
 // DELETE
 //--------------------
@@ -737,17 +814,23 @@ const deleteWorkOrder = asyncHandler(async (req, res) => {
 });
 
 export {
+  // Index
   getPropertyManagerProjectWorkOrders,
   getVendorProjectWorkOrders,
   getAllPropertyManagerWorkOrders,
   getAllVendorWorkOrders,
+  // Show
   showPropertyManagerWorkOrder,
   showVendorWorkOrder,
+  // Create
   createWorkOrder,
+  // Update
   updateWorkOrder,
   vendorAcceptWorkOrder,
   propertyManagerAcceptWorkOrder,
   vendorRescheduleWorkOrder,
   propertyManagerRescheduleWorkOrder,
+  propertyManagerCloseWorkOrder,
+  // Delete
   deleteWorkOrder,
 };

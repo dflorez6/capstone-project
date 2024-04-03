@@ -283,83 +283,81 @@ function WorkOrder() {
 
                 <div className="work-order-description">
                   {workOrder?.workOrderStatus === "inProgress" ? (
-                    <>
-                      <form className="form" id="" onSubmit={submitFormHandler}>
-                        <div className="row">
-                          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <div className="row">
-                              <div className="col-12 mb-2">
-                                <label htmlFor="title">Log Title</label>
-                                <input
-                                  type="text"
-                                  name="title"
-                                  id="title"
-                                  className="form-control"
-                                  placeholder="Work order log title"
-                                  value={title}
-                                  onChange={(e) => setTitle(e.target.value)}
-                                />
-                              </div>
-                              {/* Input: Field */}
-
-                              <div className="col-12 my-3">
-                                <label htmlFor="logImages">
-                                  Add Images {"(max 4)"}
-                                </label>
-                                <input
-                                  type="file"
-                                  name="logImages"
-                                  id="logImages"
-                                  className="form-control"
-                                  multiple
-                                  ref={inputLogImagesFileRef} // Attach the ref to the input element
-                                  onChange={handleLogImagesFileChange} // Call handleStoreImagesFileChange on file selection
-                                />
-                              </div>
-                              {/* Input: Field */}
+                    <form className="form" id="" onSubmit={submitFormHandler}>
+                      <div className="row">
+                        <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                          <div className="row">
+                            <div className="col-12 mb-2">
+                              <label htmlFor="title">Log Title</label>
+                              <input
+                                type="text"
+                                name="title"
+                                id="title"
+                                className="form-control"
+                                placeholder="Work order log title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                              />
                             </div>
+                            {/* Input: Field */}
+
+                            <div className="col-12 my-3">
+                              <label htmlFor="logImages">
+                                Add Images {"(max 4)"}
+                              </label>
+                              <input
+                                type="file"
+                                name="logImages"
+                                id="logImages"
+                                className="form-control"
+                                multiple
+                                ref={inputLogImagesFileRef} // Attach the ref to the input element
+                                onChange={handleLogImagesFileChange} // Call handleStoreImagesFileChange on file selection
+                              />
+                            </div>
+                            {/* Input: Field */}
                           </div>
-
-                          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                            <div className="row">
-                              <div className="col-12 mb-2">
-                                <label htmlFor="comment">
-                                  Comments / Observations
-                                </label>
-                                <textarea
-                                  type="text"
-                                  name="comment"
-                                  id="comment"
-                                  className="form-control"
-                                  placeholder="Enter description...."
-                                  rows={4}
-                                  value={comment}
-                                  onChange={(e) => setComment(e.target.value)}
-                                />
-                              </div>
-                              {/* Input: Textarea */}
-                            </div>
-                          </div>
-
-                          {createWorkOrderLogLoading ? (
-                            <Loader />
-                          ) : (
-                            <div className="col-12 text-center mt-2">
-                              {/* Submit */}
-                              <div className="submit-wrapper mt-0">
-                                <button
-                                  type="submit"
-                                  className="btn-app btn-app-xs btn-app-purple"
-                                >
-                                  + Work Order Log
-                                </button>
-                              </div>
-                              {/* ./Submit */}
-                            </div>
-                          )}
                         </div>
-                      </form>
-                    </>
+
+                        <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                          <div className="row">
+                            <div className="col-12 mb-2">
+                              <label htmlFor="comment">
+                                Comments / Observations
+                              </label>
+                              <textarea
+                                type="text"
+                                name="comment"
+                                id="comment"
+                                className="form-control"
+                                placeholder="Enter description...."
+                                rows={4}
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                              />
+                            </div>
+                            {/* Input: Textarea */}
+                          </div>
+                        </div>
+
+                        {createWorkOrderLogLoading ? (
+                          <Loader />
+                        ) : (
+                          <div className="col-12 text-center mt-2">
+                            {/* Submit */}
+                            <div className="submit-wrapper mt-0">
+                              <button
+                                type="submit"
+                                className="btn-app btn-app-xs btn-app-purple"
+                              >
+                                + Work Order Log
+                              </button>
+                            </div>
+                            {/* ./Submit */}
+                          </div>
+                        )}
+                      </div>
+                    </form>
                   ) : (
                     <p>{workOrder?.project?.description}</p>
                   )}
