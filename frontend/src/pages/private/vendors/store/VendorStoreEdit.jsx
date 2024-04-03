@@ -153,7 +153,7 @@ function EditVendorStore() {
       }
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("storeOwner", vendorStore.storeOwner._id);
+      formData.append("storeOwner", vendorStore?.storeOwner?._id);
 
       const res = await updateVendorStore({
         storeSlug: urlStoreSlug,

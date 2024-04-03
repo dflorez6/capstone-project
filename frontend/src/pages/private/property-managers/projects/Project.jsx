@@ -250,7 +250,7 @@ const Project = () => {
       applicationDate: utcTime,
       vendor: vendorInfo ? vendorInfo?._id : "",
       project: project?._id,
-      propertyManager: project?.propertyManager._id,
+      propertyManager: project?.propertyManager?._id,
     };
 
     // Dispatch Create Project Application

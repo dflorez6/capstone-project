@@ -1,0 +1,43 @@
+//====================
+// Modal
+//====================
+.app-modal {
+}
+
+// Full Screen
+.app-modal {
+  &.app-modal-full-screen {
+    // Dialog
+    .modal-dialog {
+      margin: 2.5vh 2.5vw;
+
+      // Content
+      .modal-content {
+        height: 95vh;
+        max-height: 95vh;
+        max-width: 95vw;
+        width: 95vw;
+
+        // Body
+        .modal-body {
+          padding: 0;
+          position: relative;
+
+          // Close Button
+          .btn-close {
+            background-color: $c-white;
+            position: absolute;
+            right: 0.25rem;
+            top: 0.25rem;
+          }
+
+          // Modal Image
+          .modal-image {
+            height: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
