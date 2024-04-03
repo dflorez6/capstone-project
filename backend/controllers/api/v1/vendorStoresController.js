@@ -210,7 +210,7 @@ const updateVendorStore = asyncHandler(async (req, res) => {
       res.status(200).json(updatedVendorStore);
     } else {
       res.status(401);
-      throw new Error("Not authorized. Not the Store owner.");
+      throw new Error("Not authorized.");
     }
   } catch (error) {
     res.status(500).json(error.message);

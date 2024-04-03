@@ -34,13 +34,13 @@
             background-color: $c-yellow;
           }
           &.accepted {
-            background-color: $c-aqua;
+            background-color: $c-purple-m;
           }
           &.reschedule {
             background-color: $c-red;
           }
           &.in-progress {
-            background-color: $c-purple-m;
+            background-color: $c-aqua;
           }
           &.closed {
             background-color: $c-text-secondary;
@@ -101,16 +101,16 @@
             color: $c-text-primary;
           }
           &.accepted {
-            background-color: $c-aqua;
-            color: $c-text-primary;
+            background-color: $c-purple-m;
+            color: $c-white;
           }
           &.reschedule {
             background-color: $c-red;
             color: $c-white;
           }
           &.in-progress {
-            background-color: $c-purple-m;
-            color: $c-white;
+            background-color: $c-aqua;
+            color: $c-text-primary;
           }
           &.closed {
             background-color: $c-text-secondary;
@@ -157,6 +157,46 @@
 // Show
 //--------------------
 .work-order-wrapper {
+  // Work Order Status
+  .work-order-status {
+    border-radius: 5px;
+    display: inline-block;
+    margin: 0;
+    padding: 0.25rem 1rem;
+
+    // Color Status
+    // Status: ["pending", "accepted", "reschedule", "inProgress", "closed"],
+    &.pending {
+      background-color: $c-yellow;
+      color: $c-text-primary;
+    }
+    &.accepted {
+      background-color: $c-purple-m;
+      color: $c-white;
+    }
+    &.reschedule {
+      background-color: $c-red;
+      color: $c-white;
+    }
+    &.in-progress {
+      background-color: $c-aqua;
+      color: $c-text-primary;
+    }
+    &.closed {
+      background-color: $c-text-secondary;
+      color: $c-white;
+    }
+
+    .status {
+      margin: 0;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  // Work Order
   .work-order-content {
     // Image + Info
     .work-order-image-info-wrapper {
@@ -268,8 +308,108 @@
         }
       }
     }
+  }
 
-    //
+  // Work Order Logs
+  .work-order-logs-content {
+    .work-order-logs-wrapper {
+      padding-left: 0.5rem;
+      padding-right: 1rem;
+
+      // Logs Panel
+      .logs-panel {
+        background-color: $c-white;
+        border-radius: 10px;
+
+        // Nav Pills
+        .logs-panel-navigation {
+          background-color: $c-purple-d;
+          border-bottom-left-radius: 10px;
+          border-top-left-radius: 10px;
+          padding: 2rem 0;
+
+          .app-nav-pills {
+            .nav-link {
+              color: $c-white;
+              border-radius: 0;
+            }
+
+            .nav-link {
+              &.active {
+                background-color: $c-aqua;
+                color: $c-text-primary;
+              }
+            }
+          }
+        }
+
+        // Nav Content
+        .logs-panel-content {
+          background-color: $c-white;
+          border-bottom-right-radius: 10px;
+          border-top-right-radius: 10px;
+          max-height: 75vh;
+          overflow-y: auto;
+          padding: 0;
+
+          // Tab Content
+          .app-tab-content {
+            padding: 2rem;
+
+            // Log
+            .log-wrapper {
+              // Header
+              .log-header {
+                // Title
+                .log-title {
+                  h3 {
+                    margin: 0;
+                    text-transform: capitalize;
+                  }
+                }
+
+                // Date
+                .log-date {
+                  h4 {
+                    color: $c-text-secondary;
+                    font-size: $f-p;
+                    font-weight: $f-regular;
+                    margin: 0.5rem 0;
+                  }
+                }
+              }
+
+              // Body
+              .log-body {
+                // Comment
+                .comment {
+                  p {
+                    margin: 0 0 1rem;
+                  }
+                }
+
+                // Images
+                .images-wrapper {
+                  .image-wrapper {
+                    display: inline-block;
+                    .image {
+                      height: 146px;
+                      margin: 0 0 2rem;
+                      width: 100%;
+                    }
+                  }
+                }
+              }
+
+              // Footer
+              .log-footer {
+                background-color: transparent;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

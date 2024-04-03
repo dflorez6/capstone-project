@@ -1,10 +1,14 @@
 // Dependencies
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 // State
 import { useDispatch, useSelector } from "react-redux";
 import { useGetVendorWorkOrderQuery } from "../../../slices/workOrderApiSlice";
+import {
+  useGetVendorWorkOrderLogsQuery,
+  useCreateVendorWorkOrderLogsMutation,
+} from "../../../slices/workOrderLogApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -30,6 +34,9 @@ function WorkOrder() {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
 
+  // Create a ref for the file input elements (image uploads)
+  const inputLogImagesFileRef = useRef(null);
+
   // Parse URL to get query params
   const url = window.location.pathname;
   const urlParts = url.split("/");
@@ -48,9 +55,18 @@ function WorkOrder() {
     isLoading: workOrderLoading,
     refetch: workOrderRefetch,
   } = useGetVendorWorkOrderQuery(urlWorkOrderId);
+  const {
+    data: workOrderLogs,
+    isError: workOrderLogsError,
+    isLoading: workOrderLogsLoading,
+    refetch: workOrderLogsRefetch,
+  } = useGetVendorWorkOrderLogsQuery(urlWorkOrderId);
 
   // Redux Toolkit Mutations
-  // TODO: Add Redux Toolkit Mutations here
+  const [
+    createWorkOrderLog,
+    { isError: createWorkOrderLogError, isLoading: createWorkOrderLogLoading },
+  ] = useCreateVendorWorkOrderLogsMutation();
 
   //----------
   // Effects
@@ -58,13 +74,20 @@ function WorkOrder() {
   // Refetch vendor stores
   useEffect(() => {
     workOrderRefetch();
-  }, [vendorInfo, workOrderRefetch]);
+    workOrderLogsRefetch();
+  }, [vendorInfo, workOrderRefetch, workOrderLogsRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
   //----------
   if (workOrderError) {
     console.log("Vendor Work Order Error: ", workOrderError);
+  }
+  if (workOrderLogsError) {
+    console.log("Vendor Work Orders Error: ", workOrderLogsError);
+  }
+  if (createWorkOrderLogError) {
+    console.log("Vendor Create Work Order Error: ", createWorkOrderLogError);
   }
 
   //----------
@@ -86,6 +109,25 @@ function WorkOrder() {
   //----------
   // Functions
   //----------
+  // Set Status Color
+  const setStatusColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "pending";
+      case "accepted":
+        return "accepted";
+      case "rescheduleByVendor":
+      case "rescheduleByPropertyManager":
+        return "reschedule";
+      case "inProgress":
+        return "in-progress";
+      case "closed":
+        return "closed";
+      default:
+        return "bg-pending";
+    }
+  };
+
   // Set Status Text
   const setStatusText = (status) => {
     switch (status) {
@@ -140,6 +182,7 @@ function WorkOrder() {
         <Loader />
       ) : (
         <>
+          {/* Work Order Header */}
           <div className="work-order-content">
             {/* Image & Info */}
             <div className="work-order-image-info-wrapper shadow">
@@ -172,8 +215,17 @@ function WorkOrder() {
                 <div className="work-order-counters-wrapper">
                   <div className="counters-wrapper">
                     <div className="work-orders-counter">
-                      {/* TODO: MAKE WORK ORDERS COUNTER DYNAMIC */}
-                      <h2>{setStatusText(workOrder?.workOrderStatus)}</h2>
+                      {/* Status Badge */}
+                      <div
+                        className={`work-order-status ${setStatusColor(
+                          workOrder?.workOrderStatus
+                        )}`}
+                      >
+                        <p className="status">
+                          {setStatusText(workOrder?.workOrderStatus)}
+                        </p>
+                      </div>
+                      {/* ./Status Badge */}
                     </div>
                   </div>
 
@@ -224,7 +276,9 @@ function WorkOrder() {
                       <div className="col-12 col-sm-12 col-md-6 col-lg-6">
                         <div className="row">
                           <div className="col-12 mb-2">
-                            <label htmlFor="name">Comments / Observations</label>
+                            <label htmlFor="name">
+                              Comments / Observations
+                            </label>
                             <textarea
                               type="text"
                               name="name"
@@ -259,10 +313,210 @@ function WorkOrder() {
               </div>
               {/* ./Info */}
             </div>
-
-            <p>WorkOrder</p>
             {/* Image & Info */}
           </div>
+          {/* ./Work Order Header */}
+
+          {/* ./Work Order Logs */}
+          <div className="work-order-logs-content">
+            {workOrderLogsLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <div className="panel-wrapper bg-transparent work-order-logs-wrapper pt-0">
+                  <div className="panel-title-wrapper">
+                    <h2>Work Order Logs</h2>
+                  </div>
+
+                  <div className="panel-content-wrapper">
+                    <div className="logs-panel">
+                      {workOrderLogs?.length > 0 ? (
+                        <>
+                          {/* Logs Panel */}
+                          <div className="row">
+                            {/* Panel Navigation */}
+                            <div className="col-md-3 logs-panel-navigation">
+                              <div
+                                className="nav flex-column nav-pills nav-fill app-nav-pills"
+                                id="v-pills-tab"
+                                role="tablist"
+                                aria-orientation="vertical"
+                              >
+                                {workOrderLogs?.map((log, index) => (
+                                  <a
+                                    key={index}
+                                    className={`nav-link ${
+                                      index === 0 && "active"
+                                    }`}
+                                    id="v-pills-home-tab"
+                                    data-bs-toggle="pill"
+                                    href={`#v-pills-home-${log._id}`}
+                                    role="tab"
+                                    aria-controls="v-pills-home"
+                                    aria-selected="true"
+                                  >
+                                    {torontoDateTime(log.createdAt)}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                            {/* ./Panel Navigation */}
+
+                            {/* Panel Content */}
+                            <div className="col-md-9 logs-panel-content">
+                              <div
+                                className="tab-content app-tab-content"
+                                id="v-pills-tabContent"
+                              >
+                                {workOrderLogs?.map((log, index) => (
+                                  <div
+                                    key={log._id}
+                                    className={`tab-pane fade ${
+                                      index === 0 && "show active"
+                                    }`}
+                                    id={`v-pills-home-${log._id}`}
+                                    role="tabpanel"
+                                    aria-labelledby="v-pills-home-tab"
+                                  >
+                                    <div
+                                      className="log-wrapper"
+                                      key={`logWrapper_${log._id}`}
+                                    >
+                                      {/* Header */}
+                                      <div
+                                        className="log-header"
+                                        key={`logHeader_${log._id}`}
+                                      >
+                                        <div
+                                          className="log-title"
+                                          key={`logTitle_${log._id}`}
+                                        >
+                                          <h3>
+                                            <span className="">
+                                              {log.title}
+                                            </span>
+                                          </h3>
+                                        </div>
+                                        <div
+                                          className="log-date"
+                                          key={`logDate_${log._id}`}
+                                        >
+                                          <h4>
+                                            <i className="fa-solid fa-calendar-days"></i>
+                                            <span className="ms-2">
+                                              {torontoDateTime(log.createdAt)}
+                                            </span>
+                                          </h4>
+                                        </div>
+                                        <hr />
+                                      </div>
+                                      {/* ./Header */}
+
+                                      {/* Body */}
+                                      <div
+                                        className="log-body"
+                                        key={`logBody_${log._id}`}
+                                      >
+                                        <div className="comment">
+                                          <p>{log.comment}</p>
+                                        </div>
+
+                                        {/* Images */}
+                                        <div
+                                          className="row images-wrapper"
+                                          key={`logImagesWrapper_${log._id}`}
+                                        >
+                                          {log.logImages?.length > 0 && (
+                                            <>
+                                              {log.logImages.map((image) => (
+                                                <div
+                                                  className="col-12 col-sm-12 col-md-3 col-lg-3 image-wrapper"
+                                                  key={`logImageWrapper_${image._id}`}
+                                                >
+                                                  <button
+                                                    className="image"
+                                                    style={{
+                                                      backgroundImage: `url(${image?.url})`,
+                                                      backgroundSize: "cover",
+                                                      backgroundPosition:
+                                                        "center center",
+                                                    }}
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target={`#imageModal_${image._id}`}
+                                                    key={`logImage_${image._id}`}
+                                                  ></button>
+
+                                                  {/* ./Image Modal */}
+                                                  <div
+                                                    className="modal fade app-modal app-modal-full-screen"
+                                                    id={`imageModal_${image._id}`}
+                                                    tabIndex="-1"
+                                                    aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true"
+                                                  >
+                                                    <div className="modal-dialog">
+                                                      <div className="modal-content">
+                                                        <div className="modal-body">
+                                                          <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"
+                                                          ></button>
+                                                          <div
+                                                            className="modal-image"
+                                                            style={{
+                                                              backgroundImage: `url(${image?.url})`,
+                                                              backgroundSize:
+                                                                "contain",
+                                                              backgroundRepeat:
+                                                                "no-repeat",
+                                                              backgroundPosition:
+                                                                "center center",
+                                                            }}
+                                                          ></div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  {/* ./Image Modal */}
+                                                </div>
+                                              ))}
+                                            </>
+                                          )}
+                                        </div>
+                                        {/* ./Images */}
+                                      </div>
+                                      {/* ./Body */}
+
+                                      {/* Footer */}
+                                      <div className="log-footer"></div>
+                                      {/* ./Footer */}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            {/* ./Panel Content */}
+                          </div>
+                          {/* Logs Panel */}
+                        </>
+                      ) : (
+                        <>
+                          <div className="row">
+                            <div className="col-12 text-center my-5">
+                              <h4>No logs to display</h4>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          {/* ./Work Order Logs */}
         </>
       )}
     </section>

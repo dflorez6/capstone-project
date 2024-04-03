@@ -77,10 +77,10 @@ const Profile = () => {
       setLastName(vendor?.lastName);
       setEmail(vendor?.email);
       setPhone(vendor?.phone || "");
-      setStreet(vendor?.address.street || "");
-      setPostalCode(vendor?.address.postalCode || "");
-      setCity(vendor?.address.city || "");
-      setProvince(vendor?.address.province || "");
+      setStreet(vendor?.address?.street || "");
+      setPostalCode(vendor?.address?.postalCode || "");
+      setCity(vendor?.address?.city || "");
+      setProvince(vendor?.address?.province || "");
     }
   }, [vendor]); // Dependency Array
 
