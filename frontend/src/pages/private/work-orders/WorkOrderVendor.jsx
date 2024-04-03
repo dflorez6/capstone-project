@@ -30,7 +30,7 @@ function WorkOrder() {
   const dispatch = useDispatch(); // Initialize
 
   // Form Fields
-  // TODO: Images uploader
+  const [logImages, setLogImages] = useState([]); // Store the selected image files
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
 
@@ -94,16 +94,42 @@ function WorkOrder() {
   // Handlers
   //----------
   // Submit Form Handler
-  const submitFormHandler = (e) => {
+  const submitFormHandler = async (e) => {
     e.preventDefault();
 
     try {
-      console.log("Submit Form Handler");
+      // Form Data
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("comment", comment);
+      formData.append("workOrderId", workOrder?._id);
+
+      // Append storeImages files if selected
+      logImages.forEach((file, index) => {
+        formData.append("logImages", file);
+      });
+
+      await createWorkOrderLog({ data: formData }).unwrap();
+      toast.success("Log created successfully");
+      workOrderRefetch();
+      workOrderLogsRefetch();
+
+      // Reset form fields after successful submission
+      setTitle("");
+      setComment("");
+      setLogImages([]);
+      inputLogImagesFileRef.current.value = null; // Reset file input field
     } catch (error) {
       toast.error(error?.data?.message || error?.error); // Toastify implementation
       console.log("Create Work Order Error:");
       console.log(error?.data?.message || error?.error);
     }
+  };
+
+  // File Change: Images
+  const handleLogImagesFileChange = (e) => {
+    const files = Array.from(e.target.files); // Convert FileList to Array
+    setLogImages(files); // Update the state with the selected files
   };
 
   //----------
@@ -210,7 +236,14 @@ function WorkOrder() {
               <div className="work-order-info-wrapper">
                 <div className="work-order-title-wrapper">
                   <h1>{workOrder?.name}</h1>
+                  <Link
+                    to={`/projects/${workOrder?.project?.propertyManager}/${workOrder?.project?._id}`}
+                    className="f-primary"
+                  >
+                    <i className="fa-solid fa-chevron-left"></i> Back
+                  </Link>
                 </div>
+
                 {/* Counter + Actions */}
                 <div className="work-order-counters-wrapper">
                   <div className="counters-wrapper">
@@ -229,7 +262,7 @@ function WorkOrder() {
                     </div>
                   </div>
 
-                  <div className="project-actions">
+                  <div className="work-order-actions">
                     <Link
                       to={`mailto:${workOrder?.project.managerEmail}`}
                       className="btn-app btn-app-xs btn-app-dark-outline me-3"
@@ -238,77 +271,98 @@ function WorkOrder() {
                     </Link>
                     <Link
                       to={`tel:${workOrder?.project.managerPhone}`}
-                      className="btn-app btn-app-xs btn-app-dark-outline me-3"
+                      className="btn-app btn-app-xs btn-app-dark-outline"
                     >
                       <i className="fa-solid fa-phone"></i>
                     </Link>
                   </div>
                 </div>
                 {/* ./Counter + Actions */}
+
                 <hr />
-                <div className="project-description">
-                  <form action="" onClick={submitFormHandler}>
-                    <div className="row">
-                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+
+                <div className="work-order-description">
+                  {workOrder?.workOrderStatus === "inProgress" ? (
+                    <>
+                      <form className="form" id="" onSubmit={submitFormHandler}>
                         <div className="row">
-                          <div className="col-12 mb-2">
-                            <label htmlFor="name">Log Title</label>
-                            <input
-                              type="text"
-                              name="name"
-                              id="name"
-                              className="form-control"
-                              placeholder="Work order log title"
-                              value={title}
-                              onChange={(e) => setTitle(e.target.value)}
-                            />
-                          </div>
-                          {/* Input: Field */}
+                          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div className="row">
+                              <div className="col-12 mb-2">
+                                <label htmlFor="title">Log Title</label>
+                                <input
+                                  type="text"
+                                  name="title"
+                                  id="title"
+                                  className="form-control"
+                                  placeholder="Work order log title"
+                                  value={title}
+                                  onChange={(e) => setTitle(e.target.value)}
+                                />
+                              </div>
+                              {/* Input: Field */}
 
-                          <div className="col-12 my-3">
-                            <label htmlFor="name">Image</label>
-                            <p>image uploader</p>
+                              <div className="col-12 my-3">
+                                <label htmlFor="logImages">
+                                  Add Images {"(max 4)"}
+                                </label>
+                                <input
+                                  type="file"
+                                  name="logImages"
+                                  id="logImages"
+                                  className="form-control"
+                                  multiple
+                                  ref={inputLogImagesFileRef} // Attach the ref to the input element
+                                  onChange={handleLogImagesFileChange} // Call handleStoreImagesFileChange on file selection
+                                />
+                              </div>
+                              {/* Input: Field */}
+                            </div>
                           </div>
-                          {/* Input: Field */}
-                        </div>
-                      </div>
 
-                      <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <div className="row">
-                          <div className="col-12 mb-2">
-                            <label htmlFor="name">
-                              Comments / Observations
-                            </label>
-                            <textarea
-                              type="text"
-                              name="name"
-                              id="name"
-                              className="form-control"
-                              placeholder="Enter description...."
-                              rows={4}
-                              value={comment}
-                              onChange={(e) => setComment(e.target.value)}
-                            />
+                          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div className="row">
+                              <div className="col-12 mb-2">
+                                <label htmlFor="comment">
+                                  Comments / Observations
+                                </label>
+                                <textarea
+                                  type="text"
+                                  name="comment"
+                                  id="comment"
+                                  className="form-control"
+                                  placeholder="Enter description...."
+                                  rows={4}
+                                  value={comment}
+                                  onChange={(e) => setComment(e.target.value)}
+                                />
+                              </div>
+                              {/* Input: Textarea */}
+                            </div>
                           </div>
-                          {/* Input: Textarea */}
-                        </div>
-                      </div>
 
-                      {/* Submit */}
-                      {/* TODO: ADD MUTATION LOADING */}
-                      <div className="col-12 text-center mt-2">
-                        <div className="submit-wrapper">
-                          <button
-                            type="submit"
-                            className="btn-app btn-app-xs btn-app-purple"
-                          >
-                            + Work Order Log
-                          </button>
+                          {createWorkOrderLogLoading ? (
+                            <Loader />
+                          ) : (
+                            <div className="col-12 text-center mt-2">
+                              {/* Submit */}
+                              <div className="submit-wrapper mt-0">
+                                <button
+                                  type="submit"
+                                  className="btn-app btn-app-xs btn-app-purple"
+                                >
+                                  + Work Order Log
+                                </button>
+                              </div>
+                              {/* ./Submit */}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      {/* ./Submit */}
-                    </div>
-                  </form>
+                      </form>
+                    </>
+                  ) : (
+                    <p>{workOrder?.project?.description}</p>
+                  )}
                 </div>
               </div>
               {/* ./Info */}
