@@ -10,6 +10,7 @@ export const NotificationTypes = {
   WORK_ORDER_ACCEPTED_PROP_MANAGER: "work_order_accepted_by_property_manager",
   WORK_ORDER_RESCHEDULE_VENDOR: "work_order_rescheduled_by_vendor",
   WORK_ORDER_RESCHEDULE_PROP_MANAGER: "work_order_rescheduled_by_property_manager",
+  WORK_ORDER_CLOSED_PROP_MANAGER: "work_order_closed_by_property_manager",
   // TODO: Add more NotificationTypes as needed
 };
 

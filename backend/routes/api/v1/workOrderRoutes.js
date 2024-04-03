@@ -5,18 +5,24 @@
 import express from "express";
 const router = express.Router();
 import {
+  // Index
   getPropertyManagerProjectWorkOrders,
   getVendorProjectWorkOrders,
   getAllPropertyManagerWorkOrders,
   getAllVendorWorkOrders,
+  // Show
   showPropertyManagerWorkOrder,
   showVendorWorkOrder,
+  // Create
   createWorkOrder,
+  // Update
   updateWorkOrder,
   vendorAcceptWorkOrder,
   propertyManagerAcceptWorkOrder,
   vendorRescheduleWorkOrder,
   propertyManagerRescheduleWorkOrder,
+  propertyManagerCloseWorkOrder,
+  // Delete
   deleteWorkOrder,
 } from "../../../controllers/api/v1/workOrdersController.js";
 import { propertyManagerProtect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Mnager has access
@@ -100,6 +106,12 @@ router.put(
   propertyManagerProtect,
   imgUploader.none(),
   propertyManagerRescheduleWorkOrder
+);
+router.put(
+  "/property-manager/close/:projectId/:workOrderId",
+  propertyManagerProtect,
+  imgUploader.none(),
+  propertyManagerCloseWorkOrder
 );
 
 // Delete

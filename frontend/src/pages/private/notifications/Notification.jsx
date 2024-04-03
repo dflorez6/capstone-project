@@ -217,6 +217,7 @@ function Notification() {
         case NotificationTypes.WORK_ORDER_CREATED:
         case NotificationTypes.WORK_ORDER_RESCHEDULE_PROP_MANAGER:
         case NotificationTypes.WORK_ORDER_ACCEPTED_PROP_MANAGER:
+        case NotificationTypes.WORK_ORDER_CLOSED_PROP_MANAGER:
           // Navigate to Project details page
           navigate(`/projects/${senderId}/${projectId}`);
           break;

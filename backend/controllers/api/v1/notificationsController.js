@@ -246,6 +246,9 @@ const createNotification = async (notificationData) => {
     case NotificationTypes.WORK_ORDER_RESCHEDULE_PROP_MANAGER:
       workOrderRescheduledByPropManager(notificationData);
       break;
+    case NotificationTypes.WORK_ORDER_CLOSED_PROP_MANAGER:
+      workOrderClosedByPropManager(notificationData);
+      break;
     // TODO: Add cases for other notification types
   }
 };
@@ -516,6 +519,44 @@ const workOrderRescheduledByVendor = async (notificationData) => {
 
 // Notification: Work Order Rescheduled by Property Manager
 const workOrderRescheduledByPropManager = async (notificationData) => {
+  // Destructure notificationData
+  const {
+    sender,
+    senderType,
+    recipient,
+    recipientType,
+    notificationType,
+    message,
+    data,
+  } = notificationData;
+
+  try {
+    // Create notification
+    const notification = await Notification.create({
+      sender,
+      senderType,
+      recipient,
+      recipientType,
+      notificationType,
+      message,
+      data,
+    });
+
+    // Check if Notification was created
+    if (notification) {
+      // Trigger notification to Vendor
+      // TODO: If theres time implement real-time notifications: Trigger notification to Vendor
+      //return notification;
+    } else {
+      throw new Error("Invalid Notification data");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// Notification: Work Order Closed by Property Manager
+const workOrderClosedByPropManager = async (notificationData) => {
   // Destructure notificationData
   const {
     sender,
