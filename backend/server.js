@@ -100,8 +100,14 @@ app.use(errorHandler);
 //====================
 // Run Server
 //====================
+// TODO: Uncomment after tests are done
+/*
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}!`);
 });
+*/
+
+// Export the app object explicitly (used for unit-testing purposes)
+export default app;

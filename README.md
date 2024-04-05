@@ -378,7 +378,7 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
 
 * Install the following packages
 
-    > yarn add --save-dev jest supertest
+    > yarn add --save --dev jest supertest
 
 * Create a jest.config.js file in the root of your project to configure Jest
 
@@ -386,24 +386,41 @@ https://www.freecodecamp.org/news/how-to-allow-users-to-upload-images-with-node-
             testEnvironment: 'node',
         };
 
+* Install babel
+
+    > yarn add @babel/preset-env --dev
+
+* Create a .babelrc file in the root of your project with the following content:
+
+        {
+            "presets": ["@babel/preset-env"]
+        }
+
+* Inside package.json, add this script:
+
+        "test": "NODE_ENV=test jest --forceExit"
+
+* If you need to detect open handles due to async functions use this:
+
+        "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
+
 <hr>
 
 # UI References
 
-https://brittanychiang.com/#experience
-https://mattfarley.ca/
-https://www.rammaheshwari.com/
-https://chaseohlson.com/
-https://dvlpr.pro/#skills
-https://samsmall.design/
-https://dlmak.droitlab.com/home-dark/
-https://github.com/emmabostian/developer-portfolios
+<https://brittanychiang.com/#experience>
+<https://mattfarley.ca/>
+<https://www.rammaheshwari.com/>
+<https://chaseohlson.com/>
+<https://dvlpr.pro/#skills>
+<https://samsmall.design/>
+<https://dlmak.droitlab.com/home-dark/>
+<https://github.com/emmabostian/developer-portfolios>
 
 ## Free Icons (svg, png, jpg)
 
 <https://icons8.com/icons/set/html5>
 <https://www.svgrepo.com/svg/473559/bitbucket?edit=true>
-
 
 # Guides
 
@@ -417,12 +434,16 @@ https://github.com/emmabostian/developer-portfolios
 <https://www.youtube.com/watch?v=R4AhvYORZRY>
 
 ## Authentication: PassportJS
-https://www.passportjs.org/docs/
+<https://www.passportjs.org/docs/>
 
-https://auth0.com/pricing?utm_source=sitelink-pricing&utm_content=sitelink-pricing&gad_source=1&gclid=CjwKCAiAhJWsBhAaEiwAmrNyqzQ68LgJzNj9Qncf47gtuqbgcwsCk5uhBS26T2ucN1qVI8T1zV2zdhoCt6kQAvD_BwE
+<https://auth0.com/pricing?utm_source=sitelink-pricing&utm_content=sitelink-pricing&gad_source=1&gclid=CjwKCAiAhJWsBhAaEiwAmrNyqzQ68LgJzNj9Qncf47gtuqbgcwsCk5uhBS26T2ucN1qVI8T1zV2zdhoCt6kQAvD_BwE>
 
-https://medium.com/@brendt_bly/simple-mern-passport-app-tutorial-4aec2105e367
+<https://medium.com/@brendt_bly/simple-mern-passport-app-tutorial-4aec2105e367>
 
 
-https://medium.com/hackernoon/m-e-r-n-stack-application-using-passport-for-authentication-920b1140a134
-https://medium.com/hackernoon/deploy-your-node-js-app-in-production-and-use-bitbucket-to-automate-your-deployment-50b07b18914c
+<https://medium.com/hackernoon/m-e-r-n-stack-application-using-passport-for-authentication-920b1140a134>
+<https://medium.com/hackernoon/deploy-your-node-js-app-in-production-and-use-bitbucket-to-automate-your-deployment-50b07b18914c>
+
+## Unit Tests: Jest & Supertest
+
+<https://www.freecodecamp.org/news/how-to-test-in-express-and-mongoose-apps/>

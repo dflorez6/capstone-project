@@ -271,9 +271,6 @@ const rejectApplication = asyncHandler(async (req, res) => {
   }
 });
 
-// TODO: Implement: Update Notification Status
-// TODO: I HAVE TO THINK ABOUT HOW TO HANDLE THIS PART. ONCE I GET INTO THE NOTIFICATIONS PART I WILL REVISIT THIS LATER
-
 export {
   getAllProjectApplications,
   getAccepetedVendorApplications,
