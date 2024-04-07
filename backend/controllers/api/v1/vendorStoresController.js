@@ -23,17 +23,13 @@ const getAllVendorStores = asyncHandler(async (req, res) => {
   let stores;
 
   // Rating
-  // TODO: Pending for implementation, search by Store Rating
-
   try {
     // Check if query params are provided
     if (companyName || city || province) {
       //-----
       // Query Params: companyName, city & province
       //-----
-      stores = await VendorStore.find({
-        // Filter the stores based on the storeOwner's city or province (or both if provided)
-      })
+      stores = await VendorStore.find({})
         .populate({
           path: "storeOwner",
           select: "-password",
@@ -72,6 +68,18 @@ const getAllVendorStores = asyncHandler(async (req, res) => {
       // Find the vendorStores associated with the extracted IDs
       stores = await VendorStore.find({
         _id: { $in: vendorStoreIds },
+      })
+        .populate({
+          path: "storeOwner",
+          select: "-password",
+        })
+        .sort({ createdAt: -1 });
+    } else if (rating) {
+      // Query Params: rating
+      const minRating = parseFloat(rating);
+      const maxRating = minRating + 0.5; // Define the maximum rating for the range
+      stores = await VendorStore.find({
+        storeRating: { $gte: minRating, $lt: maxRating }, // Filter stores by rating within the specified range
       })
         .populate({
           path: "storeOwner",

@@ -14,6 +14,10 @@ const vendorStoreSchema = mongoose.Schema(
       unique: true,
       trim: true,
     },
+    storeRating: {
+      type: Number,
+      default: 0,
+    },
     coverImage: {
       publicId: {
         type: String,
