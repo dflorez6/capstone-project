@@ -10,6 +10,8 @@ import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
+// Utilities
+import { drawRatingStars } from "../../../../utils/drawRatingStars";
 // Styles
 import "./VendorSearch.scss";
 // Assets
@@ -87,11 +89,15 @@ function VendorSearch() {
   };
 
   //----------
+  // Functions
+  //----------
+
+  //----------
   // Pagination
   //----------
   // State for pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3; // TODO: Set for 3 at the moment to be able to show pagination
+  const itemsPerPage = 6;
 
   // Calculate indexes of items to display on the current page
   const indexOfLastStore = (currentPage + 1) * itemsPerPage;
@@ -240,7 +246,10 @@ function VendorSearch() {
             <div className="row">
               {hasItems &&
                 currentStores.map((store, index) => (
-                  <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
+                  <div
+                    className="col-12 sm-12 col-md-4 col-lg-4"
+                    key={store._id}
+                  >
                     <div className="store-card-wrapper">
                       {/* Image */}
                       <div className="card-image-wrapper">
@@ -266,11 +275,7 @@ function VendorSearch() {
                       {/* Content */}
                       <div className="card-content-wrapper">
                         <div className="store-rating">
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
+                          {drawRatingStars(store.storeRating)}
                         </div>
                         <div className="store-name">
                           <h2>{store.storeOwner.companyName}</h2>

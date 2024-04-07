@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import VendorRating from "../../../models/vendorRatingModel.js";
 import Vendor from "../../../models/vendorModel.js";
+import VendorStore from "../../../models/vendorStoreModel.js";
 import PropertyManager from "../../../models/propertyManagerModel.js";
 // Notifications
 import { createNotification } from "./notificationsController.js";
@@ -13,13 +14,16 @@ import { NotificationTypes } from "../../../constants/notificationTypes.js";
 import { NotificationMessages } from "../../../constants/notificationMessages.js";
 
 //--------------------
+// Endpoints
+//--------------------
+//--------------------
 // GET
 //--------------------
 // Action: Index
-// Description: List of Work Order Logs (Accessible by Property Manager)
+// Description: Returns (Accessible by Property Manager)
 // Route: GET /api/v1/vendor-ratings/:vendorId
 // Access: Public
-const getAllVendorRatings = asyncHandler(async (req, res) => {
+const getVendorAverageRatings = asyncHandler(async (req, res) => {
   // Destructure req.params
   const { vendorId } = req.params;
 
@@ -53,8 +57,6 @@ const getAllVendorRatings = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// Show
 
 //--------------------
 // POST
@@ -98,7 +100,18 @@ const createVendorRating = asyncHandler(async (req, res) => {
         propertyManager,
       });
 
+      // Calculate average rating for the vendor
+      const averageRating = await calculateAverageRating(vendor);
+
+      // Update storeRating in VendorStore model
+      await VendorStore.updateOne(
+        { storeOwner: vendor },
+        { $set: { storeRating: averageRating } }
+      );
+
       res.status(201).json(vendorRating);
+
+      // TODO: Send notification to the vendor
     } else {
       res.status(401);
       throw new Error("Not authorized.");
@@ -108,4 +121,26 @@ const createVendorRating = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllVendorRatings, createVendorRating };
+//--------------------
+// Methods
+//--------------------
+const calculateAverageRating = async (vendorId) => {
+  try {
+    const result = await VendorRating.aggregate([
+      {
+        $match: { vendor: new mongoose.Types.ObjectId(vendorId) },
+      },
+      {
+        $group: {
+          _id: null,
+          averageRating: { $avg: "$rating" },
+        },
+      },
+    ]);
+    return result.length > 0 ? result[0].averageRating : 0;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export { getVendorAverageRatings, createVendorRating };

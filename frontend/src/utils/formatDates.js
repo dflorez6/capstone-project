@@ -1,9 +1,9 @@
-// Dependencies
-import moment from "moment-timezone";
-
 //==========
 // Utility Functions: Date Formatting
 //==========
+// Dependencies
+import moment from "moment-timezone";
+
 //----------
 // UTC to Toronto Time
 //----------

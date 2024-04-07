@@ -5,7 +5,7 @@
 import express from "express";
 const router = express.Router();
 import {
-  getAllVendorRatings,
+  getVendorAverageRatings,
   createVendorRating,
 } from "../../../controllers/api/v1/vendorRatingsController.js";
 import { propertyManagerProtect } from "../../../middleware/authPropertyManagerMiddleware.js"; // Only authenticated Property Mnager has access
@@ -18,7 +18,7 @@ import imgUploader from "../../../services/multer.js";
 // Controller Actions
 //--------------------
 // Index
-router.get("/:vendorId", getAllVendorRatings);
+router.get("/:vendorId", getVendorAverageRatings);
 
 // Show
 
