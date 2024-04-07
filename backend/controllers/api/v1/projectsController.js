@@ -231,7 +231,7 @@ const createProject = asyncHandler(async (req, res) => {
 // PUT / PATCH
 //--------------------
 // Action: Update
-// Description: Update Vendor Certificate
+// Description: Update Project
 // Route: PUT /api/v1/projects/:propertyManagerId/:projectId
 // Access: Private
 const updateProject = asyncHandler(async (req, res) => {

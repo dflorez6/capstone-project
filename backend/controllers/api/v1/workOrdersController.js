@@ -615,7 +615,6 @@ const vendorRescheduleWorkOrder = asyncHandler(async (req, res) => {
 
       res.status(200).json(updatedProject);
 
-      // TODO: Notification. Vendor -> Prop Manager
       // Build notification data object
       const notificationData = {
         sender: new mongoose.Types.ObjectId(workOrder.vendor._id), // Casting to ObjectId in case it comes as a string

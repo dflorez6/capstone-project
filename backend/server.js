@@ -71,6 +71,9 @@ import workOrderRoutes from "./routes/api/v1/workOrderRoutes.js";
 import workOrderLogRoutes from "./routes/api/v1/workOrderLogRoutes.js";
 app.use(`${baseURL}/work-orders`, workOrderRoutes);
 app.use(`${baseURL}/work-orders`, workOrderLogRoutes);
+// Ratings
+import vendorRatingRoutes from "./routes/api/v1/vendorRatingRoutes.js";
+app.use(`${baseURL}/vendor-ratings`, vendorRatingRoutes);
 
 //====================
 // Production
@@ -100,14 +103,11 @@ app.use(errorHandler);
 //====================
 // Run Server
 //====================
-// TODO: Uncomment after tests are done
-/*
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}!`);
 });
-*/
 
 // Export the app object explicitly (used for unit-testing purposes)
 export default app;

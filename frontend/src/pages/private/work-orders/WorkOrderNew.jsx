@@ -188,34 +188,32 @@ function WorkOrderNew() {
                 {createWorkOrderLoading ? (
                   <Loader />
                 ) : (
-                  <>
-                    <div className="row">
-                      {/* Submit */}
-                      <div className="col-12">
-                        <div className="submit-wrapper">
-                          <button
-                            type="submit"
-                            className="btn-app btn-app-purple"
-                          >
-                            Create Work Order
-                          </button>
-                        </div>
+                  <div className="row">
+                    {/* Submit */}
+                    <div className="col-12">
+                      <div className="submit-wrapper">
+                        <button
+                          type="submit"
+                          className="btn-app btn-app-purple"
+                        >
+                          Create Work Order
+                        </button>
                       </div>
-                      {/* ./Submit */}
-                      {/* ./Back */}
-                      <div className="row">
-                        <div className="col-12 text-center mt-3">
-                          <Link
-                            to={`/projects/${propertyManagerInfo._id}/${urlProjectId}`}
-                            className="f-primary"
-                          >
-                            <i className="fa-solid fa-chevron-left"></i> Back
-                          </Link>
-                        </div>
-                      </div>
-                      {/* ./Back */}
                     </div>
-                  </>
+                    {/* ./Submit */}
+                    {/* ./Back */}
+                    <div className="row">
+                      <div className="col-12 text-center mt-3">
+                        <Link
+                          to={`/projects/${propertyManagerInfo._id}/${urlProjectId}`}
+                          className="f-primary"
+                        >
+                          <i className="fa-solid fa-chevron-left"></i> Back
+                        </Link>
+                      </div>
+                    </div>
+                    {/* ./Back */}
+                  </div>
                 )}
               </form>
             </div>

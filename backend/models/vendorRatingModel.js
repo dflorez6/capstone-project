@@ -1,12 +1,50 @@
+//====================
+// Model: Vendor Rating
+//====================
+// Import Dependencies
+import mongoose from "mongoose";
+
+//--------------------
+// Schema Definition
+//--------------------
+const vendorRatingSchema = mongoose.Schema(
+  {
+    rating: {
+      type: Number,
+      unique: true,
+      default: 0,
+      min: 1,
+      max: 5,
+    },
+    vendor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vendor",
+      required: true,
+    },
+    propertyManager: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PropertyManager",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+//--------------------
+// Indexes
+//--------------------
+// Create an index on the fields in ascending order & make it unique so that only one rating can
+// be created per vendor and property manager
+vendorRatingSchema.index({ vendor: 1, propertyManager: 1 }, { unique: true });
+
+//--------------------
+// Model Definition
+//--------------------
+const VendorRating = mongoose.model("VendorRating", vendorRatingSchema);
+
+export default VendorRating;
+
 /*
- TODO: Implement Model
-
- _id: ObjectId				       PK
-rating: number
-ratingDate: date
-vendor: ObjectId				FK
-propertyManager: ObjectId		FK
-
 
 Indexes: Consider adding indexes on the vendor and ratingDate fields based on your querying patterns. 
 Indexes can improve query performance, especially when filtering ratings by vendor or date range.
@@ -21,57 +59,9 @@ and extract meaningful insights from the rating data.
 /*
 Calculating Average Ratings
 
-In a typical MERN stack application, you would use the average rating calculation in the backend API to provide data to the frontend for display or further processing. Let's break down how you can use it in both the backend and frontend:
-
-    Backend API (Node.js/Express.js):
-
-In your backend API, you can create a route that handles the calculation of the average rating for a specific vendor. Here's an example of how you might implement it:
-
-javascript
-
-const express = require('express');
-const mongoose = require('mongoose');
-const VendorRating = require('./models/vendorRating'); // Assuming you have defined the VendorRating model
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// MongoDB connection setup
-
-// Endpoint to calculate average rating for a vendor
-app.get('/vendors/:vendorId/average-rating', async (req, res) => {
-  try {
-    const { vendorId } = req.params;
-    const result = await VendorRating.aggregate([
-      {
-        $match: { vendor: mongoose.Types.ObjectId(vendorId) }
-      },
-      {
-        $group: {
-          _id: null,
-          averageRating: { $avg: '$rating' }
-        }
-      }
-    ]);
-
-    if (result.length > 0) {
-      res.json({ averageRating: result[0].averageRating });
-    } else {
-      res.status(404).json({ error: 'No ratings found for the vendor' });
-    }
-  } catch (err) {
-    console.error('Error calculating average rating:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-In this example, we create a GET endpoint /vendors/:vendorId/average-rating that accepts the 
-vendorId as a parameter. The endpoint uses the aggregation pipeline to calculate the average rating 
-for the specified vendor and sends the result as JSON back to the client.
+In a typical MERN stack application, you would use the average rating calculation 
+in the backend API to provide data to the frontend for display or further processing. 
+Let's break down how you can use it in both the backend and frontend:
 
     Frontend (React.js):
 
