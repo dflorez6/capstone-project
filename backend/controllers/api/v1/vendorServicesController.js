@@ -197,6 +197,7 @@ const updateVendorService = asyncHandler(async (req, res) => {
 //--------------------
 // DELETE
 //--------------------
+// Action: Destroy
 // Description: Delete Vendor Service
 // Route: DELETE /api/v1/vendor-services/:vendorStore/:serviceId
 // Access: Private

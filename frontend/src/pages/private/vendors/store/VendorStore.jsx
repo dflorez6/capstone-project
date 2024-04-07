@@ -16,6 +16,8 @@ import {
 } from "../../../../slices/vendorCertificateApiSlice"; // TODO: IMPLEMENT: INDEX & DELETE actions
 // Components
 import Loader from "../../../../components/Loader";
+// Utilities
+import { drawRatingStars } from "../../../../utils/drawRatingStars";
 // Toast
 import { toast } from "react-toastify";
 // Styles
@@ -193,17 +195,11 @@ function VendorStore() {
                 </div>
                 <div className="store-rating-wrapper">
                   <div className="store-rating-reviews-wrapper">
-                    {/* TODO: MAKE RATINGS DYNAMIC */}
                     <div className="rating-counter">
-                      <i className="fa-solid fa-star icon"></i>
-                      <i className="fa-solid fa-star icon"></i>
-                      <i className="fa-solid fa-star icon"></i>
-                      <i className="fa-solid fa-star icon"></i>
-                      <i className="fa-regular fa-star icon"></i>
+                      {drawRatingStars(vendorStore.storeRating)}
                     </div>
 
                     <div className="reviews-counter">
-                      {/* TODO: MAKE REVIEWS COUNTER DYNAMIC */}
                       <p>5 reviews</p>
                     </div>
                   </div>
@@ -221,7 +217,10 @@ function VendorStore() {
                           </Link>
                         </>
                       )}
-                    <Link to={`mailto:${vendorStore.storeOwner.email}`} className="btn-app btn-app-sm btn-app-purple ">
+                    <Link
+                      to={`mailto:${vendorStore.storeOwner.email}`}
+                      className="btn-app btn-app-sm btn-app-purple "
+                    >
                       contact
                     </Link>
                   </div>

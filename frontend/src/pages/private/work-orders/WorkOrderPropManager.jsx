@@ -9,6 +9,7 @@ import {
   usePropertyManagerCloseWorkOrderMutation,
 } from "../../../slices/workOrderApiSlice";
 import { useGetPropertyManagerWorkOrderLogsQuery } from "../../../slices/workOrderLogApiSlice";
+import { useCreateVendorRatingMutation } from "../../../slices/vendorRatingApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -30,7 +31,7 @@ function WorkOrderPropManager() {
   const dispatch = useDispatch(); // Initialize
 
   // Form Fields
-  // TODO: Add form fields here
+  const [rating, setRating] = useState("");
 
   // Parse URL to get query params
   const url = window.location.pathname;
@@ -61,6 +62,10 @@ function WorkOrderPropManager() {
     closeWorkOrder,
     { isError: closeWorkOrderError, isLoading: closeWorkOrderLoading },
   ] = usePropertyManagerCloseWorkOrderMutation();
+  const [
+    createVendorRating,
+    { isError: createVendorRatingError, isLoading: createVendorRatingLoading },
+  ] = useCreateVendorRatingMutation();
 
   //----------
   // Effects
@@ -86,6 +91,9 @@ function WorkOrderPropManager() {
       closeWorkOrderError
     );
   }
+  if (createVendorRatingError) {
+    console.log("Vendor Rating Create Error: ", createVendorRatingError);
+  }
 
   //----------
   // Handlers
@@ -102,6 +110,28 @@ function WorkOrderPropManager() {
       toast.success("Work order closed successfully");
     } catch (error) {
       toast.error("Work order has already been updated for this project");
+      console.log("Project Application Error: ", error);
+    }
+  };
+
+  //
+  const rateVendorHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Form Data
+      const formData = new FormData();
+
+      formData.append("rating", rating);
+      formData.append("vendor", workOrder?.vendor?._id);
+      formData.append("propertyManager", workOrder?.project?.propertyManager);
+
+      await createVendorRating(formData).unwrap();
+      workOrderRefetch();
+      workOrderLogsRefetch();
+      toast.success("Vendor rated successfully");
+    } catch (error) {
+      toast.error("Vendor rating cannot be blank");
       console.log("Project Application Error: ", error);
     }
   };
@@ -265,8 +295,62 @@ function WorkOrderPropManager() {
                 <div className="work-order-description">
                   {workOrder?.workOrderStatus === "closed" ? (
                     <div>
-                      {/* TODO: Implement Forms */}
-                      <p>Rate & Review Form</p>
+                      <div className="row">
+                        {/* Rating Form */}
+                        <div className="col-12 col-sm-12 col-md-4 col-lg-4">
+                          <form onSubmit={rateVendorHandler}>
+                            <div className="row">
+                              <div className="col-12">
+                                <label htmlFor="rating">Rate vendor:</label>
+                                <select
+                                  name="rating"
+                                  id="rating"
+                                  className="form-control"
+                                  value={rating}
+                                  onChange={(e) => setRating(e.target.value)}
+                                >
+                                  <option value="">Select...</option>
+                                  <option value="1">1</option>
+                                  <option value="1.5">1.5</option>
+                                  <option value="2">2</option>
+                                  <option value="2.5">2.5</option>
+                                  <option value="3">3</option>
+                                  <option value="3.5">3.5</option>
+                                  <option value="4">4</option>
+                                  <option value="4.5">4.5</option>
+                                  <option value="5">5</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            {createVendorRatingLoading ? (
+                              <Loader />
+                            ) : (
+                              <div className="row">
+                                {/* Submit */}
+                                <div className="col-12 text-center">
+                                  <div className="submit-wrapper">
+                                    <button
+                                      type="submit"
+                                      className="btn-app btn-app-xs btn-app-purple mt-3"
+                                    >
+                                      Rate Vendor
+                                    </button>
+                                  </div>
+                                </div>
+                                {/* ./Submit */}
+                              </div>
+                            )}
+                          </form>
+                        </div>
+                        {/* ./Rating Form */}
+
+                        {/* Review Form */}
+                        <div className="col-12 col-sm-12 col-md-8 col-lg-8">
+                          Reviews
+                        </div>
+                        {/* ./Review Form */}
+                      </div>
                     </div>
                   ) : (
                     <p>{workOrder?.project?.description}</p>

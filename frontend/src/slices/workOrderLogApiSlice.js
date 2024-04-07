@@ -26,7 +26,6 @@ export const workOrderLogApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Create - Work Order
-    // : POST /api/v1/work-orders
     createVendorWorkOrderLogs: builder.mutation({
       query: ({data}) => ({
         url: `${WORK_ORDER_LOGS_URL}/vendor/logs`,

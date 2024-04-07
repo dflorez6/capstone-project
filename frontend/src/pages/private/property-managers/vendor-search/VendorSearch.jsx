@@ -10,6 +10,8 @@ import { useGetProvincesQuery } from "../../../../slices/provinceApiSlice";
 import { useGetServiceCategoriesQuery } from "../../../../slices/serviceCategoryApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
+// Utilities
+import { drawRatingStars } from "../../../../utils/drawRatingStars";
 // Styles
 import "./VendorSearch.scss";
 // Assets
@@ -28,7 +30,7 @@ function VendorSearch() {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
-  // TODO: Rating
+  const [rating, setRating] = useState("");
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
@@ -36,7 +38,13 @@ function VendorSearch() {
     isError: vendorStoresError,
     isLoading: vendorStoresLoading,
     refetch: vendorStoresRefetch,
-  } = useGetVendorStoresQuery({ companyName, serviceCategory, city, province });
+  } = useGetVendorStoresQuery({
+    companyName,
+    serviceCategory,
+    city,
+    province,
+    rating,
+  });
 
   // Redux Toolkit Queries for Selects
   const { data: cities, isError: citiesError } = useGetCitiesQuery();
@@ -84,14 +92,19 @@ function VendorSearch() {
     setServiceCategory("");
     setCity("");
     setProvince("");
+    setRating("");
   };
+
+  //----------
+  // Functions
+  //----------
 
   //----------
   // Pagination
   //----------
   // State for pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3; // TODO: Set for 3 at the moment to be able to show pagination
+  const itemsPerPage = 6;
 
   // Calculate indexes of items to display on the current page
   const indexOfLastStore = (currentPage + 1) * itemsPerPage;
@@ -220,12 +233,23 @@ function VendorSearch() {
                   </div>
 
                   <div className="col-12 col-sm-12 col-md-3 col-lg-3">
-                    <select name="rating" id="rating" className="form-control">
-                      <option selected disabled>
-                        Rating
-                      </option>
+                    <select
+                      name="rating"
+                      id="rating"
+                      className="form-control"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                    >
+                      <option value="">Rating</option>
                       <option value="1">1</option>
+                      <option value="1.5">1.5</option>
                       <option value="2">2</option>
+                      <option value="2.5">2.5</option>
+                      <option value="3">3</option>
+                      <option value="3.5">3.5</option>
+                      <option value="4">4</option>
+                      <option value="4.5">4.5</option>
+                      <option value="5">5</option>
                     </select>
                   </div>
                 </div>
@@ -240,7 +264,10 @@ function VendorSearch() {
             <div className="row">
               {hasItems &&
                 currentStores.map((store, index) => (
-                  <div className="col-12 sm-12 col-md-4 col-lg-4" key={index}>
+                  <div
+                    className="col-12 sm-12 col-md-4 col-lg-4"
+                    key={store._id}
+                  >
                     <div className="store-card-wrapper">
                       {/* Image */}
                       <div className="card-image-wrapper">
@@ -266,11 +293,7 @@ function VendorSearch() {
                       {/* Content */}
                       <div className="card-content-wrapper">
                         <div className="store-rating">
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
+                          {drawRatingStars(store.storeRating)}
                         </div>
                         <div className="store-name">
                           <h2>{store.storeOwner.companyName}</h2>

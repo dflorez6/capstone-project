@@ -12,8 +12,8 @@ export const vendorStoreApiSlice = apiSlice.injectEndpoints({
     // Index - Get All Vendor Stores
 
     getVendorStores: builder.query({
-      query: ({ companyName, serviceCategory, city, province }) => ({
-        url: `${VENDOR_STORES_URL}?companyName=${companyName}&serviceCategory=${serviceCategory}&city=${city}&province=${province}`,
+      query: ({ companyName, serviceCategory, city, province, rating }) => ({
+        url: `${VENDOR_STORES_URL}?companyName=${companyName}&serviceCategory=${serviceCategory}&city=${city}&province=${province}&rating=${rating}`,
         method: "GET",
       }),
     }),

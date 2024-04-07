@@ -17,7 +17,7 @@ const getAllCertificateCategories = asyncHandler(async (req, res) => {
     // Use the find() method without any conditions to retrieve all records
     const certificateCategories = await CertificateCategory.find().sort({
       name: 1,
-    }); // TODO: DB - To get order by DESC use -1
+    }); // To get order by DESC use -1
     res.status(200).json(certificateCategories);
   } catch (error) {
     res.status(500).json(error.message);
