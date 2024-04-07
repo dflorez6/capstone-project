@@ -30,7 +30,7 @@ function VendorSearch() {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [serviceCategory, setServiceCategory] = useState("");
-  // TODO: Rating
+  const [rating, setRating] = useState("");
 
   // Redux Toolkit Queries Fetch data (Redux Toolkit Slice)
   const {
@@ -38,7 +38,13 @@ function VendorSearch() {
     isError: vendorStoresError,
     isLoading: vendorStoresLoading,
     refetch: vendorStoresRefetch,
-  } = useGetVendorStoresQuery({ companyName, serviceCategory, city, province });
+  } = useGetVendorStoresQuery({
+    companyName,
+    serviceCategory,
+    city,
+    province,
+    rating,
+  });
 
   // Redux Toolkit Queries for Selects
   const { data: cities, isError: citiesError } = useGetCitiesQuery();
@@ -86,6 +92,7 @@ function VendorSearch() {
     setServiceCategory("");
     setCity("");
     setProvince("");
+    setRating("");
   };
 
   //----------
@@ -226,12 +233,23 @@ function VendorSearch() {
                   </div>
 
                   <div className="col-12 col-sm-12 col-md-3 col-lg-3">
-                    <select name="rating" id="rating" className="form-control">
-                      <option selected disabled>
-                        Rating
-                      </option>
+                    <select
+                      name="rating"
+                      id="rating"
+                      className="form-control"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                    >
+                      <option value="">Rating</option>
                       <option value="1">1</option>
+                      <option value="1.5">1.5</option>
                       <option value="2">2</option>
+                      <option value="2.5">2.5</option>
+                      <option value="3">3</option>
+                      <option value="3.5">3.5</option>
+                      <option value="4">4</option>
+                      <option value="4.5">4.5</option>
+                      <option value="5">5</option>
                     </select>
                   </div>
                 </div>
