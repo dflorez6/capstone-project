@@ -11,7 +11,7 @@ const vendorRatingSchema = mongoose.Schema(
   {
     rating: {
       type: Number,
-      unique: true,
+      required: true,
       default: 0,
       min: 0,
       max: 5,

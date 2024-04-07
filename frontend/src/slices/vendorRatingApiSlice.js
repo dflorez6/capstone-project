@@ -19,7 +19,7 @@ export const vendorRatingApiSlice = apiSlice.injectEndpoints({
 
     // Create - Work Order
     createVendorRating: builder.mutation({
-      query: ({ data }) => ({
+      query: (data) => ({
         url: `${VENDOR_RATINGS_URL}`,
         method: "POST",
         body: data,
