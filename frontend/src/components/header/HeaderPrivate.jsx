@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 // Styles
 import "./Header.scss";
 // Assets
-// import avatar from "../../assets/img/df-original-square.jpg";
+import placeholderSquare from "../../assets/img/placeholder-square.jpg";
+import logo from "../../assets/logo.svg";
 
 // Component
 const Header = () => {
@@ -75,15 +76,18 @@ const Header = () => {
   let authRoute;
   let authId;
   let vendorStoreSlug;
+  let authAvatar;
   if (vendorInfo) {
     authUser = vendorInfo;
     authRoute = "/vendors";
-    authId = vendorInfo._id;
-    vendorStoreSlug = vendorInfo.storeSlug;
+    authId = vendorInfo?._id;
+    authAvatar = vendorInfo?.avatar.url;
+    vendorStoreSlug = vendorInfo?.storeSlug;
   } else {
     authUser = propertyManagerInfo;
     authRoute = "/property-managers";
-    authId = propertyManagerInfo._id;
+    authId = propertyManagerInfo?._id;
+    authAvatar = propertyManagerInfo?.avatar.url;
   }
 
   //----------
@@ -93,12 +97,10 @@ const Header = () => {
     <>
       <nav className="navbar navbar-expand-lg app-navbar">
         <div className="container-fluid app-container">
-          {/* TODO: Refactor when having 2 user types: Vendor & Property Manager */}
           {authUser && (
             <>
               <Link to="/dashboard" className="navbar-brand">
-                {/* <img src={avatar} alt="David Florez" className="img-fluid" /> */}
-                <p>VendorLynx Private</p>
+                <img src={logo} alt="VendorLynx" className="logo" />
               </Link>
             </>
           )}
@@ -118,7 +120,7 @@ const Header = () => {
 
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <div className="ms-auto">
-              <ul className="navbar-nav">
+              <ul className="navbar-nav align-items-center">
                 <li className="nav-item">
                   <Link className="nav-link" to="/notifications">
                     <i className="fa-solid fa-bell"></i>
@@ -176,7 +178,11 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    {authUser.email}
+                    {authAvatar === "" ? (
+                      <img src={placeholderSquare} alt="" className="avatar" />
+                    ) : (
+                      <img src={authAvatar} alt="" className="avatar" />
+                    )}
                   </a>
                   <ul className="dropdown-menu">
                     <li>

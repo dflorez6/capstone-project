@@ -5,9 +5,29 @@
 // Footer
 //====================
 footer {
+  background: $c-purple-d;
+  color: $c-white;
+  padding: 3rem 0 2rem;
   text-align: center;
 
   .footer-wrapper {
-    //
+    p {
+      margin: 0;
+    }
+
+    .vendor-lynx {
+      background-color: $c-aqua;
+      border-radius: 10px;
+      color: $c-purple-d;
+      display: inline-block;
+      font-size: 1rem;
+      margin: 0 0 0.5rem;
+      padding: 0.25rem 1rem;
+    }
+
+    .team-dal {
+      font-size: 0.9rem;
+      margin: 0;
+    }
   }
 }
