@@ -217,6 +217,85 @@
     // Reviews
     .store-reviews-wrapper {
       background-color: $c-white;
+
+      // Flex
+      .reviews-cards-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 1rem;
+        justify-content: flex-start;
+
+        // Reviews Card
+        .reviews-card-wrapper {
+          background-color: $c-white;
+          border-radius: 10px;
+          box-shadow: var(--bs-box-shadow-sm);
+          width: 32.2%;
+
+          // Header
+          .card-header {
+            padding: 2rem 1rem 1rem;
+            text-align: center;
+
+            .avatar-wrapper {
+              .avatar {
+                border-radius: 50%;
+                height: 50px;
+                width: 50px;
+              }
+            }
+
+            .name {
+              margin: 0.5rem 0 0;
+              h4 {
+                font-size: $f-h5;
+                margin: 0;
+              }
+            }
+            .review-date {
+              p {
+                color: $c-text-secondary;
+                font-size: 1rem;
+                margin: 0;
+                text-align: center;
+              }
+            }
+          }
+
+          // Body
+          .card-body {
+            min-height: 5vh;
+            max-height: 20vh;
+            overflow-y: auto;
+            padding: 0 2rem 1rem;
+            text-align: center;
+
+            .review-text {
+              p {
+                font-size: 1rem;
+                margin: 0;
+              }
+            }
+          }
+
+          // Footer
+          .card-footer {
+            padding: 1rem;
+            p {
+              color: $c-text-secondary;
+              font-size: 1rem;
+              margin: 0;
+              text-align: center;
+            }
+          }
+        }
+
+        // Reviews Card Hover
+        .reviews-card-wrapper:hover {
+          box-shadow: var(--bs-box-shadow);
+        }
+      }
     }
   }
 

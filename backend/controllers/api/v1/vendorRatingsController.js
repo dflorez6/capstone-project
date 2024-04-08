@@ -20,7 +20,7 @@ import { NotificationMessages } from "../../../constants/notificationMessages.js
 // GET
 //--------------------
 // Action: Index
-// Description: Returns (Accessible by Property Manager)
+// Description: Returns Average Vendor Ratings (Accessible by Property Manager)
 // Route: GET /api/v1/vendor-ratings/:vendorId
 // Access: Public
 const getVendorAverageRatings = asyncHandler(async (req, res) => {
@@ -62,7 +62,7 @@ const getVendorAverageRatings = asyncHandler(async (req, res) => {
 // POST
 //--------------------
 // Action: Create
-// Description: Create Project's Work Order. (Accessible by Property Manager)
+// Description: Create Vendor Rating. (Accessible by Property Manager)
 // Route: POST /api/v1/vendor-ratings
 // Access: Private
 const createVendorRating = asyncHandler(async (req, res) => {

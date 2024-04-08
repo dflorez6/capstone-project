@@ -14,16 +14,19 @@ import {
   useUpdateVendorCertificateMutation,
   useDeleteVendorCertificateMutation,
 } from "../../../../slices/vendorCertificateApiSlice"; // TODO: IMPLEMENT: INDEX & DELETE actions
+import { useGetVendorReviewsQuery } from "../../../../slices/vendorReviewApiSlice";
 // Components
 import Loader from "../../../../components/Loader";
 // Utilities
 import { drawRatingStars } from "../../../../utils/drawRatingStars";
+import { torontoDateTime } from "../../../../utils/formatDates";
 // Toast
 import { toast } from "react-toastify";
 // Styles
 import "./VendorStore.scss";
 // Assets
 import imgPlaceholder from "../../../../assets/img/placeholder-landscape.png";
+import VendorReview from "../../../../../../backend/models/vendorReviewModel";
 
 // Component
 function VendorStore() {
@@ -59,6 +62,12 @@ function VendorStore() {
     isLoading: vendorCertificatesLoading,
     refetch: vendorCertificatesRefetch,
   } = useGetVendorCertificatesQuery(vendorStore?._id);
+  const {
+    data: vendorReviews,
+    isError: vendorReviewsError,
+    isLoading: vendorReviewsLoading,
+    refetch: vendorRatingRefetch,
+  } = useGetVendorReviewsQuery(urlStoreSlug);
 
   // Redux Toolkit Mutations
   const [
@@ -83,7 +92,8 @@ function VendorStore() {
   useEffect(() => {
     vendorServicesRefetch();
     vendorCertificatesRefetch();
-  }, [vendorServicesRefetch, vendorCertificatesRefetch]);
+    vendorRatingRefetch();
+  }, [vendorServicesRefetch, vendorCertificatesRefetch, vendorRatingRefetch]);
 
   //----------
   // Redux Toolkit Slice Errors
@@ -105,6 +115,9 @@ function VendorStore() {
       "Delete Vendor Certificates Error: ",
       deleteVendorCertificateError
     );
+  }
+  if (vendorReviewsError) {
+    console.log("Vendor Reviews Error: ", vendorReviewsError);
   }
 
   //----------
@@ -200,7 +213,11 @@ function VendorStore() {
                     </div>
 
                     <div className="reviews-counter">
-                      <p>5 reviews</p>
+                      {vendorReviews?.length > 0 ? (
+                        <p>{vendorReviews.length} reviews</p>
+                      ) : (
+                        <p>0 reviews</p>
+                      )}
                     </div>
                   </div>
 
@@ -509,8 +526,66 @@ function VendorStore() {
             )}
             {/* ./Gallery */}
 
-            <div className="panel-wrapper store-reviews-wrapper shadow">
-              <p>Reviews</p>
+            <div className="panel-wrapper bg-transparent store-reviews-wrapper">
+              {vendorReviewsLoading ? (
+                <Loader />
+              ) : (
+                <div className="reviews-wrapper">
+                  <div className="panel-title-wrapper">
+                    <h2>Reviews</h2>
+                  </div>
+
+                  <div className="panel-content-wrapper">
+                    {/* Review Cards */}
+                    <div className="reviews-cards-wrapper">
+                      {vendorReviews?.length > 0 ? (
+                        <>
+                          {vendorReviews?.map((review) => (
+                            <>
+                              {/* Reviews Card */}
+                              <div
+                                className="reviews-card-wrapper"
+                                key={review._id}
+                              >
+                                <div className="card-header">
+                                  <div className="avatar-wrapper">
+                                    <img
+                                      src={review.propertyManager.avatar.url}
+                                      alt=""
+                                      className="avatar"
+                                    />
+                                  </div>
+                                  <div className="name">
+                                    <h4>
+                                      {`${review.propertyManager.firstName} ${review.propertyManager.lastName}`}
+                                      {}
+                                    </h4>
+                                  </div>
+                                  <div className="review-date">
+                                    <p>{torontoDateTime(review.createdAt)}</p>
+                                  </div>
+                                </div>
+                                <div className="card-body">
+                                  <div className="review-text">
+                                    <p>{review.review}</p>
+                                  </div>
+                                </div>
+                                <div className="card-footer"></div>
+                              </div>
+                              {/* Reviews Card */}
+                            </>
+                          ))}
+                        </>
+                      ) : (
+                        <div className="col-12 col-sm-12 text-center">
+                          <h4>No reviews received yet</h4>
+                        </div>
+                      )}
+                    </div>
+                    {/* ./Review Cards */}
+                  </div>
+                </div>
+              )}
             </div>
             {/* ./Reviews */}
           </div>

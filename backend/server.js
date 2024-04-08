@@ -73,7 +73,9 @@ app.use(`${baseURL}/work-orders`, workOrderRoutes);
 app.use(`${baseURL}/work-orders`, workOrderLogRoutes);
 // Ratings
 import vendorRatingRoutes from "./routes/api/v1/vendorRatingRoutes.js";
+import vendorReviewRoutes from "./routes/api/v1/vendorReviewRoutes.js";
 app.use(`${baseURL}/vendor-ratings`, vendorRatingRoutes);
+app.use(`${baseURL}/vendor-reviews`, vendorReviewRoutes);
 
 //====================
 // Production
