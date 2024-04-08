@@ -10,6 +10,7 @@ import {
 } from "../../../slices/workOrderApiSlice";
 import { useGetPropertyManagerWorkOrderLogsQuery } from "../../../slices/workOrderLogApiSlice";
 import { useCreateVendorRatingMutation } from "../../../slices/vendorRatingApiSlice";
+import { useCreateVendorReviewMutation } from "../../../slices/vendorReviewApiSlice";
 // Time
 import { torontoDateTime } from "../../../utils/formatDates";
 // Components
@@ -32,6 +33,7 @@ function WorkOrderPropManager() {
 
   // Form Fields
   const [rating, setRating] = useState("");
+  const [review, setReview] = useState("");
 
   // Parse URL to get query params
   const url = window.location.pathname;
@@ -66,6 +68,10 @@ function WorkOrderPropManager() {
     createVendorRating,
     { isError: createVendorRatingError, isLoading: createVendorRatingLoading },
   ] = useCreateVendorRatingMutation();
+  const [
+    createVendorReview,
+    { isError: createVendorReviewError, isLoading: createVendorReviewLoading },
+  ] = useCreateVendorReviewMutation();
 
   //----------
   // Effects
@@ -94,6 +100,9 @@ function WorkOrderPropManager() {
   if (createVendorRatingError) {
     console.log("Vendor Rating Create Error: ", createVendorRatingError);
   }
+  if (createVendorReviewError) {
+    console.log("Vendor Review Create Error: ", createVendorReviewError);
+  }
 
   //----------
   // Handlers
@@ -114,7 +123,7 @@ function WorkOrderPropManager() {
     }
   };
 
-  //
+  // Rate Vendor Handler
   const rateVendorHandler = async (e) => {
     e.preventDefault();
 
@@ -129,9 +138,33 @@ function WorkOrderPropManager() {
       await createVendorRating(formData).unwrap();
       workOrderRefetch();
       workOrderLogsRefetch();
+      setRating(""); // Clear the rating field
       toast.success("Vendor rated successfully");
     } catch (error) {
       toast.error("Vendor rating cannot be blank");
+      console.log("Project Application Error: ", error);
+    }
+  };
+
+  // Review Vendor Handler
+  const reviewVendorHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Form Data
+      const formData = new FormData();
+
+      formData.append("review", review);
+      formData.append("vendor", workOrder?.vendor?._id);
+      formData.append("propertyManager", workOrder?.project?.propertyManager);
+
+      await createVendorReview(formData).unwrap();
+      workOrderRefetch();
+      workOrderLogsRefetch();
+      setReview(""); // clear review field
+      toast.success("Vendor review added successfully");
+    } catch (error) {
+      toast.error("Vendor review cannot be blank");
       console.log("Project Application Error: ", error);
     }
   };
@@ -271,19 +304,30 @@ function WorkOrderPropManager() {
                       <Loader />
                     ) : (
                       <>
-                        <Link
-                          to={`mailto:${workOrder?.project.managerEmail}`}
-                          className="btn-app btn-app-xs btn-app-dark-outline me-3"
-                        >
-                          <i className="fa-solid fa-envelope"></i>
-                        </Link>
-                        <button
-                          type="button"
-                          className="btn-app btn-app-xs btn-app-purple"
-                          onClick={closeOrderHandler}
-                        >
-                          Close Order
-                        </button>
+                        {workOrder?.workOrderStatus === "closed" ? (
+                          <Link
+                            to={`mailto:${workOrder?.project.managerEmail}`}
+                            className="btn-app btn-app-xs btn-app-dark-outline"
+                          >
+                            <i className="fa-solid fa-envelope"></i>
+                          </Link>
+                        ) : (
+                          <>
+                            <Link
+                              to={`mailto:${workOrder?.project.managerEmail}`}
+                              className="btn-app btn-app-xs btn-app-dark-outline me-3"
+                            >
+                              <i className="fa-solid fa-envelope"></i>
+                            </Link>
+                            <button
+                              type="button"
+                              className="btn-app btn-app-xs btn-app-purple"
+                              onClick={closeOrderHandler}
+                            >
+                              Close Order
+                            </button>
+                          </>
+                        )}
                       </>
                     )}
                   </div>
@@ -301,7 +345,7 @@ function WorkOrderPropManager() {
                           <form onSubmit={rateVendorHandler}>
                             <div className="row">
                               <div className="col-12">
-                                <label htmlFor="rating">Rate vendor:</label>
+                                <label htmlFor="rating">Add Rating</label>
                                 <select
                                   name="rating"
                                   id="rating"
@@ -332,7 +376,7 @@ function WorkOrderPropManager() {
                                   <div className="submit-wrapper">
                                     <button
                                       type="submit"
-                                      className="btn-app btn-app-xs btn-app-purple mt-3"
+                                      className="btn-app btn-app-xs btn-app-purple mt-3 w-100"
                                     >
                                       Rate Vendor
                                     </button>
@@ -347,7 +391,42 @@ function WorkOrderPropManager() {
 
                         {/* Review Form */}
                         <div className="col-12 col-sm-12 col-md-8 col-lg-8">
-                          Reviews
+                          <form onSubmit={reviewVendorHandler}>
+                            <div className="row">
+                              <div className="col-12">
+                                <label htmlFor="name">Add Review</label>
+                                <textarea
+                                  type="text"
+                                  name="name"
+                                  id="name"
+                                  className="form-control"
+                                  placeholder="Work order title"
+                                  value={review}
+                                  onChange={(e) => setReview(e.target.value)}
+                                />
+                              </div>
+                              {/* Input: Field */}
+                            </div>
+
+                            {createVendorReviewLoading ? (
+                              <Loader />
+                            ) : (
+                              <div className="row">
+                                {/* Submit */}
+                                <div className="col-12 text-center">
+                                  <div className="submit-wrapper">
+                                    <button
+                                      type="submit"
+                                      className="btn-app btn-app-xs btn-app-purple-outline mt-3"
+                                    >
+                                      Add Review
+                                    </button>
+                                  </div>
+                                </div>
+                                {/* ./Submit */}
+                              </div>
+                            )}
+                          </form>
                         </div>
                         {/* ./Review Form */}
                       </div>
