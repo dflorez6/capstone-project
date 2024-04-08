@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 // Styles
 import "./Header.scss";
 // Assets
-// import avatar from "../../assets/img/df-original-square.jpg";
+import logo from "../../assets/logo.svg";
 
 // Component
 const Header = () => {
@@ -15,8 +15,7 @@ const Header = () => {
       <nav className="navbar navbar-expand-lg app-navbar">
         <div className="container-fluid app-container">
           <Link to="/" className="navbar-brand">
-            {/* <img src={avatar} alt="David Florez" className="img-fluid" /> */}
-            <p>VendorLynx Public</p>
+            <img src={logo} alt="VendorLynx" className="logo" />
           </Link>
           {/* ./Brand */}
 

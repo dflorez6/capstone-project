@@ -11,14 +11,21 @@ header {
 
     // Brand
     .navbar-brand {
-      //
+      .logo {
+        width: 40px;
+        border-radius: 50%;
+      }
     }
 
     // Links
     .navbar-collapse {
       .navbar-nav {
         .nav-item {
-          //
+          // Avatar
+          .avatar {
+            width: 25px;
+            border-radius: 50%;
+          }
         }
       }
     }
