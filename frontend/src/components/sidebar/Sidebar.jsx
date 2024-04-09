@@ -1,5 +1,5 @@
 // Dependencies
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 // State
 import { useSelector, useDispatch } from "react-redux";
 import { useVendorLogoutMutation } from "../../slices/vendorsApiSlice";
@@ -16,6 +16,7 @@ function Sidebar() {
   //----------
   const dispatch = useDispatch(); // Initialize
   const navigate = useNavigate(); // Initialize
+  const location = useLocation(); // Initialize
 
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
@@ -98,29 +99,48 @@ function Sidebar() {
         <div className="offcanvas-body app-sidebar-body">
           <div className="sidebar-navigation-wrapper">
             <ul className="sidebar-navigation">
-              <li className="sidebar-navigation-item">
+              <li
+                className={`sidebar-navigation-item ${
+                  location.pathname === "/notifications" ? "active" : ""
+                }`}
+              >
                 <Link className="sidebar-navigation-link " to="/notifications">
                   <i className="fa-solid fa-bell link-icon"></i>
                   <span className="link-text">Notifications</span>
                 </Link>
               </li>
-              <li className="sidebar-navigation-item">
+              {/*
+              <li
+                className={`sidebar-navigation-item ${
+                  location.pathname === "/dashboard" ? "active" : ""
+                }`}
+              >
                 <Link className="sidebar-navigation-link " to="/dashboard">
                   <i className="fa-solid fa-chart-simple link-icon"></i>
                   <span className="link-text">Dashboard</span>
                 </Link>
               </li>
-
+              */}
               {vendorInfo ? (
                 <>
                   {/* Vendor */}
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === "/projects" ? "active" : ""
+                    }`}
+                  >
                     <Link className="sidebar-navigation-link" to={`/projects`}>
                       <i className="fa-solid fa-magnifying-glass link-icon"></i>
                       <span className="link-text">Projects</span>
                     </Link>
                   </li>
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname.startsWith("/work-orders/vendor")
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={`/work-orders/vendor/${authId}`}
@@ -130,7 +150,13 @@ function Sidebar() {
                     </Link>
                   </li>
 
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === `/vendors/store/${vendorStoreSlug}`
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={`/vendors/store/${vendorStoreSlug}`}
@@ -139,7 +165,14 @@ function Sidebar() {
                       <span className="link-text">Store</span>
                     </Link>
                   </li>
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname ===
+                      `/vendors/store/${vendorStoreSlug}/edit`
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={`/vendors/store/${vendorStoreSlug}/edit`}
@@ -149,7 +182,11 @@ function Sidebar() {
                     </Link>
                   </li>
 
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === "/vendors/profile" ? "active" : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={"/vendors/profile"}
@@ -162,7 +199,11 @@ function Sidebar() {
               ) : (
                 <>
                   {/* Property Manager */}
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === "/vendors/search" ? "active" : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={"/vendors/search"}
@@ -171,7 +212,13 @@ function Sidebar() {
                       <span className="link-text">Vendors</span>
                     </Link>
                   </li>
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === `/projects/${authId}`
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={`/projects/${authId}`}
@@ -180,7 +227,11 @@ function Sidebar() {
                       <span className="link-text">Projects</span>
                     </Link>
                   </li>
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === `/projects/new` ? "active" : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={`/projects/new`}
@@ -189,9 +240,16 @@ function Sidebar() {
                       <span className="link-text">Create Project</span>
                     </Link>
                   </li>
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname ===
+                      `/work-orders/property-manager/${authId}`
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
-                      className="sidebar-navigation-link"                      
+                      className="sidebar-navigation-link"
                       to={`/work-orders/property-manager/${authId}`}
                     >
                       <i className="fa-solid fa-calendar-days link-icon"></i>
@@ -199,7 +257,13 @@ function Sidebar() {
                     </Link>
                   </li>
 
-                  <li className="sidebar-navigation-item">
+                  <li
+                    className={`sidebar-navigation-item ${
+                      location.pathname === "/property-managers/profile"
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <Link
                       className="sidebar-navigation-link"
                       to={"/property-managers/profile"}
@@ -210,7 +274,6 @@ function Sidebar() {
                   </li>
                 </>
               )}
-
               <li className="sidebar-navigation-item">
                 <Link
                   className="sidebar-navigation-link"

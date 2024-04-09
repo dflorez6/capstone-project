@@ -9,7 +9,7 @@ export const NotificationMessages = {
   WORK_ORDER_ACCEPTED_VENDOR: "accepted a work order for project",
   WORK_ORDER_ACCEPTED_PROP_MANAGER: "accepted a work order for project",
   WORK_ORDER_RESCHEDULE_VENDOR: "needs to reschedule a work order for project",
-  WORK_ORDER_RESCHEDULE_PROP_MANAGER: "needs to reschedule a work order for project",
+  WORK_ORDER_RESCHEDULE_PROP_MANAGER: "needs a rescheduling for project",
   WORK_ORDER_CLOSED_PROP_MANAGER: "closed a work order for project",
   // TODO: Add more NotificationTypes as needed
 };

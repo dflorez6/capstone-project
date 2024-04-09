@@ -46,8 +46,11 @@ const Login = () => {
   //----------
   // Redirect to dashboard if already logged in
   useEffect(() => {
-    if (vendorInfo || propertyManagerInfo) {
-      navigate("/dashboard");
+    if (vendorInfo) {
+      navigate("/projects");
+    }
+    if (propertyManagerInfo) {
+      navigate("/vendors/search");
     }
   }, [navigate, vendorInfo, propertyManagerInfo]); // Dependency Array
 
@@ -177,7 +180,13 @@ const Login = () => {
 
                   <div className="row py-3">
                     <div className="col-12">
-                      New Customer? <Link to="/vendors/register">Register</Link>
+                      New Customer?{" "}
+                      <Link
+                        to="/vendors/register"
+                        className="f-purple-m f-underline"
+                      >
+                        Register
+                      </Link>
                     </div>
                   </div>
                 </form>
@@ -247,7 +256,12 @@ const Login = () => {
               <div className="row py-3">
                 <div className="col-12">
                   New Customer?{" "}
-                  <Link to="/property-managers/register">Register</Link>
+                  <Link
+                    to="/property-managers/register"
+                    className="f-white f-underline"
+                  >
+                    Register
+                  </Link>
                 </div>
               </div>
             </form>

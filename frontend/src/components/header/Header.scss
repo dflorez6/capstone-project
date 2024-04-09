@@ -20,11 +20,30 @@ header {
     // Links
     .navbar-collapse {
       .navbar-nav {
+
+        // Item
         .nav-item {
           // Avatar
           .avatar {
             width: 25px;
             border-radius: 50%;
+          }
+
+          // Link Hover
+          .nav-link:hover {
+            color: $c-purple-m;
+          }
+
+          // Active
+
+        }
+
+        // Item Active
+        .nav-item {
+          &.active {
+            .nav-link {
+              color: $c-purple-m;
+            }
           }
         }
       }
