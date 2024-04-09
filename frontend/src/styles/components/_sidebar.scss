@@ -31,6 +31,7 @@
         margin: 0;
         padding: 0;
 
+        // Item
         .sidebar-navigation-item {
           // Link
           .sidebar-navigation-link {
@@ -57,9 +58,11 @@
           }
 
           // Active
-          .active {
-            background-color: $c-purple-m;
-            color: $c-white;
+          &.active {
+            .sidebar-navigation-link {
+              background-color: $c-purple-m;
+              color: $c-white;
+            }
           }
         }
       }

@@ -42,7 +42,7 @@ function PropertyManagerRegistration() {
   // Redirect to home page if already logged in
   useEffect(() => {
     if (propertyManagerInfo) {
-      navigate("/dashboard");
+      navigate("/vendors/search");
     }
   }, [navigate, propertyManagerInfo]); // Dependency Array
 
@@ -214,7 +214,10 @@ function PropertyManagerRegistration() {
 
           <div className="row py-3">
             <div className="col-12">
-              Already have an account? <Link to="/login">Login</Link>
+              Already have an account?{" "}
+              <Link to="/login" className="f-purple-m f-underline">
+                Login
+              </Link>
             </div>
           </div>
         </form>

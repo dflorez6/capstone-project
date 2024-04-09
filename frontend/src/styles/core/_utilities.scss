@@ -34,8 +34,17 @@
   color: $c-purple-m;
 }
 
+.f-white {
+  color: $c-white;
+}
+
 .f-primary {
   color: $c-text-primary;
+}
+
+// Style
+.f-underline {
+  text-decoration: underline;
 }
 
 // Display

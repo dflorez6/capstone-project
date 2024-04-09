@@ -1,5 +1,5 @@
 // Dependencies
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 // State
 import { useSelector, useDispatch } from "react-redux";
 import { useVendorLogoutMutation } from "../../slices/vendorsApiSlice";
@@ -21,6 +21,7 @@ const Header = () => {
   //----------
   const dispatch = useDispatch(); // Initialize
   const navigate = useNavigate(); // Initialize
+  const location = useLocation(); // Initialize
 
   // Redux Store
   const { vendorInfo } = useSelector((state) => state.vendorAuth); // Gets Vendor Info through the useSelector Hook
@@ -121,51 +122,103 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <div className="ms-auto">
               <ul className="navbar-nav align-items-center">
-                <li className="nav-item">
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/notifications" ? "active" : ""
+                  }`}
+                >
                   <Link className="nav-link" to="/notifications">
                     <i className="fa-solid fa-bell"></i>
                   </Link>
                 </li>
+                {/*
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">
                     Dashboard
                   </Link>
                 </li>
+                 */}
 
                 {authUser.accountType == "vendor" ? (
                   <>
-                    <Link className="nav-link" to="/projects">
-                      Projects
-                    </Link>
-                    <Link
-                      className="nav-link"
-                      to={`/work-orders/vendor/${authId}`}
+                    <li
+                      className={`nav-item ${
+                        location.pathname === "/projects" ? "active" : ""
+                      }`}
                     >
-                      Work Orders
-                    </Link>
-                    <Link
-                      className="nav-link"
-                      to={`/vendors/store/${vendorStoreSlug}`}
+                      <Link className="nav-link" to="/projects">
+                        Projects
+                      </Link>
+                    </li>
+                    <li
+                      className={`nav-item ${
+                        location.pathname === `/work-orders/vendor/${authId}`
+                          ? "active"
+                          : ""
+                      }`}
                     >
-                      Store
-                    </Link>
+                      <Link
+                        className="nav-link"
+                        to={`/work-orders/vendor/${authId}`}
+                      >
+                        Work Orders
+                      </Link>
+                    </li>
+                    <li
+                      className={`nav-item ${
+                        location.pathname ===
+                        `/vendors/store/${vendorStoreSlug}`
+                          ? "active"
+                          : ""
+                      }`}
+                    >
+                      <Link
+                        className="nav-link"
+                        to={`/vendors/store/${vendorStoreSlug}`}
+                      >
+                        Store
+                      </Link>
+                    </li>
                     {/* TODO: Update Vendor Links */}
                   </>
                 ) : (
                   <>
                     {/* TODO: Update Prop Manager Links */}
-                    <Link className="nav-link" to="/vendors/search">
-                      Vendors
-                    </Link>
-                    <Link className="nav-link" to={`/projects/${authId}`}>
-                      Projects
-                    </Link>
-                    <Link
-                      className="nav-link"
-                      to={`/work-orders/property-manager/${authId}`}
+                    <li
+                      className={`nav-item ${
+                        location.pathname === "/vendors/search" ? "active" : ""
+                      }`}
                     >
-                      Work Orders
-                    </Link>
+                      <Link className="nav-link" to="/vendors/search">
+                        Vendors
+                      </Link>
+                    </li>
+                    <li
+                      className={`nav-item ${
+                        location.pathname === `/projects/${authId}`
+                          ? "active"
+                          : ""
+                      }`}
+                    >
+                      <Link className="nav-link" to={`/projects/${authId}`}>
+                        Projects
+                      </Link>
+                    </li>
+                    <li
+                      className={`nav-item ${
+                        location.pathname ===
+                        `/work-orders/property-manager/${authId}`
+                          ? "active"
+                          : ""
+                      }`}
+                    >
+                      <Link
+                        className="nav-link"
+                        to={`/work-orders/property-manager/${authId}`}
+                      >
+                        Work Orders
+                      </Link>
+                    </li>
                   </>
                 )}
 
