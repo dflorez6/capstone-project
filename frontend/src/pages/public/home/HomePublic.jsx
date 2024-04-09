@@ -147,7 +147,7 @@ function HomePublic() {
                   <p>
                     <strong>Simplified Bidding Process:</strong> Easily discover
                     and apply to projects that align with your skills and
-                    capabilities. standards.
+                    capabilities.
                   </p>
                 </div>
               </div>
