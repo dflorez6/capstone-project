@@ -14,9 +14,9 @@ const Header = () => {
     <>
       <nav className="navbar navbar-expand-lg app-navbar">
         <div className="container-fluid app-container">
-          <Link to="/" className="navbar-brand">
+          <a href="/#home" className="navbar-brand">
             <img src={logo} alt="VendorLynx" className="logo" />
-          </Link>
+          </a>
           {/* ./Brand */}
 
           <button
@@ -35,18 +35,18 @@ const Header = () => {
             <div className="ms-auto">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    About
+                  <a className="nav-link" href="#about">
+                    About Us
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Vendors
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="#property-managers">
                     Property Managers
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#vendors">
+                    Vendors
                   </a>
                 </li>
 
